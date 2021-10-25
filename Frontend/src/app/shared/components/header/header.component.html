@@ -1,0 +1,21 @@
+<header class="header">
+  <div class="container">
+    <div class="flex-group">
+      <div class="logo-Group">
+      <img class="head-logo"src="../../../../assets/images/icon.png" alt="Image">
+      <a class="title">Gestión</a>
+    </div>
+  </div>
+  <div class="flex-group">
+    <div class="user-Group">
+      <em class="usericon fas fa-user"> </em>
+      <span class="username">{{user!.nombre}}</span> 
+    </div>
+
+    <a class="btn_exit" (click)="logout()">
+      <em class="fas fa-sign-out-alt"></em>
+    </a>
+
+  </div>
+  </div>
+</header>

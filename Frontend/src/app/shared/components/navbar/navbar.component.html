@@ -1,0 +1,19 @@
+<div class="side-bar">
+  <ul class="tools" id='{{selected_tab}}'>
+    <li class="tools_item inicio"  [routerLink]="['/','inicio']" (click) = 'emmit("inicio")'>
+      Inicio
+    </li>
+    <li class="tools_item solicitudes" [routerLink]="['/','solicitudes']"  (click) = 'emmit("solicitudes")'>
+        Solicitudes
+    </li>
+    <li class="tools_item avances"  [routerLink]="['/','avances']"  (click) = 'emmit("avances")'>
+      Avances
+    </li>
+    <li class="tools_item departamentos"  [routerLink]="['/','departamentos']"  (click) = 'emmit("departamentos")'>
+      Departamentos
+    </li>
+    <li class="tools_item funcionarios"  [routerLink]="['/','funcionarios']"  (click) = 'emmit("funcionarios")'>
+      Funcionarios
+    </li>
+  </ul>
+</div>

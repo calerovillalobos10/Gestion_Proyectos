@@ -1,0 +1,80 @@
+.tools{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.side-bar{
+
+  position: fixed;
+  top: 0%;
+  left: 25%;
+  background-color: var(--clr-base-100);
+  color: var(--clr-neutral-100);
+  border-radius: 0  0 1em 1em  ;
+  width: 50%;
+  padding: 1em;
+}
+
+.tools{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.tools_item{
+  width: 10em;
+  cursor: pointer;
+  font-weight: bold;
+  user-select: none;
+  text-align: center;
+  padding: 1em;
+  position: relative;
+  transition: transform 250ms, color 250ms;
+}
+
+.tools_item:hover{
+  transform: scale(1.2);
+}
+
+.tools_item::before{
+content: '';
+  display: inline-block;
+  position: absolute;
+  left: 10%;
+  bottom: 5%;
+  width: 80%;
+  height: .1em;
+  background-color:  var(--clr-accent-500);
+  transform: scaleX(0);
+  transition: transform 250ms;
+  transform-origin: left;
+}
+
+.tools_item:active{
+  transform: scale(1);
+  color: var(--clr-accent-500);
+}
+
+.tools_item:hover::before{
+  transform: scaleX(1);
+}
+
+#inicio .inicio,
+#solicitudes .solicitudes,
+#avances .avances,
+#departamentos .departamentos,
+#funcionarios .funcionarios
+{
+  transform: scale(1.2);
+  color: var(--clr-accent-500);
+}
+
+#inicio .inicio::before,
+#solicitudes .solicitudes::before,
+#avances .avances::before,
+#departamentos .departamentos::before,
+#funcionarios .funcionarios::before
+{
+  transform: scaleX(1);
+}

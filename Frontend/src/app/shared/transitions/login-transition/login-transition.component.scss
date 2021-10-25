@@ -1,0 +1,53 @@
+.purple_box {
+  background-color: var(--clr-base-100);
+  position: fixed;
+  width: 170%;
+  height: 50%;
+  transform: rotate(0deg);
+}
+
+.purple_box.top {
+  right: -60%;
+  top: -43%;
+}
+
+.purple_box.bot {
+  left: -60%;
+  bottom: -43%;
+}
+
+.purple_box.top.in {
+  animation: entrarTop 600ms ease-in-out 1;
+}
+.purple_box.bot.in {
+  animation: entrarBot 600ms ease-in-out 1;
+}
+
+@keyframes entrarTop {
+  0% {
+    transform: rotate(10deg);
+    top: -30%; 
+  }
+  50% {
+    transform: rotate(0deg);
+    top: -30%;
+  }
+  100%{
+    top: -43%;
+  }
+}
+
+@keyframes entrarBot {
+  0% {
+    transform: rotate(10deg);
+    bottom: -30%;
+  }
+  50% {
+    transform: scale(0deg);
+    bottom: -30%;
+  }
+
+  100%{
+    bottom: -43%;
+  }
+}

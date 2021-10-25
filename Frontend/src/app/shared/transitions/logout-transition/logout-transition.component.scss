@@ -1,0 +1,54 @@
+.purple_box {
+  background-color: var(--clr-base-100);
+  position: fixed;
+  width: 170%;
+  height: 50%;
+  transform: rotate(0deg);
+}
+
+.purple_box.top {
+  right: -60%;
+  top: -43%;
+}
+
+.purple_box.bot {
+  left: -60%;
+  bottom: -43%;
+}
+
+.purple_box.top.out {
+  animation: salirTop 600ms ease-in-out 1;
+}
+.purple_box.bot.out {
+  animation: salirBot 600ms ease-in-out 1;
+}
+
+@keyframes salirTop {
+  0% {
+    top: -43%;
+  }
+  50% {
+    transform: rotate(0deg);
+    top: -30%;
+  }
+  100%{
+    transform: rotate(10deg);
+    top: -30%; 
+    
+  }
+}
+
+@keyframes salirBot {
+  0% {
+    bottom: -43%;
+  }
+  50% {
+    transform: scale(0deg);
+    bottom: -30%;
+  }
+
+  100%{
+    transform: rotate(10deg);
+    bottom: -30%;
+  }
+}
