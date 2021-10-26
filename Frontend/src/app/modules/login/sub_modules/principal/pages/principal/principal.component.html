@@ -1,0 +1,51 @@
+<div class="primary_box" >
+  <div class="primary_box_container" [ngClass]="{'desaparecer': desaparecer}">
+    
+    <div>
+      <h1 class="title">Acceso al Sistema</h1>
+      <form [formGroup]="form" (submit)="prepareLogin()">
+        <div class="input_group">
+          <input class="input" type="text" placeholder=" " id="correo" formControlName="correo" />
+          <label class="label" for="correo"> Correo</label>
+          <ng-container *ngTemplateOutlet="correo_error; context: {error: form.get('correo')?.errors}"></ng-container>
+        </div>
+
+        <div class="remember">
+          <input type="checkbox" id="remember" name="remember" formControlName="remember" (change)='removeRemember()'/>
+          <label  for="remember"> Recordar correo</label>
+        </div>
+        
+        <div class="input_group">
+          <input class="input" type="password" placeholder=" " id="password" formControlName="password" />
+          <label class="label" for="password"> Contraseña</label>
+          <ng-container *ngTemplateOutlet="contra_error; context: {error: form.get('password')?.errors}"></ng-container>
+        </div>
+
+        <a class="link recovery" (click)="toRecovery()">Recuperar contraseña</a>
+
+        <button class="btn">Acceder</button>
+
+        <!-- No tienes cuenta-->
+        <p class="final_text"></p>
+        <!-- No tienes registrate-->
+        <a class="link register"> </a>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-template #correo_error let-error="error">
+  <p class="error-input" *ngIf="form.get('correo')?.dirty || form.get('correo')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.pattern">No es un email </span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Maximo {{error.maxlength.requiredLength}}, actual {{error.maxlength.actualLength}}  </span>
+</p>
+</ng-template>
+
+<ng-template #contra_error let-error="error">
+  <p class="error-input" *ngIf="form.get('password')?.dirty || form.get('correo')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.maxlength">Maximo {{error.maxlength.requiredLength}}, actual {{error.maxlength.actualLength}}  </span>
+</p>
+</ng-template>
+

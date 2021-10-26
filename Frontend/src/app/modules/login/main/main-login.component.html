@@ -1,0 +1,9 @@
+<app-login-transition *ngIf="logging" ></app-login-transition>
+<main *ngIf="!logging">
+  <div class="purple_box top"></div>
+
+    <router-outlet></router-outlet>
+
+  <div class="purple_box bot"></div>
+ 
+</main>

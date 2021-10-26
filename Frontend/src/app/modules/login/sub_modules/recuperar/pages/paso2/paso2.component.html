@@ -1,0 +1,28 @@
+<div class="primary_box">
+  <div class="primary_box_container" [ngClass]="{ desaparecer: desaparecer }">
+    <h1 class="title">Código de acceso</h1>
+    <form [formGroup]="form" (submit)="prepararCodigo()">
+      <div class="input_group">
+        <p class="final_text">
+          Fue enviado a su correo un código de recuperación, digítelo acontinuación.
+        </p>
+      </div>
+
+      <div class="input_group">
+        <input class="input" type="text" placeholder=" " id="codigo" name="codigo" formControlName="codigo" />
+        <label class="label" for="codigo"> Código</label>
+        <ng-container *ngTemplateOutlet="codigo_error; context: {error: form.get('codigo')?.errors}"></ng-container>
+      </div>
+      <button class="btn"> Confirmar </button>
+
+      <p class="final_text">¿Ya la recordaste?</p>
+      <a class="link register" (click)="aLogin()">Volver.</a>
+    </form>
+  </div>
+</div>
+
+<ng-template #codigo_error let-error="error">
+  <p class="error-input" *ngIf="form.get('codigo')?.dirty || form.get('codigo')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+</p>
+</ng-template>

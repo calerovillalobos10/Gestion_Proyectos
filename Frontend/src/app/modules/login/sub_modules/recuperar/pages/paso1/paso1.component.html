@@ -1,0 +1,31 @@
+<div class="loading_screen" *ngIf="sendingMail">  
+  <img class="gif" src="../../../../../assets/images/loading_icon.gif" alt="Loading gif"/>
+</div>
+
+<div class="primary_box">
+  <div class="primary_box_container" [ngClass]="{'desaparecer': desaparecer}">
+
+    <h1 class="title">Recuperar contraseña</h1>
+    <form [formGroup]="form" (submit)="prepararRecuperacion()">
+      <p class="final_text">Digite el correo registrado.</p>
+
+      <div class="input_group">
+        <input class="input" type="text" placeholder=" " id="mail" name="correo" formControlName="correo" />
+        <label class="label" for="mail"> Correo</label>
+        <ng-container *ngTemplateOutlet="correo_error; context: {error: form.get('correo')?.errors}"></ng-container>
+      </div>
+      <button class="btn"> Recuperar </button>
+
+      <p class="final_text">¿Ya la recordaste?</p>
+      <a class="link register" (click)="aLogin()">Volver.</a>
+    </form>
+  </div>
+</div>
+
+<ng-template #correo_error let-error="error">
+  <p class="error-input" *ngIf="form.get('correo')?.dirty ||form.get('correo')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.pattern">No es un email </span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Maximo {{error.maxlength.requiredLength}}, actual {{error.maxlength.actualLength}}  </span>
+</p>
+</ng-template>
