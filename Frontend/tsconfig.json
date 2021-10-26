@@ -30,6 +30,7 @@
       "@shared/*" : [
         "src/app/shared/*"
       ],
+      
      
     }
 

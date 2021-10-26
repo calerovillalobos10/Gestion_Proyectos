@@ -8,7 +8,7 @@ import {timeout} from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private _registerURL = "http://localhost:4000/api/register";
+
   private _loginURL = "http://localhost:4000/api/register";
 
   @Output() userData:Usuario | undefined;
@@ -44,7 +44,11 @@ export class AuthService {
   }
 
   // Loguear a un usuario.
+  // Recibe el usuario del back y lo asigna.
   async loginUser(user: Usuario){
+    if(this.userData){
+      this.logoutUser();
+    }
     try {
       const res = await this.http.post<Usuario>(this._loginURL, user)
       .pipe(timeout(500)).toPromise();
@@ -57,13 +61,34 @@ export class AuthService {
   }
 
   logoutUser(){
-    localStorage.removeItem("LogedUser")
+    localStorage.removeItem("LogedUser");
     this.userData = undefined;
   }
 
   getUserData(): Usuario | undefined {
     return this.userData;
   }
+
+  // Tiene que realizar la verificacion del secret para el determinado usuario en el back.
+  // Retorna true si el autenticador es valido, false de lo contrario.
+  async googleAuth(pin:string) {
+    let status = false;
+
+    try {
+      const res = await this.http.post<boolean>(this._loginURL, {correo: this.userData?.correo, pin:pin})
+      .pipe(timeout(500)).toPromise();
+      status = res;
+    } catch (e) {
+      status = false;
+    }
+
+    // Simulacion, el token sera 333
+    return pin === '333';
+    //return status;
+  }
+
+  
+
 
   
   /* Simula consulta a la API.*/
