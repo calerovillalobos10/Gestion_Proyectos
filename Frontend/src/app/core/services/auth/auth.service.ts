@@ -24,7 +24,7 @@ export class AuthService {
   async checkStored() {
     const stored = JSON.parse(localStorage.getItem("LogedUser") || '{}' );
       
-    // Verifica la existencia de un token.
+    // Verifica la existencia de un usuario almacenado.
     if(stored){
       await this.loginUser({correo: stored.correo, contrasenia: stored.contrasenia});
       
@@ -62,6 +62,7 @@ export class AuthService {
 
   logoutUser(){
     localStorage.removeItem("LogedUser");
+     // Destruir aca el token tambien.
     this.userData = undefined;
   }
 
@@ -82,7 +83,7 @@ export class AuthService {
       status = false;
     }
 
-    // Simulacion, el token sera 333
+    // Simulacion, el pin sera 333
     return pin === '333';
     //return status;
   }
