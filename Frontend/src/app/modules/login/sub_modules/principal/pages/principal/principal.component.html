@@ -45,6 +45,7 @@
 <ng-template #contra_error let-error="error">
   <p class="error-input" *ngIf="form.get('password')?.dirty || form.get('correo')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.minlength">Minimo {{error.minlength.requiredLength}}, actual {{error.minlength.actualLength}}  </span>
     <span class="login_error" *ngIf="error?.maxlength">Maximo {{error.maxlength.requiredLength}}, actual {{error.maxlength.actualLength}}  </span>
 </p>
 </ng-template>

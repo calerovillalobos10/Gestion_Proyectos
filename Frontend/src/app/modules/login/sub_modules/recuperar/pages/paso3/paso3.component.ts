@@ -25,7 +25,7 @@ export class Paso3Component implements OnInit{
   ) {
     this.form = this.formBuilder.group({
       correo: [{ value: this.recoveryService.userMail, disabled: true }, [Validators.required, Validators.email, Validators.maxLength(50)]],
-      password: ["", Validators.required],
+      password: ["", Validators.required, Validators.minLength(8)],
       rePassword: ["", Validators.required],
     })
   }

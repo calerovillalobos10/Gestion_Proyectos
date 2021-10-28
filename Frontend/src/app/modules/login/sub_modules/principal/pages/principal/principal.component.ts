@@ -26,12 +26,13 @@ export class PrincipalComponent implements OnInit {
       correo: ["",
         [
           Validators.required,
-          Validators.pattern("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"),
+          Validators.pattern("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"),
           Validators.maxLength(50)
         ]],
       password: ["", [
         Validators.required,
-        Validators.maxLength(20)
+        Validators.maxLength(20),
+        Validators.minLength(8)
       ]],
       remember: []
     })

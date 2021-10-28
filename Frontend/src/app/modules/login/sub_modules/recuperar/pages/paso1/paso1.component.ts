@@ -29,7 +29,7 @@ export class Paso1Component implements OnInit {
     this.form = this.formBuilder.group({
       correo: ["", 
       [ Validators.required, 
-        Validators.pattern("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"), 
+        Validators.pattern("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"), 
         Validators.maxLength(50)]]
     })
    }
@@ -47,7 +47,7 @@ export class Paso1Component implements OnInit {
         this.sendingMail = true;
         this.enviarCodigo();
        }else{
-        this.alert.simpleAlert("El correo ingresado no es valido.");
+        this.alert.simpleAlert("El correo ingresado no es válido");
        }
       }
     }
