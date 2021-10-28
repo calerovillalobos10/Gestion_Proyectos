@@ -40,6 +40,7 @@ CREATE TABLE tb_Funcionarios(
   contrasenia VARBINARY(MAX) NOT NULL,
   urlFoto VARCHAR(180) NOT NULL,
   estado BIT DEFAULT 1 NOT NULL,
+  secretUrl VARCHAR(180) NOT NULL
 
   CONSTRAINT fk_Funcionario_Sexo 
   FOREIGN KEY (idSexo) 

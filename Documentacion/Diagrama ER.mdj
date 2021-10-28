@@ -419,20 +419,35 @@
 											"top": 481,
 											"width": 271,
 											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "AAAAAAF8x0M0u9qhgA0=",
+											"_parent": {
+												"$ref": "AAAAAAF74fh4/bVCHIA="
+											},
+											"model": {
+												"$ref": "AAAAAAF8x0M0qNqenN4="
+											},
+											"font": "Arial;13;0",
+											"left": 933,
+											"top": 496,
+											"width": 271,
+											"height": 13
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 928,
 									"top": 311,
 									"width": 281,
-									"height": 188
+									"height": 203
 								}
 							],
 							"font": "Arial;13;0",
 							"left": 928,
 							"top": 288,
 							"width": 281,
-							"height": 211,
+							"height": 226,
 							"nameLabel": {
 								"$ref": "AAAAAAF74fh4/bVB2BE="
 							},
@@ -1771,7 +1786,7 @@
 									},
 									"font": "Arial;13;0",
 									"left": 1005,
-									"top": 517,
+									"top": 532,
 									"height": 13,
 									"alpha": -0.5235987755982988,
 									"distance": 30,
@@ -1788,7 +1803,7 @@
 								"$ref": "AAAAAAF74gLVALd5D9A="
 							},
 							"lineStyle": 2,
-							"points": "873:576;1020:576;1020:498",
+							"points": "873:576;1020:576;1020:513",
 							"nameLabel": {
 								"$ref": "AAAAAAF74gps8LhpgX0="
 							},
@@ -1852,7 +1867,7 @@
 									},
 									"font": "Arial;13;0",
 									"left": 1137,
-									"top": 517,
+									"top": 532,
 									"height": 13,
 									"alpha": -0.5235987755982988,
 									"distance": 30,
@@ -1869,7 +1884,7 @@
 								"$ref": "AAAAAAF74gFNCLcPYEQ="
 							},
 							"lineStyle": 2,
-							"points": "524:776;1152:776;1152:498",
+							"points": "524:776;1152:776;1152:513",
 							"nameLabel": {
 								"$ref": "AAAAAAF74g+Pi7iXcF0="
 							},
@@ -2719,6 +2734,16 @@
 							"name": "estado",
 							"type": "BIT",
 							"length": 0
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "AAAAAAF8x0M0qNqenN4=",
+							"_parent": {
+								"$ref": "AAAAAAF74fh4/LU+pd8="
+							},
+							"name": "secretUrl",
+							"type": "VARCHAR",
+							"length": "60"
 						}
 					]
 				},
