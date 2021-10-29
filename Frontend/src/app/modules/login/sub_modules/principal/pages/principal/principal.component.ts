@@ -59,10 +59,10 @@ export class PrincipalComponent implements OnInit {
   }
 
   // Metodo de preparacion para login.
-  async prepareLogin() {
+  prepareLogin() {
     this.form.markAllAsTouched();
     if (this.form.valid) {
-      await this.authService.loginUser({ correo: this.form.value.correo, contrasenia: this.form.value.password });
+      this.authService.loginUser({ correo: this.form.value.correo, contrasenia: this.form.value.password });
       if (this.authService.isLogged()) {
         this.DoubleAuthAlert();
       } else {
