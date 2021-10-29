@@ -5,22 +5,22 @@ import jwt from 'jsonwebtoken'
 // Recupera el nombre y el correo del funcionario una vez valido la existencia del mismo en la bd
 export const getNombreCorreo = async (dataLogin) => {
 
+    let pool = null
+    let request = null
+
     try {
-        const pool = await getConnection()
-        const request = pool.request()
+        pool = await getConnection()
+        request = pool.request()
         // Parámetros de entrada y salida del sp
-        request.input("correo", sql.VarChar(50), dataLogin.correo)
-        request.input("contrasenia", sql.VarBinary(), dataLogin.contrasenia)
-        request.output("nombre", sql.VarChar(15))
-        request.output("correo", sql.VarChar(50))
-        request.output("dobleAuth", sql.Bit())
+        request.input("correoBE", sql.VarChar(50), dataLogin.correo)
+        request.input("contraseniaBE", sql.VarBinary(), dataLogin.contrasenia)
         // Ejecución del sp
         const result = await request.execute('sp_login')
         // Retorno del objeto con los parámetros que se ocupan en el frontend
         return {
-            nombre: result.output.nombre,
-            correo: result.output.correo,
-            dobleAuth: result.output.dobleAuth,
+            nombre: result.recordset[0].nombre,
+            correo: result.recordset[0].correo,
+            dobleAuth: result.recordset[0].dobleAuth,
             estado: true
         }
     } catch (err) {
@@ -40,13 +40,12 @@ export const getSecret = async (correo) => {
         const pool = await getConnection()
         const request = pool.request()
         // Parámetros de entrada y salida del sp
-        request.input("correo", sql.VarChar(50), correo)
-        request.output("secretUrl", sql.VarChar(180))
+        request.input("correoBE", sql.VarChar(50), correo)
         // Ejecución del sp
         const result = await request.execute('sp_recuperarSecret')
         // Retorno del objeto con los parámetros que se ocupan en el frontend
         return {
-            secretUrl: result.output.secretUrl,
+            secretUrl: result.recordset[0].secretUrl,
             estado: true
         }
     } catch (err) {

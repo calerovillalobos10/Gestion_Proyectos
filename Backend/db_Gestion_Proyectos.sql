@@ -158,8 +158,8 @@ GO
 -- =============================================
 CREATE OR ALTER PROCEDURE sp_login
 (
-@correo VARCHAR(50),
-@contrasenia VARBINARY(MAX)
+@correoBE VARCHAR(50),
+@contraseniaBE VARBINARY(MAX)
 )
 AS
 BEGIN
@@ -170,13 +170,13 @@ BEGIN
     -- Insert statements for procedure here
 	SELECT F.nombre, F.correo, F.dobleAuth
 	FROM tb_Funcionarios as F
-	WHERE @correo = F.correo AND PWDCOMPARE(@contrasenia, F.contrasenia) = 1
+	WHERE @correoBE = F.correo AND PWDCOMPARE(@contraseniaBE, F.contrasenia) = 1
 END
 GO
 
 CREATE OR ALTER PROCEDURE sp_recuperarSecret
 (
-@correo VARCHAR(50)
+@correoBE VARCHAR(50)
 )
 AS
 BEGIN
@@ -187,6 +187,6 @@ BEGIN
     -- Insert statements for procedure here
 	SELECT F.secretUrl
 	FROM tb_Funcionarios as F
-	WHERE @correo = F.correo
+	WHERE @correoBE = F.correo
 END
 GO
