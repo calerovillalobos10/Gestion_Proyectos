@@ -13,7 +13,6 @@ app.set('port', config.port || 3000)
 
 // Middlewares
 app.use(cors('http://localhost:4200/'));
-app.use(express.json())
 
 app.use(express.json())
 
