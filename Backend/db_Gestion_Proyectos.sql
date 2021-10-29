@@ -1,6 +1,9 @@
 CREATE DATABASE db_Gestion_Proyectos;
 
 USE db_Gestion_Proyectos;
+GO
+sp_changedbowner 'sa'
+GO
 
 CREATE TABLE tb_Sexos(
   idSexo TINYINT IDENTITY(1, 1) PRIMARY KEY,
@@ -40,7 +43,8 @@ CREATE TABLE tb_Funcionarios(
   contrasenia VARBINARY(MAX) NOT NULL,
   urlFoto VARCHAR(180) NOT NULL,
   estado BIT DEFAULT 1 NOT NULL,
-  secretUrl VARCHAR(180) NOT NULL
+  secretUrl VARCHAR(180),
+  dobleAuth BIT DEFAULT 0
 
   CONSTRAINT fk_Funcionario_Sexo 
   FOREIGN KEY (idSexo) 
@@ -132,3 +136,57 @@ CREATE TABLE tb_Bitacoras(
   REFERENCES tb_Solicitudes(idSolicitud)
 );
 
+-- ================================================
+-- Template generated from Template Explorer using:
+-- Create Procedure (New Menu).SQL
+--
+-- Use the Specify Values for Template Parameters 
+-- command (Ctrl-Shift-M) to fill in the parameter 
+-- values below.
+--
+-- This block of comments will not be included in
+-- the definition of the procedure.
+-- ================================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE OR ALTER PROCEDURE sp_login
+(
+@correo VARCHAR(50),
+@contrasenia VARBINARY(MAX)
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT F.nombre, F.correo, F.dobleAuth
+	FROM tb_Funcionarios as F
+	WHERE @correo = F.correo AND PWDCOMPARE(@contrasenia, F.contrasenia) = 1
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_recuperarSecret
+(
+@correo VARCHAR(50)
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT F.secretUrl
+	FROM tb_Funcionarios as F
+	WHERE @correo = F.correo
+END
+GO
