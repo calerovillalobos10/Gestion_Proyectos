@@ -36,10 +36,10 @@ router.post('/autenticar', recuperarToken, verifyToken, async (req, res) => {
     Obtiene el correo y la contraseña del frontend
 */
 router.post('/login', async (req, res) => {
-    console.log(req.body)
+
     const dataLogin = req.body; // Falta validar estos datos
     const dataBD = await getNombreCorreo(dataLogin);
-    
+
     if ( dataBD ) {
 
         // Llamado para crear el token del usuario

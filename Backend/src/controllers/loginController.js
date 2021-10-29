@@ -14,14 +14,8 @@ export const getNombreCorreo = async (dataLogin) => {
         // Parámetros de entrada y salida del sp
         request.input("correoBE", sql.VarChar(50), dataLogin.correo)
         request.input("contraseniaBE", sql.VarChar(16), dataLogin.contrasenia)
-        //request.output("nombre", sql.VarChar(15))
-        //request.output("correo", sql.VarChar(50))
-        //request.output("dobleAuth", sql.Bit())
         // Ejecución del sp
         const result = await request.execute('sp_login')
-
-        console.log(result);
-
         // Retorno del objeto con los parámetros que se ocupan en el frontend
         return {
             nombre: result.recordset[0].nombre,
@@ -46,8 +40,7 @@ export const getSecret = async (correo) => {
         const pool = await getConnection()
         const request = pool.request()
         // Parámetros de entrada y salida del sp
-        request.input("correo", sql.VarChar(50), correo)
-        //request.output("secretUrl", sql.VarChar(180))
+        request.input("correoBE", sql.VarChar(50), correo)
         // Ejecución del sp
         const result = await request.execute('sp_recuperarSecret')
         // Retorno del objeto con los parámetros que se ocupan en el frontend
