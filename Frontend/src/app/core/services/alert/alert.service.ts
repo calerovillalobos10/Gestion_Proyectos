@@ -42,8 +42,8 @@ export class AlertService {
   googleAuthAlert(){
     return Swal.fire({
       title: 'Authenticador de Google',
-      text: 'Ingrese el código proporcionado en su autenticador.',
-      input: 'text',
+      text: 'Ingrese el código proporcionado en su autenticador',
+      input: 'password',
       showCancelButton: true,
       confirmButtonText: 'Autenticar',
       cancelButtonText: 'Cancelar',

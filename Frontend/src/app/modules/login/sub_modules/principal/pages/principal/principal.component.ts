@@ -26,12 +26,13 @@ export class PrincipalComponent implements OnInit {
       correo: ["",
         [
           Validators.required,
-          Validators.pattern("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"),
+          Validators.pattern("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"),
           Validators.maxLength(50)
         ]],
       password: ["", [
         Validators.required,
-        Validators.maxLength(20)
+        Validators.maxLength(20),
+        Validators.minLength(8)
       ]],
       remember: []
     })
@@ -58,10 +59,10 @@ export class PrincipalComponent implements OnInit {
   }
 
   // Metodo de preparacion para login.
-  async prepareLogin() {
+  prepareLogin() {
     this.form.markAllAsTouched();
     if (this.form.valid) {
-      await this.authService.loginUser({ correo: this.form.value.correo, contrasenia: this.form.value.password });
+      this.authService.loginUser({ correo: this.form.value.correo, contrasenia: this.form.value.password });
       if (this.authService.isLogged()) {
         this.DoubleAuthAlert();
       } else {

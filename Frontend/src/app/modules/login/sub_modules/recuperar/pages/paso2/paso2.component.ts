@@ -33,9 +33,9 @@ export class Paso2Component implements OnInit {
     this.form.markAllAsTouched();
     if (this.form.valid) {
       if (this.form.value.codigo !== this.loginService.temporal) {
-        this.alert.simpleAlert("El código no coincide.");
+        this.alert.simpleAlert("El código no coincide");
       } else {
-        this.alert.promiseAlert('Codigo correcto')
+        this.alert.promiseAlert('Código correcto')
           .then(() => {
             this.router.navigate(['/login/recuperar/paso3'])
           });

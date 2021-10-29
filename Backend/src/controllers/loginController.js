@@ -13,10 +13,11 @@ export const getNombreCorreo = async (dataLogin) => {
         request = pool.request()
         // Parámetros de entrada y salida del sp
         request.input("correoBE", sql.VarChar(50), dataLogin.correo)
-        request.input("contraseniaBE", sql.VarBinary(), dataLogin.contrasenia)
+        request.input("contraseniaBE", sql.VarChar(16), dataLogin.contrasenia)
         // Ejecución del sp
         const result = await request.execute('sp_login')
         // Retorno del objeto con los parámetros que se ocupan en el frontend
+        
         return {
             nombre: result.recordset[0].nombre,
             correo: result.recordset[0].correo,
