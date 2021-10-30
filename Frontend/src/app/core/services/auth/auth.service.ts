@@ -3,13 +3,14 @@ import { Usuario } from './../../models/Usuario';
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {timeout} from 'rxjs/operators';
+import jwt_decode from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private _loginURL = "http://localhost:3000";
+  private _loginURL = "http://localhost:4000";
 
   @Output() userData:Usuario | undefined;
   @Output() logining: EventEmitter<boolean> = new EventEmitter();
@@ -45,40 +46,31 @@ export class AuthService {
 
   // Loguear a un usuario.
   // Recibe el usuario del back y lo asigna.
-  /*async loginUser(user: Usuario){
+  async loginUser(user: Usuario){
     if(this.userData){
       this.logoutUser();
     }
     try {
-      const res = await this.http.post<Usuario>(`${this._loginURL}/login`, user)
-      .pipe(timeout(500)).toPromise();
-      this.userData = res;
+      const res = await this.http.post<any>(`${this._loginURL}/login`, user)
+      .pipe(timeout(5000)).toPromise();
 
-      console.log(res)
+      if(!res['estado'])
+
+      const tokenPayload = this.openToken(res.token)['dataLogin'];
+
+     
+
+      if(!tokenPayload['estado']){
+        this.userData = undefined
+      }else{
+        this.userData = {correo: tokenPayload['correo'], nombre: tokenPayload['nombre'], dobleAuth: tokenPayload['dobleAuth'] }
+      }
 
     } catch (e) {
-    
-    
+      console.log(e)
       this.userData = undefined
     }
-  }*/
-
-  loginUser(usuario:Usuario) {
-    /*const res = this.http.post<Usuario>(this._loginURL + '/login', usuario).subscribe(res => {
-      console.log(res)
-      this.userData = res;
-    }, err => {
-      console.log(err);
-      
-    });*/
-
-    const res = this.http.post<any>('http://localhost:3000/login', 'hola')
-    console.log('Llego al login user', res);
-    
-    
   }
-
-
 
   logoutUser(){
     localStorage.removeItem("LogedUser");
@@ -107,5 +99,15 @@ export class AuthService {
     return pin === '333';
     //return status;
   }
+
+  openToken(token: string): any {
+    try{
+        return jwt_decode(token);
+    }
+    catch(Error){
+        return null;
+    }
+  }
+  
 
 }

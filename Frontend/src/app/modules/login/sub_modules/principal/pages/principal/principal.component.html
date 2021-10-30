@@ -21,7 +21,8 @@
           <ng-container *ngTemplateOutlet="contra_error; context: {error: form.get('password')?.errors}"></ng-container>
         </div>
 
-        <a class="link recovery" (click)="toRecovery()">Recuperar contraseña</a>
+        <!-- Recuperar contraseña -->
+        <!-- <a class="link recovery" (click)="toRecovery()">Recuperar contraseña</a>-->
 
         <button class="btn">Acceder</button>
 
@@ -37,7 +38,7 @@
 <ng-template #correo_error let-error="error">
   <p class="error-input" *ngIf="form.get('correo')?.dirty || form.get('correo')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
-    <span class="login_error" *ngIf="error?.pattern">No es un email </span>
+    <span class="login_error" *ngIf="error?.email">No es un email </span>
     <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Maximo {{error.maxlength.requiredLength}}, actual {{error.maxlength.actualLength}}  </span>
 </p>
 </ng-template>
