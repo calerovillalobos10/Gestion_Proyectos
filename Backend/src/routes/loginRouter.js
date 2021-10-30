@@ -46,7 +46,7 @@ router.post('/login', async (req, res) => {
     if ( dataBD ) {
 
         // Llamado para crear el token del usuario
-        const token = getToken(dataLogin, res);
+        const token = getToken(dataBD, res);
 
         if ( token ) {
 

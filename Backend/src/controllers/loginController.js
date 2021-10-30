@@ -83,13 +83,13 @@ export const verifySecret = (secret, token) => {
 }
 
 // Crea el toquen para el funcionario
-export const getToken = (dataLogin, res) => {
+export const getToken = (dataBD, res) => {
     
     /* 
       La función sign de jwt permite crear el token, agregandole una cadena de caracteres (SECRETKEY), la cual se obtiene de las env
       {expiresIn: '10h'} funciona para que el token expire en cierto tiempo, y así hacer que el usuario tenga que loguear nuevamente
     */
-    jwt.sign({dataLogin}, process.env.SECRETKEY+'', {expiresIn: '10h'}, (err, token) => {
+    jwt.sign({dataBD}, process.env.SECRETKEY+'', {expiresIn: '10h'}, (err, token) => {
 
         if (err) {
 
