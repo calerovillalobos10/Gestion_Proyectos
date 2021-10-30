@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-principal',
@@ -59,10 +58,10 @@ export class PrincipalComponent implements OnInit {
   }
 
   // Metodo de preparacion para login.
-  prepareLogin() {
+  async prepareLogin() {
     this.form.markAllAsTouched();
     if (this.form.valid) {
-      this.authService.loginUser({ correo: this.form.value.correo, contrasenia: this.form.value.password });
+      await this.authService.loginUser({ correo: this.form.value.correo, contrasenia: this.form.value.password });
       if (this.authService.isLogged()) {
         this.DoubleAuthAlert();
       } else {
@@ -74,7 +73,6 @@ export class PrincipalComponent implements OnInit {
   // Redireccion a componente de recuperacion.
   toRecovery() {
     this.desaparecer = true;
-
     setTimeout(() => {
       this.router.navigate(["/login/recuperar"]);
     }, 500)

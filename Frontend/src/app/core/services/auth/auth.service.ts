@@ -19,7 +19,7 @@ export class AuthService {
     private http:HttpClient,
     private router:Router
     ){
-      this.checkStored();
+      //this.checkStored();
     }
 
   async checkStored() {
@@ -54,27 +54,22 @@ export class AuthService {
       const res = await this.http.post<any>(`${this._loginURL}/login`, user)
       .pipe(timeout(5000)).toPromise();
 
-      if(!res['estado'])
-
-      const tokenPayload = this.openToken(res.token)['dataLogin'];
-
-     
-
-      if(!tokenPayload['estado']){
+      if(res['mensaje']){
         this.userData = undefined
       }else{
+        const tokenPayload = this.openToken(res["token"])['dataBD'];
+        localStorage.setItem("id_token", res["token"])
         this.userData = {correo: tokenPayload['correo'], nombre: tokenPayload['nombre'], dobleAuth: tokenPayload['dobleAuth'] }
       }
 
     } catch (e) {
-      console.log(e)
       this.userData = undefined
     }
   }
 
   logoutUser(){
     localStorage.removeItem("LogedUser");
-     // Destruir aca el token tambien.
+    localStorage.removeItem("id_token");
     this.userData = undefined;
   }
 
@@ -88,16 +83,15 @@ export class AuthService {
     let status = false;
 
     try {
-      const res = await this.http.post<boolean>(this._loginURL, {correo: this.userData?.correo, pin:pin})
-      .pipe(timeout(500)).toPromise();
-      status = res;
+      const res = await this.http.post<any>(`${this._loginURL}/autenticar`, {correo: this.userData?.correo, pin:pin})
+      .pipe(timeout(5000)).toPromise();
+      status = res['estado'];
+
     } catch (e) {
       status = false;
     }
 
-    // Simulacion, el pin sera 333
-    return pin === '333';
-    //return status;
+    return status;
   }
 
   openToken(token: string): any {
@@ -108,6 +102,5 @@ export class AuthService {
         return null;
     }
   }
-  
-
+ 
 }

@@ -2,7 +2,6 @@
 import {getConnection, sql} from '../database/connection'
 import jwt from 'jsonwebtoken'
 import speakeasy from 'speakeasy'
-import qrcode from 'qrcode'
 
 // Recupera el nombre y el correo del funcionario una vez valido la existencia del mismo en la bd
 export const getNombreCorreo = async (dataLogin) => {
@@ -47,8 +46,10 @@ const createSecret = () => {
 // Recupera el secret para la autentificación de google
 export const getSecret = async (correo) => {
 
+    let pool = null;
+
     try {
-        const pool = await getConnection()
+        pool = await getConnection()
         const request = pool.request()
         // Parámetros de entrada y salida del sp
         request.input("correoBE", sql.VarChar(50), correo)
@@ -71,12 +72,13 @@ export const getSecret = async (correo) => {
 
 // Función para que valide el pin
 export const verifySecret = (secret, token) => {
+    console.log("Llego el verify token");
 
     const verify = speakeasy.totp.verify({
 
-        secret,
+        secret:secret,
         encoding: 'ascii',
-        token
+        token:token
     })
 
     return ( verify ) ? true : false 
