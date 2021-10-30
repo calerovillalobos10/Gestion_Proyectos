@@ -23,7 +23,7 @@ router.post('/autenticar', recuperarToken, verifyToken, async (req, res) => {
 
         // Se envía el secret al frontend
         res.json({
-            "estado": secret.estado
+            "estado": true
         })
     } else {
         // Si sucede algún error se le notifica al frontend
