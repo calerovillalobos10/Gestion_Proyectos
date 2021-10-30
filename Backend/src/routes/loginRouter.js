@@ -1,6 +1,6 @@
 // Importaciones necesarias
 import {Router} from 'express'
-import {getNombreCorreo, getToken, getSecret, verifyToken, recuperarToken, jwt} from '../controllers/loginController'
+import {getNombreCorreo, getToken, getSecret, verifyToken, recuperarToken, verifySecret} from '../controllers/loginController'
 
 // Instancia
 const router = Router()
@@ -8,19 +8,22 @@ const router = Router()
 // Rutas de login
 /*
     Envía el secret mediante el código, para ver si es válido
-    Obtiene el correo del frontend
+    Obtiene el correo del frontend y un pin
 */
 router.post('/autenticar', recuperarToken, verifyToken, async (req, res) => {
 
     const correo = req.body.correo; // Falta validar este dato
+    const pin = req.body.pin; // Falta validar este dato
     const secret = await getSecret(correo);
 
-    if (secret) {
+    // Se llama a la función que valida el Pin
+    const validarPin = verifySecret(secret.secretUrl, pin);
+
+    if (validarPin) {
 
         // Se envía el secret al frontend
         res.json({
-            "secretUrl": secret.secretUrl,
-            "estado": secret.estado,
+            "estado": secret.estado
         })
     } else {
         // Si sucede algún error se le notifica al frontend

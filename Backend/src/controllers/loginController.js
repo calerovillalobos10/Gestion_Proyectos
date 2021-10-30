@@ -1,6 +1,8 @@
 // Importaciones necesarias
 import {getConnection, sql} from '../database/connection'
 import jwt from 'jsonwebtoken'
+import speakeasy from 'speakeasy'
+import qrcode from 'qrcode'
 
 // Recupera el nombre y el correo del funcionario una vez valido la existencia del mismo en la bd
 export const getNombreCorreo = async (dataLogin) => {
@@ -34,6 +36,14 @@ export const getNombreCorreo = async (dataLogin) => {
     }
 };
 
+// Esta función genera el Secret
+const createSecret = () => {
+
+    const secret = speakeasy.generateSecret({
+        name: "GestionDevs"
+    })
+}
+
 // Recupera el secret para la autentificación de google
 export const getSecret = async (correo) => {
 
@@ -60,7 +70,17 @@ export const getSecret = async (correo) => {
 };
 
 // Función para que valide el pin
+export const verifySecret = (secret, token) => {
 
+    const verify = speakeasy.totp.verify({
+
+        secret,
+        encoding: 'ascii',
+        token
+    })
+
+    return ( verify ) ? true : false 
+}
 
 // Crea el toquen para el funcionario
 export const getToken = (dataLogin, res) => {
