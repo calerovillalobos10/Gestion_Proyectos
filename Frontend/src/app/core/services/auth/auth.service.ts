@@ -19,27 +19,47 @@ export class AuthService {
     private http:HttpClient,
     private router:Router
     ){
-      //this.checkStored();
+      this.checkStored();
     }
 
   async checkStored() {
-    const stored = JSON.parse(localStorage.getItem("LogedUser") || '{}' );
-      
-    // Verifica la existencia de un usuario almacenado.
+    const stored = localStorage.getItem("id_token") || '{}';
+   
+    // Verifica la existencia de un token almacenado.
     if(stored){
-      await this.loginUser({correo: stored.correo, contrasenia: stored.contrasenia});
+
+      if(await this.validateToken()){
+        const tokenPayload = this.openToken(stored)['dataBD'];
+        this.loadDataToken(tokenPayload);
       
       // Si es valido me permite acceder.
-      if(this.isLogged()){
-        this.router.navigate(['/inicio'])
+          this.router.navigate(['/inicio'])
+     
       }else{
         // Si es invalido se elimina.
-        localStorage.removeItem("LogedUser")
+        localStorage.removeItem("id_token")
       }
     }
   }
+
+  /*
+    Envia una peticion al servidor solo para validar si el token al realizar el refrescamiento aun no ha expirado.
+  */
+  async validateToken(){
+    let status = false;
+    try {
+      const res = await this.http.post<any>(`${this._loginURL}/autenticar`, {correo: 1, pin:1})
+      .pipe(timeout(5000)).toPromise();
+      status = true;
+    } catch (e) {
+      status = false;
+    }
+    return status
+  }
   
-  // Verificar si un usuario esta logueado.
+  /*
+    Verificar si un usuario esta logueado.
+  */ 
   isLogged() {
     return this.userData !== undefined;
   }
@@ -58,8 +78,8 @@ export class AuthService {
         this.userData = undefined
       }else{
         const tokenPayload = this.openToken(res["token"])['dataBD'];
+        this.loadDataToken(tokenPayload);
         localStorage.setItem("id_token", res["token"])
-        this.userData = {correo: tokenPayload['correo'], nombre: tokenPayload['nombre'], dobleAuth: tokenPayload['dobleAuth'] }
       }
 
     } catch (e) {
@@ -67,8 +87,12 @@ export class AuthService {
     }
   }
 
+  // Carga los datos en memoria apartir del token seleccionado
+  loadDataToken(tokenPayload:any){
+    this.userData = {correo: tokenPayload['correo'], nombre: tokenPayload['nombre'], dobleAuth: tokenPayload['dobleAuth'] }
+  }
+
   logoutUser(){
-    localStorage.removeItem("LogedUser");
     localStorage.removeItem("id_token");
     this.userData = undefined;
   }
@@ -90,7 +114,6 @@ export class AuthService {
     } catch (e) {
       status = false;
     }
-
     return status;
   }
 

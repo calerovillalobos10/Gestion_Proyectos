@@ -45,8 +45,11 @@ export class ListComponent implements OnInit {
    
   }
 
+  // Para filtrar la tabla de funcionarios.
   filter_table(){
-    alert(this.form.value.filter)
+    if(this.form.valid){
+      alert(this.form.value.filter)
+    }
   }
 
   add_func(){

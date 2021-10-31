@@ -83,7 +83,6 @@ export class PrincipalComponent implements OnInit {
     this.alertService.googleAuthAlert().then((result) => {
       if (result.isConfirmed) {
           this.alertService.promiseAlert('Acceso garantizado').then(() => {
-          localStorage.setItem('LogedUser', JSON.stringify(this.authService.getUserData()));
           this.makeLogin();
         });
       }
