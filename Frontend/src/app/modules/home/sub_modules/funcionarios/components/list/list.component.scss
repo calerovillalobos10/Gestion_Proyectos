@@ -1,0 +1,106 @@
+.table{
+  z-index: 1;
+  margin: 11em;
+}
+
+
+.actions{
+  justify-content: space-evenly;
+}
+
+.action_btn{
+  display: inline-block;
+  font-size: 1.1em;
+  width: 2em;
+  height: 2em;
+  padding: .5em;
+  margin:.2em;
+  text-align: center;
+  line-height: .5em;
+  color: white;
+  border-radius: .2em;
+  box-shadow: 3px 3px 6px #4b4b4b8f;
+  cursor: pointer;
+  transition: transform 150ms;
+}
+
+.action_btn:hover{
+  transform: scale(1.1);
+  filter: brightness(1.1);
+}
+
+.action_btn:active{
+  transform: scale(1);
+}
+
+.action_btn.del{
+  background-color: var(--clr-danger);
+}
+
+.action_btn.edi{
+  background-color: var(--clr-warning);
+}
+
+.action_btn.det{
+  background-color: var(--clr-success);
+}
+
+.limited_colum{
+  text-overflow: ellipsis;
+  max-width: 18ch;
+  overflow: hidden;
+  user-select: none;
+  
+}
+
+.table{
+  z-index: 1000;
+  margin-bottom: 5em;
+}
+
+.table_tools{
+  justify-content: space-between;
+  margin-bottom: 1em;
+}
+
+
+.filter_text{
+  border-radius: .4em;
+  padding: .4em;
+  border: none;
+  box-shadow: 0 0 5px rgba(71, 71, 71, 0.233);
+}
+
+.filter_text:focus{
+  outline: 1px solid var(--clr-accent-500);
+}
+
+.add_functionary,
+.filter_functionary{
+  cursor: pointer;
+  padding: .5em;
+  color: white;
+  background-color: var(--clr-base-100);
+  border-radius: .5em;
+  margin-left: 1em;
+  transition: transform 150ms;
+}
+
+
+.add_functionary:hover,
+.filter_functionary:hover{
+  transform: scale(1.2);
+}
+
+.add_functionary:active,
+.filter_functionary:active{
+  transform: scale(1);
+}
+
+.button_submit{
+  outline: none;
+  padding: 0;
+  margin:  0.2em;
+  border: none;
+  background-color: alpha($color: #00000000);
+}

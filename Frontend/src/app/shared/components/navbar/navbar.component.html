@@ -1,4 +1,7 @@
+<div class="content">
+  <input type="checkbox" id="hidden_toggle" class="hidden_toggle" checked>
 <div class="side-bar">
+  
   <ul class="tools" id='{{selected_tab}}'>
     <li class="tools_item inicio"  [routerLink]="['/','inicio']" (click) = 'emmit("inicio")'>
       Inicio
@@ -14,6 +17,13 @@
     </li>
     <li class="tools_item funcionarios"  [routerLink]="['/','funcionarios']"  (click) = 'emmit("funcionarios")'>
       Funcionarios
-    </li>
+    </li>  
   </ul>
+  <div class="row">
+    <label class="toolbox" for="hidden_toggle">
+    <i class="fas fa-box-open op"></i>
+    <i class="fas fa-box cl"></i>
+  </label>
+  </div>
+</div>
 </div>

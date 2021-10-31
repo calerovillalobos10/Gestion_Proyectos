@@ -12,8 +12,11 @@ export class ErrImgDirective {
   constructor(private elementRef:ElementRef) {}
   @HostListener('error')
   loadDefaultImage(){
+    
     const element = this.elementRef.nativeElement;
-    element.src = '../assets/img_not_found.jpg'
+    element.src = '../../../assets/images/img_not_found.jpg'
+
   }
+
 
 }

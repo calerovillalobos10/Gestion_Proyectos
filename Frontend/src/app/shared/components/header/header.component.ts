@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-
+  public userImage:string = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_hbUApsP7Dsm3dj3X6fvzol4_f9Q6ITmaDA&usqp=CAU';
   public user?:Usuario;
 
   constructor(
@@ -27,7 +27,6 @@ export class HeaderComponent implements OnInit {
       setTimeout(() => {
         this.router.navigate(['/login'])
       },500)
-   
   }
 
 }

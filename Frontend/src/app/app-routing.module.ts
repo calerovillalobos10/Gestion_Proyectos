@@ -15,7 +15,7 @@ const routes: Routes = [
     path:'', 
     component: HomeComponent,
     loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule),
-    canActivate:[AuthGuard],
+    //canActivate:[AuthGuard],
   },
 
 ];
