@@ -130,7 +130,7 @@
 
   &.input {
     &[type="date"] {
-      padding: 0.7em;
+      padding: 0.7em !important;
     }
   }
 }
@@ -149,7 +149,7 @@
 }
 
 .primary_box .input_group {
-  margin-bottom: 1.5em;
+  margin-bottom: 2.5em;
   position: relative;
 }
 
@@ -244,14 +244,26 @@ input[type="file"] {
   display: none;
 }
 
+input[type="date"] {
+  padding: 0.7em !important;
+}
+
 .custom-file-upload {
   display: inline-block;
 
   cursor: pointer;
   border: none;
-  padding: 0.9em;
+  padding: 0.7em;
   box-shadow: 0.2em 0.2em 0.4em var(--clr-neutral-400);
   outline: none;
   width: 100%;
   transition: outline-width 400ms;
+}
+
+.login_error{
+  color: tomato;
+  position: absolute;
+  top: 3.2em;
+  font-size: .8em;
+  user-select: none;
 }

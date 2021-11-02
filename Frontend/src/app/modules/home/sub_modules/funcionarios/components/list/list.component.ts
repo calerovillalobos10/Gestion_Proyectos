@@ -15,7 +15,8 @@ export class ListComponent implements OnInit {
   
   
   public filterForm!: FormGroup;
-
+  private lastFilter: string;
+  
   private allRows:any = [];
   public filteredRows:any = [];
 
@@ -28,6 +29,13 @@ export class ListComponent implements OnInit {
   
     this.loadTable();
     this.filteredRows = this.allRows;
+
+    this.service.updateNeeded.subscribe((data)=> {
+      if(data){
+        this.loadTable();
+      }
+    })
+
   }
 
   ColumnMode = ColumnMode;
@@ -38,34 +46,36 @@ export class ListComponent implements OnInit {
     private service:FuncionariosService
   ) {
   
-    
+    this.lastFilter = '';
     this.filterForm = this.formBuilder.group({
-      filter: ["",
-        [
-          Validators.required
-        ]]
-    })
-
+      filter: ["", [ Validators.required ]] })
 
   }
 
   loadTable() {
     this.allRows = fixedData;
+    this.applyFilter();
   }
 
   // Para filtrar la tabla de funcionarios.
   filter_table(){
-    if(this.filterForm.valid){
-      this.filteredRows = [];
-      this.allRows.forEach((element: { nombre: string; }) => {
-        if(element.nombre.toLocaleLowerCase().startsWith(this.filterForm.value.filter.toLocaleLowerCase())){
-          this.filteredRows.push(element)
-        }
-      });
-    }else{
-      this.filteredRows = this.allRows;
-    }
+    this.lastFilter = this.filterForm.value.filter;
+    this.applyFilter();
   }
+
+    // Aplica el filtro
+    applyFilter(){
+      if(this.lastFilter !== ''){
+        this.filteredRows = [];
+        this.allRows.forEach((element: { nombre: string; }) => {
+          if(element.nombre.toLocaleLowerCase().startsWith(this.filterForm.value.filter.toLocaleLowerCase())){
+            this.filteredRows.push(element)
+          }
+        });
+      }else{
+        this.filteredRows = this.allRows;
+      }
+    }
 
   add_func(){
     this.service.modalNeeded.emit({subject: 'addModal', status:true});
@@ -101,48 +111,47 @@ export class ListComponent implements OnInit {
     this.setColumns(event.target.innerWidth);
   }
 
+  getFunc(id: number) {
+    let func = null;
+    this.allRows.forEach((element: { id: number; }) => {
+      if(element.id === id){
+        func = element;
+      }
+    });
+    return func;
+   }
+ 
+
   /*
     Asigna un set de columnas acorde al ancho de ventana actual
   */
   setColumns(width:number){
+    this.columns = [
+      { name: 'nombre', title: 'Nombre', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl }, 
+      { name: 'apellido1', title: 'Primer apellido', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl}, ]
+
     if(width > 1300){
-      this.columns = [
-        { name: 'nombre', title: 'Nombre', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl }, 
-        { name: 'apellido1', title: 'Primer apellido', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl}, 
+      this.columns = [...this.columns,
         { name: 'apellido2', title: 'Segundo apellido', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl}, 
         { name: 'sexo', title: 'Sexo', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl}, 
-        { name: 'tipo', title: 'Tipo', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl}, 
-        { name: 'departamento', title: 'Departamento',headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl }, 
-        { name: 'acciones', title: 'Acciones', headerTemplate: this.hdrTpl, cellTemplate: this.actionTmpl }];
-    }else if (width > 950){
-      this.columns = [
-        { name: 'nombre', title: 'Nombre', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl }, 
-        { name: 'apellido1', title: 'Primer apellido', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl},
-        { name: 'tipo', title: 'Tipo', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl}, 
-        { name: 'departamento', title: 'Departamento',headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl }, 
-        { name: 'acciones', title: 'Acciones', headerTemplate: this.hdrTpl, cellTemplate: this.actionTmpl }];
+      ];
     }
-    else if (width > 600){
-      this.columns = [
-        { name: 'nombre', title: 'Nombre', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl }, 
-        { name: 'apellido1', title: 'Primer apellido', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl},
-        { name: 'departamento', title: 'Departamento',headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl }, 
-        { name: 'acciones', title: 'Acciones', headerTemplate: this.hdrTpl, cellTemplate: this.actionTmpl }];
+    
+    if (width > 950){
+      this.columns = [...this.columns,
+        { name: 'tipo', title: 'Tipo', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl}, 
+      ];
     }
+
+    this.columns = [...this.columns,
+      { name: 'departamento', title: 'Departamento',headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl }, 
+      { name: 'acciones', title: 'Acciones', headerTemplate: this.hdrTpl, cellTemplate: this.actionTmpl }]
   } 
 
-  getFunc(id: number) {
-   let func = null;
-   this.allRows.forEach((element: { id: number; }) => {
-     if(element.id === id){
-       func = element;
-     }
-   });
-   return func;
-  }
-
-  
 }
+
+
+
 
 /* Datos de prueba para eliminar*/
 const fixedData = [{id:1, nombre: 'Alberto', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
@@ -157,5 +166,3 @@ const fixedData = [{id:1, nombre: 'Alberto', apellido1: 'Primer apellido', apell
 {id:10, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
 {id:11, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
 {id:13, nombre: 'aa', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' }]
-
-

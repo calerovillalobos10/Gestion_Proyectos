@@ -6,7 +6,7 @@
     <div>
       <h1 class="title">Registro de funcionario</h1>
 
-      <form [formGroup]="form" (submit)="add_func()" >
+      <form [formGroup]="form" (submit)="edt_func()" >
         <div class="row">
           <div class="col mr-1">
             <div class="input_group">
@@ -23,6 +23,7 @@
               </label>
 
               <label class="label"> Foto</label>
+              <ng-container *ngTemplateOutlet="foto_error; context: {error: form.get('foto')?.errors}"></ng-container>
             </div>
           </div>
         </div>
@@ -33,6 +34,7 @@
             <div class="input_group">
               <input class="input" type="text" placeholder=" " id="correo" formControlName="correo" />
               <label class="label" for="correo"> Correo</label>
+              <ng-container *ngTemplateOutlet="correo_error; context: {error: form.get('correo')?.errors}"></ng-container>
             </div>
 
             <div class="input_group">
@@ -43,6 +45,7 @@
                 <option value="3">Informatica</option>
               </select>
               <label class="label" for="departamento"> Departamento</label>
+              <ng-container *ngTemplateOutlet="departamento_error; context: {error: form.get('departamento')?.errors}"></ng-container>
             </div>
 
             <div class="input_group">
@@ -54,6 +57,7 @@
               </select>
          
               <label class="label" for="tipo"> Tipo de funcionario</label>
+              <ng-container *ngTemplateOutlet="tipo_error; context: {error: form.get('tipo')?.errors}"></ng-container>
             </div>
 
             <div class="input_group">
@@ -63,6 +67,7 @@
                 <option value="2">Mujer</option>
               </select>
               <label class="label" for="sexo"> Sexo</label>
+              <ng-container *ngTemplateOutlet="sexo_error; context: {error: form.get('sexo')?.errors}"></ng-container>
             </div>
 
           </div>
@@ -72,15 +77,18 @@
             <div class="input_group">
               <input class="input" type="text" placeholder=" " id="nombre" formControlName="nombre"/>
               <label class="label" for="nombre"> Nombre</label>
+              <ng-container *ngTemplateOutlet="nombre_error; context: {error: form.get('nombre')?.errors}"></ng-container>
             </div>
 
             <div class="input_group">
               <input class="input" type="text" placeholder=" " id="apellido1" formControlName="apellido1" />
               <label class="label" for="apellido1"> Primer apellido</label>
+              <ng-container *ngTemplateOutlet="apellido1_error; context: {error: form.get('apellido1')?.errors}"></ng-container>
             </div>
             <div class="input_group">
               <input class="input" type="text" placeholder=" " id="apellido2" formControlName="apellido2" />
               <label class="label" for="apellido2"> Segundo apellido</label>
+              <ng-container *ngTemplateOutlet="apellido2_error; context: {error: form.get('apellido2')?.errors}"></ng-container>
             </div>
 
 
@@ -88,6 +96,7 @@
             <div class="input_group">
               <input class="input" type="date" id="nacimiento" formControlName="nacimiento"/>
               <label class="label" for="nacimiento"> Fecha de nacimiento</label>
+              <ng-container *ngTemplateOutlet="nacimiento_error; context: {error: form.get('nacimiento')?.errors}"></ng-container>
             </div>
           </div>
         </div>
@@ -100,3 +109,67 @@
     </div>
   </div>
 </div>
+
+
+
+<ng-container >
+
+  <!-- Templates de error -->
+
+<ng-template #correo_error let-error="error">
+  <p class="error-input" *ngIf="form.get('correo')?.dirty || form.get('correo')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #departamento_error let-error="error">
+  <p class="error-input" *ngIf="form.get('departamento')?.dirty || form.get('departamento')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #tipo_error let-error="error">
+  <p class="error-input" *ngIf="form.get('tipo')?.dirty || form.get('tipo')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #nombre_error let-error="error">
+  <p class="error-input" *ngIf="form.get('nombre')?.dirty || form.get('nombre')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #apellido1_error let-error="error">
+  <p class="error-input" *ngIf="form.get('apellido1')?.dirty || form.get('apellido1')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+
+<ng-template #apellido2_error let-error="error">
+  <p class="error-input" *ngIf="form.get('apellido2')?.dirty || form.get('apellido2')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+
+<ng-template #sexo_error let-error="error">
+  <p class="error-input" *ngIf="form.get('sexo')?.dirty || form.get('sexo')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #nacimiento_error let-error="error">
+  <p class="error-input" *ngIf="form.get('nacimiento')?.dirty || form.get('nacimiento')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #foto_error let-error="error">
+  <p class="error-input" *ngIf="form.get('foto')?.dirty || form.get('foto')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+</ng-container>

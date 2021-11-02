@@ -1,4 +1,4 @@
-import { Funcionario } from './../../../../../../core/models/Funcionario';
+import { Funcionario } from '@core/models/Funcionario';
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -12,7 +12,6 @@ export class DetModalComponent implements OnInit {
   public formToggle:boolean;
   public userId:number;
   public openedModal:boolean;
-
   public funcionario:Funcionario | undefined
 
   constructor(

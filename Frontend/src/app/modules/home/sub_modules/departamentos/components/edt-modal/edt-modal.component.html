@@ -13,6 +13,7 @@
             <div class="input_group">
               <input class="input" type="text" placeholder=" " id="descripcion" formControlName="descripcion" />
               <label class="label" for="descripcion"> Departamento </label>
+              <ng-container *ngTemplateOutlet="descripcion_error; context: {error: form.get('descripcion')?.errors}"></ng-container>
             </div>
 
           </div>
@@ -25,3 +26,8 @@
     </div>
   </div>
 </div>
+
+<ng-template #descripcion_error let-error="error">
+  <p class="error-input" *ngIf="form.get('descripcion')?.dirty || form.get('descripcion')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+</p>

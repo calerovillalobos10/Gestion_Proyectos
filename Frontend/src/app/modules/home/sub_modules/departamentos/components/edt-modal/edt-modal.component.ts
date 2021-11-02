@@ -1,20 +1,20 @@
 import { AlertService } from '@core/services/alert/alert.service';
 import { DepartamentosService } from '@core/services/Departamentos/departamentos.service';
-import { Departamento } from '@core/models/Departamento';
-
-import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+
+import { Departamento } from '@core/models/Departamento';
 
 @Component({
   selector: 'app-edt-modal',
   templateUrl: './edt-modal.component.html',
   styleUrls: ['./edt-modal.component.scss']
 })
+
 export class EdtModalComponent implements OnInit {
   public form!: FormGroup;
   public formToggle: boolean;
   public openedModal: boolean;
-  public modalAction: string;
   public departamentId: number;
 
   constructor(
@@ -22,7 +22,7 @@ export class EdtModalComponent implements OnInit {
     private service: DepartamentosService,
     private alertService: AlertService,
   ) {
-    this.modalAction = 'Registrar'
+    
     this.formToggle = false
     this.openedModal = false
     this.departamentId = 0;
@@ -41,7 +41,6 @@ export class EdtModalComponent implements OnInit {
         this.openedModal = data.status
         this.formToggle = !data.status
         this.departamentId = data.departamentId
-        this.modalAction = 'Editar'
         this.loadEditDept()
       }
     })
@@ -49,17 +48,27 @@ export class EdtModalComponent implements OnInit {
 
   // Esta funcion tiene que traer del back el usuario a editar.
   loadEditDept() {
-    const userData: Departamento = { descripcion: 'Luis@gmail.com' }
+    const departmentData: Departamento = { descripcion: 'Luis@gmail.com' }
     this.form.patchValue({
-      descripcion: userData.descripcion
+      descripcion: departmentData.descripcion
     })
   }
 
-  edt_dept() {
+  // Envia los datos de la edicion del departamento
+  async edt_dept() {
+    this.form.markAllAsTouched();
     if(this.form.valid){
       
-    }else{
-      this.alertService.simpleAlert('Formulario incorrecto')
+      // Espera la respuesta del back.
+      if(await this.service.update({descripcion:this.form.value.descripcion, idDepartamento:this.departamentId})){
+          this.closeModal();  
+          this.alertService.promiseAlert('Se modificó correctamente el departamento').then(()=>{
+          this.service.updateNeeded.emit(true)
+        })
+      }else{
+        // Si el backend envia una respuesta incorrecta.
+        this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
+      }
     }
   }
 
@@ -69,5 +78,4 @@ export class EdtModalComponent implements OnInit {
     setTimeout(() => { this.openedModal = false }, 500)
     this.form.reset()
   }
-
 }

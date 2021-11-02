@@ -15,7 +15,11 @@ p{
 }
 
 .user_image{
-  max-width: 200px;
+  min-width: 100px;
+  max-width: 150px;
+  border-radius: 1em;
+  box-shadow: 0 0 0 3px rgba(90, 90, 90, 0.438);
+  margin-bottom: 1em;
 }
 
 .user_data{
