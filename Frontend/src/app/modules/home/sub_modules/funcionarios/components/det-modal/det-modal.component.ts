@@ -33,8 +33,11 @@ export class DetModalComponent implements OnInit {
     })
   }
 
-  loadUser(){
-    // Este usuario se pide al back
+  async loadUser(){
+    
+
+     //const userData: Funcionario = await this.service.getById(this.userId); --------------------------------------- Al tener el back ----------------------
+
     const userData: Funcionario =
     {
       correo: 'Luis@gmail.com', idTipoFuncionario: '1', idDepartamento: '2', nombre: 'Luis', apellido1: "apellido1",

@@ -52,7 +52,7 @@ export class EdtModalComponent implements OnInit {
   // Esta funcion tiene que traer del back el usuario a editar.
   async loadEditUser() {
 
-    //const userData: Funcionario = await this.service.getById(this.userId);
+    //const userData: Funcionario = await this.service.getById(this.userId); -------------------------------Al tener el back----------------------
 
     const userData: Funcionario =
     {
@@ -85,7 +85,7 @@ export class EdtModalComponent implements OnInit {
     if(this.form.valid){
       
       // Envia datos y espera la respuesta del backend.
-      if(await this.service.update(this.obtainFunc())){
+      if(await this.service.update(this.obtainFunc())){ //--------------------------------------- Al tener el back ----------------------
           this.closeModal();  
           this.alertService.promiseAlert('Se agregó correctamente el funcionario').then(()=>{
           this.service.updateNeeded.emit(true)
@@ -143,14 +143,41 @@ export class EdtModalComponent implements OnInit {
         correo: ["", [
             Validators.required,
             Validators.pattern("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"),
-            Validators.maxLength(50)]],
-        departamento: ["", [ Validators.required, Validators.min(1), Validators.max(255)]],
-        tipo: ["", [ Validators.required, Validators.min(1), Validators.max(255)]],
-        foto: ["",],
-        nombre: ["", [ Validators.required, Validators.maxLength(15) ]],
-        apellido1: ["", [ Validators.required, Validators.maxLength(15) ]],
-        apellido2: ["", [ Validators.required, Validators.maxLength(15) ]],
-        sexo: ["", [ Validators.required, Validators.min(1), Validators.max(255) ]],
+            Validators.maxLength(50) ]],
+        departamento: ["", [ 
+          Validators.required, 
+          Validators.min(1), 
+          Validators.max(255)
+        ]],
+        tipo: ["", [ 
+          Validators.required, 
+          Validators.min(1), 
+          Validators.max(255)
+        ]],
+        foto: ["", [ 
+          Validators.required,
+          Validators.pattern('^(.)*.(jpe?g|png|webp)$')
+        ]],
+        nombre: ["", [ 
+          Validators.required, 
+          Validators.minLength(3), 
+          Validators.maxLength(15) 
+        ]],
+        apellido1: ["", [
+          Validators.required, 
+          Validators.minLength(3), 
+          Validators.maxLength(15) 
+        ]],
+        apellido2: ["", [ 
+          Validators.required, 
+          Validators.minLength(3), 
+          Validators.maxLength(15) 
+        ]],
+        sexo: ["", [ 
+          Validators.required, 
+          Validators.min(1), 
+          Validators.max(255) 
+        ]],
         nacimiento: ["", [ Validators.required ]],
       })
     }

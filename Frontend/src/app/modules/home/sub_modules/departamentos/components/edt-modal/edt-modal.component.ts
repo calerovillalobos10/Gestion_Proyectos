@@ -1,5 +1,5 @@
 import { AlertService } from '@core/services/alert/alert.service';
-import { DepartamentosService } from '@core/services/Departamentos/departamentos.service';
+import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
@@ -28,10 +28,10 @@ export class EdtModalComponent implements OnInit {
     this.departamentId = 0;
 
     this.form = this.formBuilder.group({
-      descripcion: ["",
-        [ Validators.required,
-          Validators.maxLength(50)
-        ]]
+      descripcion: ["", [ 
+        Validators.required, 
+        Validators.minLength(3),
+        Validators.maxLength(30)]]
     })
   }
 
@@ -48,6 +48,7 @@ export class EdtModalComponent implements OnInit {
 
   // Esta funcion tiene que traer del back el usuario a editar.
   loadEditDept() {
+    //const departmentData: Departamento = this.service.getById(this.departamentId); //-------------------------Al tener el back---------------
     const departmentData: Departamento = { descripcion: 'Luis@gmail.com' }
     this.form.patchValue({
       descripcion: departmentData.descripcion
@@ -55,12 +56,12 @@ export class EdtModalComponent implements OnInit {
   }
 
   // Envia los datos de la edicion del departamento
-  async edt_dept() {
+  edt_dept() {
     this.form.markAllAsTouched();
     if(this.form.valid){
       
-      // Espera la respuesta del back.
-      if(await this.service.update({descripcion:this.form.value.descripcion, idDepartamento:this.departamentId})){
+      // Espera la respuesta del back.------------------------------------------------------------------------------Al tener el back---------------
+      if(this.service.update({descripcion:this.form.value.descripcion, idDepartamento:this.departamentId})){
           this.closeModal();  
           this.alertService.promiseAlert('Se modificó correctamente el departamento').then(()=>{
           this.service.updateNeeded.emit(true)

@@ -1,4 +1,4 @@
-import { DepartamentosService } from '@core/services/Departamentos/departamentos.service';
+import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
 import { AlertService } from '@core/services/alert/alert.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ColumnMode } from '@swimlane/ngx-datatable';
@@ -53,6 +53,7 @@ export class ListComponent implements OnInit {
   }
 
   loadTable() {
+    this.allRows = this.service.getAll();
     this.allRows = fixedData;
     this.applyFilter();
   }
@@ -85,16 +86,26 @@ export class ListComponent implements OnInit {
     this.service.modalNeeded.emit({subject: 'editModal', status:true, departamentId: id});
   }
   
-  async deleteDept(id:number){
+  deleteDept(id:number){
     const dept:any = this.getDept(id);
     this.alertService.confirmAlert('¿Está seguro de eliminar?', `Departamento: ${dept.descripcion}`)
-    .then((res) => {
+    .then( (res) => {
+
+       // Confirmacion del usuario
       if(res.isConfirmed){
-          this.filteredRows = this.filteredRows.filter( (element: { idDepartamento: number; }) => {
-          return element.idDepartamento !== id;
-        })
+      
+        // Confirmacion del servidor.
+        
+        if(this.service.deleteById(id)){
+          this.alertService.simpleAlert('Se eliminó el registro');
+          this.loadTable();
+        }else{
+          this.alertService.simpleAlert('Surgió un error al eliminar'); //----------------------------------------------Al tener el back--------------------------------
+        }
+
+        this.filteredRows = fixedDelete(this.filteredRows, id);
         this.alertService.simpleAlert('Se eliminó el registro');
-      }
+      }  
     })
   }
 
@@ -107,8 +118,15 @@ export class ListComponent implements OnInit {
    });
    return dept;
   }
-
 }
+
 
 /* Datos de prueba para eliminar*/
 const fixedData = [{idDepartamento:1, descripcion: 'Recursos Humanos'},{idDepartamento:2, descripcion: 'Contabilidad'},]
+
+const fixedDelete:any = (filteredRows: any[], id: number) => {
+  filteredRows = filteredRows.filter(function (element: { idDepartamento: number; }) {
+    return element.idDepartamento !== id;
+  })
+  return filteredRows;
+}

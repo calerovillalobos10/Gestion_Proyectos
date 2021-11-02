@@ -4,6 +4,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
 
+
+import { RxwebValidators } from '@rxweb/reactive-form-validators';
+
 @Component({
   selector: 'app-add-modal',
   templateUrl: './add-modal.component.html',
@@ -38,11 +41,11 @@ export class AddModalComponent implements OnInit {
     })
   }
 
-  async add_func() { 
+  add_func() { 
     this.form.markAllAsTouched();
     if(this.form.valid){
       // Espera la respuesta del backend.
-      if(await this.service.create(this.obtainFunc())){
+      if(this.service.create(this.obtainFunc())){ //-----------------------------------------------------Al tener el back -----------
           this.closeModal();  
           this.alertService.promiseAlert('Se agregó correctamente el funcionario').then(()=>{
           this.service.updateNeeded.emit(true)
@@ -99,16 +102,52 @@ export class AddModalComponent implements OnInit {
         correo: ["", [
             Validators.required,
             Validators.pattern("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"),
+            Validators.minLength(8),
             Validators.maxLength(50) ]],
-        password: ["", [ Validators.required ]],
-        rePassword: ["", [ Validators.required ]],
-        departamento: ["", [ Validators.required, Validators.min(1), Validators.max(255)]],
-        tipo: ["", [ Validators.required, Validators.min(1), Validators.max(255)]],
-        foto: ["", [ Validators.required ]],
-        nombre: ["", [ Validators.required, Validators.maxLength(15) ]],
-        apellido1: ["", [ Validators.required, Validators.maxLength(15) ]],
-        apellido2: ["", [ Validators.required, Validators.maxLength(15) ]],
-        sexo: ["", [ Validators.required, Validators.min(1), Validators.max(255) ]],
+        password: ["", [ 
+          Validators.required,
+          Validators.minLength(8), 
+          Validators.maxLength(16)
+        ]],
+        rePassword: ["", [ 
+          Validators.required, 
+          Validators.minLength(8), 
+          Validators.maxLength(16)
+        ]],
+        departamento: ["", [ 
+          Validators.required, 
+          Validators.min(1), 
+          Validators.max(255)
+        ]],
+        tipo: ["", [ 
+          Validators.required, 
+          Validators.min(1), 
+          Validators.max(255)
+        ]],
+        foto: ["", [ 
+          Validators.required,
+          Validators.pattern('^(.)*.(jpe?g|png|webp)$')
+        ]],
+        nombre: ["", [ 
+          Validators.required, 
+          Validators.minLength(3), 
+          Validators.maxLength(15) 
+        ]],
+        apellido1: ["", [
+          Validators.required, 
+          Validators.minLength(3), 
+          Validators.maxLength(15) 
+        ]],
+        apellido2: ["", [ 
+          Validators.required, 
+          Validators.minLength(3), 
+          Validators.maxLength(15) 
+        ]],
+        sexo: ["", [ 
+          Validators.required, 
+          Validators.min(1), 
+          Validators.max(255) 
+        ]],
         nacimiento: ["", [ Validators.required ]],
       })
     }

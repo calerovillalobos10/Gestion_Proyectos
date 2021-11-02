@@ -52,7 +52,8 @@ export class ListComponent implements OnInit {
 
   }
 
-  loadTable() {
+  async loadTable() {
+    //this.allRows = await this.service.getAll() ----------------------------------------------Al tener el back--------------------------------
     this.allRows = fixedData;
     this.applyFilter();
   }
@@ -63,24 +64,26 @@ export class ListComponent implements OnInit {
     this.applyFilter();
   }
 
-    // Aplica el filtro
-    applyFilter(){
-      if(this.lastFilter !== ''){
-        this.filteredRows = [];
-        this.allRows.forEach((element: { nombre: string; }) => {
-          if(element.nombre.toLocaleLowerCase().startsWith(this.filterForm.value.filter.toLocaleLowerCase())){
-            this.filteredRows.push(element)
-          }
-        });
-      }else{
-        this.filteredRows = this.allRows;
-      }
+  // Aplica el filtro
+  applyFilter(){
+    if(this.lastFilter !== ''){
+      this.filteredRows = [];
+      this.allRows.forEach((element: { nombre: string; }) => {
+        if(element.nombre.toLocaleLowerCase().startsWith(this.filterForm.value.filter.toLocaleLowerCase())){
+          this.filteredRows.push(element)
+        }
+      });
+    }else{
+      this.filteredRows = this.allRows;
     }
+  }
 
+  // Llama al modal correspondiente de agregar
   add_func(){
     this.service.modalNeeded.emit({subject: 'addModal', status:true});
   }
 
+  // Llama al modal correspondiente de detalles
   detailsFunc(id:number){
     this.service.modalNeeded.emit({subject: 'detModal', status:true, userId: id});
   }
@@ -88,29 +91,33 @@ export class ListComponent implements OnInit {
   async deleteFunc(id:number){
     const func:any = this.getFunc(id);
     this.alertService.confirmAlert('¿Está seguro de eliminar?', `Registro: ${func.nombre} ${func.apellido1} ${func.apellido2}`)
-    .then((res) => {
+    .then(async (res) => {
+
+      // Confirmacion del usuario
       if(res.isConfirmed){
-          this.filteredRows = this.filteredRows.filter(function (element: { id: number; }) {
-          return element.id !== id;
-          
-        })
+
+        // Confirmacion del servidor.
+        /*
+        if(await this.service.deleteById(id)){
+          this.alertService.simpleAlert('Se eliminó el registro');
+          this.loadTable();
+        }else{
+          this.alertService.simpleAlert('Surgió un error al eliminar'); ----------------------------------------------Al tener el back--------------------------------
+        }*/
+
+        this.filteredRows = fixedDelete(this.filteredRows,id);
         this.alertService.simpleAlert('Se eliminó el registro');
       }
     })
   }
 
+  // Llama al modal correspondiente de editar
   editFunc(id:number){
     this.service.modalNeeded.emit({subject: 'editModal', status:true, userId: id});
   }
   
-  /*
-    Asigna el reajuste de cantidad de columnas segun el evento de resize.
-  */
-  @HostListener('window:resize', ['$event'])
-  onResize(event:any) {
-    this.setColumns(event.target.innerWidth);
-  }
 
+  // Obtiene el funcionario de la lista.
   getFunc(id: number) {
     let func = null;
     this.allRows.forEach((element: { id: number; }) => {
@@ -121,6 +128,15 @@ export class ListComponent implements OnInit {
     return func;
    }
  
+
+  /*
+    Asigna el reajuste de cantidad de columnas segun el evento de resize.
+  */
+  @HostListener('window:resize', ['$event'])
+  onResize(event:any) {
+    this.setColumns(event.target.innerWidth);
+  }
+
 
   /*
     Asigna un set de columnas acorde al ancho de ventana actual
@@ -154,6 +170,14 @@ export class ListComponent implements OnInit {
 
 
 /* Datos de prueba para eliminar*/
+
+const fixedDelete:any = (filteredRows: any[], id: number) => {
+  filteredRows = filteredRows.filter(function (element: { id: number; }) {
+    return element.id !== id;
+  })
+  return filteredRows;
+}
+
 const fixedData = [{id:1, nombre: 'Alberto', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
 {id:2, nombre: 'Juan', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
 {id:3, nombre: 'Marcos', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },

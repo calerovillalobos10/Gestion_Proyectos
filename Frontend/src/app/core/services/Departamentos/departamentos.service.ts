@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Departamento } from './../../models/Departamento';
+import { Departamento } from '../../models/Departamento';
 import { Injectable, Output, EventEmitter } from '@angular/core';
 import { timeout } from 'rxjs/operators';
 
@@ -17,83 +17,80 @@ export class DepartamentosService {
   @Output() updateNeeded: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
-    private http:HttpClient
+    private http: HttpClient
   ) { }
 
 
   // Metodo de obtencion por id.
   // Obtiene solo un departamento.
 
-  async getById(id:number){
+  getById(id: number): Departamento | undefined {
     let departament = undefined;
-
-    try {
-      const res = await this.http.get<any>(`${this._loginURL}/departamentos/${id}`)
-      .pipe(timeout(5000)).toPromise();
-      departament = res['mensaje'] ? undefined : res['dataBD']
-    } catch (e) {
-      departament = undefined
-    }
+    const res = this.http.get<any>(`${this._loginURL}/departamentos/${id}`).subscribe(
+      (res) => {
+        departament = res['mensaje'] ? [] : res['dataBD'];
+      },
+      (err) => {
+        departament = undefined;
+      })
     return departament;
   }
 
-
   // Metodo de creacion de departamento.
   // Envia solo descripcion del departamento.
-  async create(dept:Departamento){
-    let status:boolean = false;
+  create(dept: Departamento) {
+    let status: boolean = false;
 
-    try {
-      const res = await this.http.post<any>(`${this._loginURL}/departamentos`, dept)
-      .pipe(timeout(5000)).toPromise();
-      status =  res['estado'];
-    } catch (e) {
-      status = false;
-    }
-    
+    this.http.post<any>(`${this._loginURL}/departamentos`, dept).subscribe(
+      (res) => {
+        status = res['estado'];
+      },
+      (err) => {
+        status = false;
+      })
+
     return status;
   }
 
   // Metodo de actualizacion de departamento.
   // Envia id y descripcion nueva del departamento.
-  async update(dept:Departamento){
-    let status:boolean = false;
+  update(dept: Departamento) {
+    let status: boolean = false;
 
-    try {
-      const res = await this.http.put<any>(`${this._loginURL}/departamentos`, dept)
-      .pipe(timeout(5000)).toPromise();
-      status =  res['estado'];
-    } catch (e) {
-      status = false;
-    }
-    
+      this.http.put<any>(`${this._loginURL}/departamentos`, dept).subscribe(
+        (res) => {
+          status = res['estado'];
+         },
+        (err) => {
+          status = false;
+        })
     return status;
   }
 
-  async deleteById(id:number){
-    let status:boolean = false;
+  deleteById(id: number) {
+    let status: boolean = false;
 
-    try {
-      const res = await this.http.delete<any>(`${this._loginURL}/departamentos/${id}`)
-      .pipe(timeout(5000)).toPromise();
-      status =  res['estado'];
-    } catch (e) {
-      status = false;
-    }
-    
+    this.http.delete<any>(`${this._loginURL}/departamentos/${id}`).subscribe(
+      (res)=>{
+        status = res['estado'];
+      },
+      (err)=>{
+        status = false;
+      })
+   
     return status;
   }
 
-  async getAll(){
-    let departaments = [];
-    try {
-      const res = await this.http.get<any>(`${this._loginURL}/departamentos`)
-      .pipe(timeout(5000)).toPromise();
-      departaments =  res['mensaje'] ? [] : res['dataBD'];
-      
-    } catch (e) {
-      departaments = []
-    }
+  getAll(): Array<Departamento> {
+    let departaments: Array<Departamento> = [];
+    this.http.get<any>(`${this._loginURL}/departamentos`).subscribe(
+      (res) => {
+        departaments = res['mensaje'] ? [] : res['dataBD'];
+      },
+      (err) => {
+        departaments = []
+      }
+    )
 
     return departaments;
   }

@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Funcionario } from './../../models/Funcionario';
 import { Injectable, Output, EventEmitter } from '@angular/core';
-import { timeout } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,84 +16,80 @@ export class FuncionariosService {
   @Output() updateNeeded: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
-    private http:HttpClient
+    private http: HttpClient
   ) { }
-
 
   // Metodo de obtencion por id.
   // Obtiene solo un funcionario.
-
-  async getById(id:number){
+  getById(id: number) {
     let funcionario = undefined;
 
-    try {
-      const res = await this.http.get<any>(`${this._loginURL}/funcionarios/${id}`)
-      .pipe(timeout(5000)).toPromise();
+    this.http.get<any>(`${this._loginURL}/funcionarios/${id}`).subscribe((res) => {
       funcionario = res['mensaje'] ? undefined : res['dataBD']
-    } catch (e) {
+    }, (err) => {
       funcionario = undefined
-    }
+    })
+
     return funcionario;
   }
 
-
   // Metodo de creacion de funcionarios.
   // Envia todos los datos del funcionario.
-  async create(dept:Funcionario){
-    let status:boolean = false;
+  create(dept: Funcionario) {
+    let status: boolean = false;
 
-    try {
-      const res = await this.http.post<any>(`${this._loginURL}/funcionarios`, dept)
-      .pipe(timeout(5000)).toPromise();
-      status =  res['estado'];
-    } catch (e) {
-      status = false;
-    }
-    
+    this.http.post<any>(`${this._loginURL}/funcionarios`, dept).subscribe(
+      (res) => {
+        status = res['estado'];
+      },
+      (err) => {
+        status = false;
+      })
+
     return status;
   }
 
   // Metodo de actualizacion de funcionarios.
   // Envia id y datos nuevos del funcionario.
-  async update(dept:Funcionario){
-    let status:boolean = false;
+  update(dept: Funcionario) {
+    let status: boolean = false;
 
-    try {
-      const res = await this.http.put<any>(`${this._loginURL}/funcionarios`, dept)
-      .pipe(timeout(5000)).toPromise();
-      status =  res['estado'];
-    } catch (e) {
-      status = false;
-    }
-    
+    this.http.put<any>(`${this._loginURL}/funcionarios`, dept).subscribe(
+      (res) => {
+        status = res['estado'];
+      },
+      (err) => {
+        status = false;
+      })
+
     return status;
   }
 
-  async deleteById(id:number){
-    let status:boolean = false;
+  deleteById(id: number) {
+    let status: boolean = false;
 
-    try {
-      const res = await this.http.delete<any>(`${this._loginURL}/funcionarios/${id}`)
-      .pipe(timeout(5000)).toPromise();
-      status =  res['estado'];
-    } catch (e) {
-      status = false;
-    }
-    
-    return status;
-  }
-
-  async getAll(){
-    let funcionarios = [];
-    try {
-      const res = await this.http.get<any>(`${this._loginURL}/funcionarios`)
-      .pipe(timeout(5000)).toPromise();
-      funcionarios =  res['mensaje'] ? [] : res['dataBD'];
+    this.http.delete<any>(`${this._loginURL}/funcionarios/${id}`).subscribe(
+        (res)=>{   
+          status = res['estado'];
+        },
+        (err)=>{
+          status = false;
+        },)
       
-    } catch (e) {
-      funcionarios = []
-    }
+    return status;
+  }
 
+  getAll() {
+    let funcionarios: Array<Funcionario> = [];
+
+    this.http.get<any>(`${this._loginURL}/funcionarios`).subscribe(
+      (res)=>{
+        funcionarios = res['mensaje'] ? [] : res['dataBD'];
+      },
+      (err)=>{
+        funcionarios = []
+      },)
+      
     return funcionarios;
   }
 }

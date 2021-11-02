@@ -1,5 +1,6 @@
+import { Departamento } from '@core/models/Departamento';
 import { AlertService } from '@core/services/alert/alert.service';
-import { DepartamentosService } from '@core/services/Departamentos/departamentos.service';
+import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
@@ -12,20 +13,25 @@ export class AddModalComponent implements OnInit {
   public form!: FormGroup;
   public formToggle: boolean;
   public openedModal: boolean;
+  public departamentos: Array<Departamento>;
   
   constructor(
     private formBuilder:FormBuilder,
     private service: DepartamentosService,
+    private deptService: DepartamentosService,
     private alertService: AlertService
   ) { 
     this.formToggle = false
     this.openedModal = false
 
+    this.departamentos = this.deptService.getAll();
+
     this.form = this.formBuilder.group({
       descripcion: ["",
         [
           Validators.required,
-          Validators.maxLength(50)
+          Validators.minLength(3),
+          Validators.maxLength(30)
         ]]
       })
   }
@@ -40,12 +46,12 @@ export class AddModalComponent implements OnInit {
   }
 
   // Envia los datos de la agregacion del departamento
-  async add_dept() {
+  add_dept() {
     this.form.markAllAsTouched();
     if(this.form.valid){
       
       // Espera la respuesta del backend.
-      if(await this.service.create({descripcion:this.form.value.descripcion})){
+      if(this.service.create({descripcion:this.form.value.descripcion})){  //-------------------------------Al tener el back-----------
           this.closeModal();  
           this.alertService.promiseAlert('Se agregó correctamente el departamento').then(()=>{
           this.service.updateNeeded.emit(true)
@@ -63,4 +69,7 @@ export class AddModalComponent implements OnInit {
       setTimeout(() => { this.openedModal = false }, 500)
       this.form.reset();
     }
+
+    
 }
+

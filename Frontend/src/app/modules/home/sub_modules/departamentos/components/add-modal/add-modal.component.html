@@ -1,7 +1,7 @@
 <div class="primary_box" *ngIf="openedModal" >
  
   <div class="primary_box_container" [ngClass]="{ desaparecer: formToggle }">
-    <button class="btn_close" (click)='closeModal()'><i class="fas fa-window-close"></i>x</button>
+    <button class="btn_close" (click)='closeModal()'><i class="fas fa-window-close"></i></button>
     <div>
       <h1 class="title">Registrar</h1>
 
@@ -29,4 +29,6 @@
 <ng-template #descripcion_error let-error="error">
   <p class="error-input" *ngIf="form.get('descripcion')?.dirty || form.get('descripcion')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
 </p>

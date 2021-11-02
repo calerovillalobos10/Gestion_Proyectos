@@ -2,7 +2,7 @@
 <div class="primary_box" *ngIf="openedModal" >
  
   <div class="primary_box_container" [ngClass]="{ desaparecer: formToggle }">
-    <button class="btn_close" (click)='closeModal()'><i class="fas fa-window-close"></i>x</button>
+    <button class="btn_close" (click)='closeModal()'><i class="fas fa-window-close"></i></button>
     <div>
       <h1 class="title">Registro de funcionario</h1>
 
@@ -52,9 +52,12 @@
             <div class="input_group">
               <select class="select" name="departamento" id="departamento" formControlName="departamento"> 
                 <option selected disabled hidden>Seleccione</option>
-                <option value="1">Recursos Humanos</option>
-                <option value="2">Contabilidad</option>
-                <option value="3">Informatica</option>
+                <option value="1">Gerencía</option>
+                <option value="2">Seguridad</option>
+                <option value="3">Contraloría</option>
+                <option value="4">Mensajería</option>
+                <option value="5">Contabilidad</option>
+                <option value="6">TI</option>
               </select>
               <label class="label" for="departamento"> Departamento</label>
               <ng-container *ngTemplateOutlet="departamento_error; context: {error: form.get('departamento')?.errors}"></ng-container>
@@ -117,30 +120,37 @@
           <button class="btn">Registrar</button>
         </div>
       </form>
-
     </div>
   </div>
 </div>
-
 
 <ng-container >
 
   <!-- Templates de error -->
 
 <ng-template #correo_error let-error="error">
+  
   <p class="error-input" *ngIf="form.get('correo')?.dirty || form.get('correo')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.pattern && !error?.minlength">El formato del correo no es válido </span>
   </p>
 </ng-template>
 
 <ng-template #pass_error let-error="error">
   <p class="error-input" *ngIf="form.get('password')?.dirty || form.get('password')?.touched">
+    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
   </p>
 </ng-template>
 
 <ng-template #repass_error let-error="error">
   <p class="error-input" *ngIf="form.get('rePassword')?.dirty || form.get('rePassword')?.touched">
+    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="!error && form.value.password !== form.value.rePassword">Las constraseñas no coinciden</span>
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
   </p>
 </ng-template>
@@ -160,12 +170,16 @@
 <ng-template #nombre_error let-error="error">
   <p class="error-input" *ngIf="form.get('nombre')?.dirty || form.get('nombre')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
   </p>
 </ng-template>
 
 <ng-template #apellido1_error let-error="error">
   <p class="error-input" *ngIf="form.get('apellido1')?.dirty || form.get('apellido1')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
   </p>
 </ng-template>
 
@@ -173,6 +187,8 @@
 <ng-template #apellido2_error let-error="error">
   <p class="error-input" *ngIf="form.get('apellido2')?.dirty || form.get('apellido2')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
   </p>
 </ng-template>
 
@@ -190,8 +206,10 @@
 </ng-template>
 
 <ng-template #foto_error let-error="error">
+
   <p class="error-input" *ngIf="form.get('foto')?.dirty || form.get('foto')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.pattern">El formato de la imagen no es válido</span>
   </p>
 </ng-template>
 
