@@ -39,6 +39,18 @@ export class AlertService {
     })
   }
 
+  confirmAlert(title: string, message: string){
+    return Swal.fire({
+      title: title,
+      text: message,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si, eliminar',
+      cancelButtonText: 'No, cancelar',
+      allowOutsideClick: false
+    })
+  }
+
   googleAuthAlert(){
     return Swal.fire({
       title: 'Authenticador de Google',

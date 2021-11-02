@@ -1,3 +1,4 @@
+import { FuncionariosService } from './../../../../../../core/services/funcionarios/funcionarios.service';
 import { AlertService } from '@core/services/alert/alert.service';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { Component, OnInit, TemplateRef, ViewChild, HostListener } from '@angular/core';
@@ -12,9 +13,12 @@ export class ListComponent implements OnInit {
   @ViewChild('actionTmpl', { static: true }) actionTmpl: TemplateRef<any> | undefined;
   @ViewChild('hdrTpl', { static: true }) hdrTpl: TemplateRef<any> | undefined;
   
-  public form!: FormGroup;
+  
+  public filterForm!: FormGroup;
 
-  rows:any = [];
+  private allRows:any = [];
+  public filteredRows:any = [];
+
   public columns:any = [];
 
   ngOnInit(): void {
@@ -22,52 +26,76 @@ export class ListComponent implements OnInit {
     this.columns = [];
     this.setColumns(window.innerWidth);
   
-    this.rows = fixedData;
+    this.loadTable();
+    this.filteredRows = this.allRows;
   }
-
 
   ColumnMode = ColumnMode;
 
   constructor(
     private formBuilder: FormBuilder,
     private alertService: AlertService,
+    private service:FuncionariosService
   ) {
-    this.form = this.formBuilder.group({
+  
+    
+    this.filterForm = this.formBuilder.group({
       filter: ["",
         [
           Validators.required
         ]]
-      
     })
+
+
   }
 
   loadTable() {
-   
+    this.allRows = fixedData;
   }
 
   // Para filtrar la tabla de funcionarios.
   filter_table(){
-    if(this.form.valid){
-      alert(this.form.value.filter)
+    if(this.filterForm.valid){
+      this.filteredRows = [];
+      this.allRows.forEach((element: { nombre: string; }) => {
+        if(element.nombre.toLocaleLowerCase().startsWith(this.filterForm.value.filter.toLocaleLowerCase())){
+          this.filteredRows.push(element)
+        }
+      });
+    }else{
+      this.filteredRows = this.allRows;
     }
   }
 
   add_func(){
-
+    this.service.modalNeeded.emit({subject: 'addModal', status:true});
   }
 
   detailsFunc(id:number){
-    alert('detallando ' + id)
+    this.service.modalNeeded.emit({subject: 'detModal', status:true, userId: id});
   }
 
-  deleteFunc(id:number){
-    alert('eliminando ' + id)
+  async deleteFunc(id:number){
+    const func:any = this.getFunc(id);
+    this.alertService.confirmAlert('¿Está seguro de eliminar?', `Registro: ${func.nombre} ${func.apellido1} ${func.apellido2}`)
+    .then((res) => {
+      if(res.isConfirmed){
+          this.filteredRows = this.filteredRows.filter(function (element: { id: number; }) {
+          return element.id !== id;
+          
+        })
+        this.alertService.simpleAlert('Se eliminó el registro');
+      }
+    })
   }
 
   editFunc(id:number){
-    alert('editando ' + id)
+    this.service.modalNeeded.emit({subject: 'editModal', status:true, userId: id});
   }
   
+  /*
+    Asigna el reajuste de cantidad de columnas segun el evento de resize.
+  */
   @HostListener('window:resize', ['$event'])
   onResize(event:any) {
     this.setColumns(event.target.innerWidth);
@@ -102,18 +130,32 @@ export class ListComponent implements OnInit {
         { name: 'acciones', title: 'Acciones', headerTemplate: this.hdrTpl, cellTemplate: this.actionTmpl }];
     }
   } 
+
+  getFunc(id: number) {
+   let func = null;
+   this.allRows.forEach((element: { id: number; }) => {
+     if(element.id === id){
+       func = element;
+     }
+   });
+   return func;
+  }
+
+  
 }
 
 /* Datos de prueba para eliminar*/
-const fixedData = [{id:1, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
-{id:2, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
-{id:3, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
-{id:1, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
-{id:1, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
-{id:1, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
-{id:1, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
-{id:1, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
-{id:1, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
-{id:1, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
-{id:1, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
-{id:13, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' }]
+const fixedData = [{id:1, nombre: 'Alberto', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
+{id:2, nombre: 'Juan', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
+{id:3, nombre: 'Marcos', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
+{id:4, nombre: 'Pedro', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
+{id:5, nombre: 'Luis', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
+{id:6, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
+{id:7, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
+{id:8, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
+{id:9, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
+{id:10, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
+{id:11, nombre: 'Nombre', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' },
+{id:13, nombre: 'aa', apellido1: 'Primer apellido', apellido2: 'Primer apellido', departamento: 'Primer departamento', sexo: 'H', tipo: 'Tipo' }]
+
+

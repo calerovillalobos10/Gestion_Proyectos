@@ -1,0 +1,27 @@
+<div class="primary_box" *ngIf="openedModal" >
+ 
+  <div class="primary_box_container" [ngClass]="{ desaparecer: formToggle }">
+    <button class="btn_close" (click)='closeModal()'><i class="fas fa-window-close"></i>x</button>
+    <div>
+      <h1 class="title">Registrar</h1>
+
+      <form [formGroup]="form" (submit)="add_dept()" >
+      
+        <div class="row">
+          <!---------Columna 1 ---------->
+          <div class="col mr-1">
+            <div class="input_group">
+              <input class="input" type="text" placeholder=" " id="descripcion" formControlName="descripcion" />
+              <label class="label" for="descripcion"> Departamento </label>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="btn">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

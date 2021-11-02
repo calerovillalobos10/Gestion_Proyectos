@@ -6,7 +6,6 @@ import { HeaderComponent } from './components/header/header.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { LoginTransitionComponent } from './transitions/login-transition/login-transition.component';
 import { LogoutTransitionComponent } from './transitions/logout-transition/logout-transition.component';
-import { ErrImgDirective } from '@core/directives/images/err-img.directive';
 import { ErrLogoDirective } from '@core/directives/images/err-logo.directive';
 
 
@@ -17,7 +16,7 @@ import { ErrLogoDirective } from '@core/directives/images/err-logo.directive';
     NavbarComponent,
     LoginTransitionComponent,
     LogoutTransitionComponent,
-    ErrImgDirective,
+  
     ErrLogoDirective
   ],
   imports: [
