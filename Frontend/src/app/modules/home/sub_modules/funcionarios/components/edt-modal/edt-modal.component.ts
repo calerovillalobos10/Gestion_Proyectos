@@ -1,3 +1,5 @@
+import { Departamento } from '@core/models/Departamento';
+import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
 import { AlertService } from '@core/services/alert/alert.service';
 import { Funcionario } from '@core/models/Funcionario';
 
@@ -14,8 +16,9 @@ export class EdtModalComponent implements OnInit {
   public form!: FormGroup;
   public formToggle: boolean;
   public openedModal: boolean;
-  public modalAction: string;
+
   private userId: number;     
+  public departamentos: Array<Departamento>;
 
   private oldPicture: string | ArrayBuffer | null | undefined;
   public preview: string | ArrayBuffer | null | undefined;
@@ -23,10 +26,12 @@ export class EdtModalComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private service: FuncionariosService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private deptService: DepartamentosService
   ) {
+    this.departamentos = this.deptService.getAll();
+    this.departamentos = [{descripcion: 'TI', idDepartamento: 1},{descripcion: 'RRHH', idDepartamento: 2}]
 
-    this.modalAction = 'Registrar'
     this.formToggle = false
     this.openedModal = false
     this.userId = 0
@@ -43,7 +48,6 @@ export class EdtModalComponent implements OnInit {
         this.openedModal = data.status
         this.formToggle = !data.status
         this.userId = data.userId
-        this.modalAction = 'Editar'
         this.loadEditUser()
       }
     })
@@ -56,12 +60,15 @@ export class EdtModalComponent implements OnInit {
 
     const userData: Funcionario =
     {
-      correo: 'Luis@gmail.com', idTipoFuncionario: '1', idDepartamento: '2', nombre: 'Luis', apellido1: "apellido1",
+      correo: 'Luis@gmail.com', idTipoFuncionario: '1', idDepartamento: '33', nombre: 'Luis', apellido1: "apellido1",
       apellido2: "apellido2", fechaNacimiento: '1995-09-09', idSexo: '1', urlFoto: 'http://localhost:4200/assets/images/not_found_user.png'
     }
 
     // Guardamos la foto anterior por si no se modifica.
     this.oldPicture = userData.urlFoto;
+
+    // Esto valida si no esta conteneido el departamento enviado.
+    if (! this.departamentos.some(e => e.idDepartamento == userData.idDepartamento)) {}
 
     this.form.patchValue({
       correo: userData.correo,
@@ -182,5 +189,3 @@ export class EdtModalComponent implements OnInit {
       })
     }
 }
-
-

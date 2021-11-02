@@ -52,12 +52,7 @@
             <div class="input_group">
               <select class="select" name="departamento" id="departamento" formControlName="departamento"> 
                 <option selected disabled hidden>Seleccione</option>
-                <option value="1">Gerencía</option>
-                <option value="2">Seguridad</option>
-                <option value="3">Contraloría</option>
-                <option value="4">Mensajería</option>
-                <option value="5">Contabilidad</option>
-                <option value="6">TI</option>
+                <option  *ngFor="let departamento of departamentos" value="{{departamento.idDepartamento}}">{{departamento.descripcion}}</option>
               </select>
               <label class="label" for="departamento"> Departamento</label>
               <ng-container *ngTemplateOutlet="departamento_error; context: {error: form.get('departamento')?.errors}"></ng-container>

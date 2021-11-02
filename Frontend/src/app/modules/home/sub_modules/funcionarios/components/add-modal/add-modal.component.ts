@@ -1,11 +1,10 @@
+import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
+import { Departamento } from '@core/models/Departamento';
 import { AlertService } from '@core/services/alert/alert.service';
 import { Funcionario } from '@core/models/Funcionario';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
-
-
-import { RxwebValidators } from '@rxweb/reactive-form-validators';
 
 @Component({
   selector: 'app-add-modal',
@@ -17,16 +16,23 @@ export class AddModalComponent implements OnInit {
   public form!: FormGroup;
   public formToggle: boolean;
   public openedModal: boolean;
+
+  public departamentos: Array<Departamento>;
+  
   public preview: string | ArrayBuffer | null | undefined;
 
   constructor(
     private formBuilder: FormBuilder,
     private service: FuncionariosService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private deptService: DepartamentosService
   ) {
   
     this.formToggle = false
     this.openedModal = false
+    this.departamentos = this.deptService.getAll();
+    this.departamentos = [{descripcion: 'TI', idDepartamento: 1},{descripcion: 'RRHH', idDepartamento: 1},]
+
     this.preview = '';
 
     this.buildForm();

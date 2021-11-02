@@ -13,18 +13,16 @@ export class AddModalComponent implements OnInit {
   public form!: FormGroup;
   public formToggle: boolean;
   public openedModal: boolean;
-  public departamentos: Array<Departamento>;
+  
   
   constructor(
     private formBuilder:FormBuilder,
     private service: DepartamentosService,
-    private deptService: DepartamentosService,
     private alertService: AlertService
   ) { 
     this.formToggle = false
     this.openedModal = false
-
-    this.departamentos = this.deptService.getAll();
+    
 
     this.form = this.formBuilder.group({
       descripcion: ["",

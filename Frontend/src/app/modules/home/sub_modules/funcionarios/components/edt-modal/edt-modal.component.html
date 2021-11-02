@@ -40,9 +40,8 @@
             <div class="input_group">
               <select class="select" name="departamento" id="departamento" formControlName="departamento"> 
                 <option selected disabled hidden>Seleccione</option>
-                <option value="1">Recursos Humanos</option>
-                <option value="2">Contabilidad</option>
-                <option value="3">Informatica</option>
+                <option  *ngFor="let departamento of departamentos" value="{{departamento.idDepartamento}}">{{departamento.descripcion}}</option>
+                
               </select>
               <label class="label" for="departamento"> Departamento</label>
               <ng-container *ngTemplateOutlet="departamento_error; context: {error: form.get('departamento')?.errors}"></ng-container>
@@ -193,7 +192,6 @@
 <ng-template #foto_error let-error="error">
   
   <p class="error-input" *ngIf="form.get('foto')?.dirty || form.get('foto')?.touched">
-    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
     <span class="login_error" *ngIf="error?.pattern">El formato de la imagen no es válido</span>
   </p>
 </ng-template>
