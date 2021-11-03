@@ -36,9 +36,9 @@ export class ListComponent implements OnInit {
     })
 
     this.columns = [
-      { name: 'idDepartamento', title: 'Código', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl },
-      { name: 'descripcion', title: 'Nombre', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl },
-      { name: 'acciones', title: 'Acciones', headerTemplate: this.hdrTpl, cellTemplate: this.actionTmpl }];
+      { name: 'idDepartamento', title: 'Código', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl, width: 20 },
+      { name: 'descripcion', title: 'Nombre', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl, width: 150},
+      { name: 'acciones', title: 'Acciones', headerTemplate: this.hdrTpl, cellTemplate: this.actionTmpl, width:10 }];
   }
 
   constructor(
