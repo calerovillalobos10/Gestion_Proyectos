@@ -1,7 +1,6 @@
 import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
 import { Departamento } from '@core/models/Departamento';
 import { AlertService } from '@core/services/alert/alert.service';
-import { Funcionario } from '@core/models/Funcionario';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
@@ -75,31 +74,39 @@ export class AddModalComponent implements OnInit {
   // Metodo para cambiar el preview de la foto del funcionario.
   onFileChange(event: any) {
     if (event.target.files && event.target.files[0]) {
-      const reader = new FileReader();
-      reader.readAsDataURL(event.target.files[0]);
-
-      reader.onload = (event) => {
-        this.preview = event.target?.result;
-      }
+      this.loadPreview(event);
+      this.form.patchValue({foto: event.target.files[0]})
     } else {
+      this.form.patchValue({foto: ''})
       this.preview = '';
     }
   }
 
+  
+  loadPreview(event:any){
+    const reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+    reader.onload = (event) => {
+      this.preview = event.target?.result;
+    }
+  }
+
     // Extrae los datos de un funcionario valido a un objeto funcionario
-    obtainFunc():Funcionario {
-      return {
-        correo: this.form.value.correo,
-        contrasenia: this.form.value.password,
-        idSexo: this.form.value.sexo,
-        idDepartamento: this.form.value.departamento,
-        idTipoFuncionario: this.form.value.tipo,
-        fechaNacimiento: this.form.value.nacimiento,
-        nombre: this.form.value.nombre,
-        apellido1: this.form.value.apellido1,
-        apellido2: this.form.value.apellido2,
-        urlFoto: this.preview,
-      }
+    obtainFunc():FormData {
+      const postData = new FormData();
+
+      postData.append('correo', this.form.value.correo);
+      postData.append('contrasenia', this.form.value.password);
+      postData.append('idSexo', this.form.value.sexo);
+      postData.append('idDepartamento', this.form.value.departamento);
+      postData.append('idTipoFuncionario', this.form.value.tipo);
+      postData.append('fechaNacimiento', this.form.value.nacimiento);
+      postData.append('nombre', this.form.value.nombre);
+      postData.append('apellido1', this.form.value.apellido1);
+      postData.append('apellido2', this.form.value.apellido2);
+      postData.append('urlFoto', this.form.value.foto);
+
+      return postData;
     }
 
     // Metodo para construir el formulario con validaciones
@@ -130,9 +137,10 @@ export class AddModalComponent implements OnInit {
           Validators.min(1), 
           Validators.max(255)
         ]],
-        foto: ["", [ 
+        foto: ["", []],
+        urlFoto: ["", [ 
           Validators.required,
-          Validators.pattern('^(.)*.(jpe?g|png|webp)$')
+          Validators.pattern('^(.)*.(jpe?g|png)$')
         ]],
         nombre: ["", [ 
           Validators.required, 

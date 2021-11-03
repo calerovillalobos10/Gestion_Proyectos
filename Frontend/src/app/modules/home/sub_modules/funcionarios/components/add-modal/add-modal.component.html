@@ -17,13 +17,14 @@
           </div>
           <div class="col ml-1 mt-2">
             <div class="input_group">
-              <input class="input" type="file" placeholder=" " id="foto" name="foto" formControlName="foto"  (change)="onFileChange($event)" accept="image/png,image/jpeg"/>
-              <label class="custom-file-upload" for="foto">
+              <input class="input" type="file" placeholder=" " id="urlFoto" name="urlFoto" (change)="onFileChange($event)" 
+              accept="image/png,image/jpeg" enctype="multipart/form-data" formControlName="urlFoto"/>
+              <label class="custom-file-upload" for="urlFoto" >
                 <i class="fas fa-upload"></i> Seleccionar
               </label>
 
               <label class="label"> Foto</label>
-              <ng-container *ngTemplateOutlet="foto_error; context: {error: form.get('foto')?.errors}"></ng-container>
+              <ng-container *ngTemplateOutlet="foto_error; context: {error: form.get('urlFoto')?.errors}"></ng-container>
             </div>
           </div>
         </div>
@@ -202,7 +203,7 @@
 
 <ng-template #foto_error let-error="error">
 
-  <p class="error-input" *ngIf="form.get('foto')?.dirty || form.get('foto')?.touched">
+  <p class="error-input" *ngIf="form.get('urlFoto')?.dirty || form.get('urlFoto')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
     <span class="login_error" *ngIf="error?.pattern">El formato de la imagen no es válido</span>
   </p>

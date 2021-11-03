@@ -76,23 +76,26 @@ export class EdtModalComponent implements OnInit {
       apellido1: userData.apellido1,
       apellido2: userData.apellido2,
       departamento: userData.idDepartamento,
+      urlFoto:this.oldPicture,
       tipo: userData.idTipoFuncionario,
       sexo: userData.idSexo,
       nacimiento:userData.fechaNacimiento
     })
     
     setTimeout(()=>{
-      this.preview = userData.urlFoto;
+      this.preview = this.oldPicture;
      })
+
+     
   }
 
   // Esta funcion perpara la edicion del funcionario
-  async edt_func() {
+  edt_func() {
     this.form.markAllAsTouched();
     if(this.form.valid){
       
       // Envia datos y espera la respuesta del backend.
-      if(await this.service.update(this.obtainFunc())){ //--------------------------------------- Al tener el back ----------------------
+      if( this.service.update(this.obtainFunc())){ //--------------------------------------- Al tener el back ----------------------
           this.closeModal();  
           this.alertService.promiseAlert('Se agregó correctamente el funcionario').then(()=>{
           this.service.updateNeeded.emit(true)
@@ -115,33 +118,45 @@ export class EdtModalComponent implements OnInit {
   // Metodo para cambiar el preview de la foto del funcionario.
   onFileChange(event: any) {
     if (event.target.files && event.target.files[0]) {
-      const reader = new FileReader();
-      reader.readAsDataURL(event.target.files[0]);
-
-      reader.onload = (event) => {
-        this.preview = event.target?.result;
-      }
+      this.loadPreview(event);
+      this.form.patchValue({foto: event.target.files[0]})
+      this.form.patchValue({urlFoto: event.target.files[0].name})
+      
+      console.log(this.form.value.urlFoto);
 
     } else {
-      // Si se elimina la foto del campo formulario se coloca la anterior.
+      this.form.patchValue({urlFoto: this.oldPicture})
+      this.form.patchValue({foto: ''})
       this.preview = this.oldPicture;
     }
   }
 
+  loadPreview(event:any){
+    const reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+    reader.onload = (event) => {
+      this.preview = event.target?.result;
+    }
+  }
+
+
     // Extrae los datos de un funcionario valido a un objeto funcionario
-    obtainFunc():Funcionario {
-      return {
-        idFuncionario: this.userId,
-        correo: this.form.value.correo,
-        idSexo: this.form.value.sexo,
-        idDepartamento: this.form.value.departamento,
-        idTipoFuncionario: this.form.value.tipo,
-        fechaNacimiento: this.form.value.nacimiento,
-        nombre: this.form.value.nombre,
-        apellido1: this.form.value.apellido1,
-        apellido2: this.form.value.apellido2,
-        urlFoto: this.preview === '' ? this.oldPicture : this.preview
-      }
+    obtainFunc():FormData {
+
+      const postData = new FormData();
+
+      postData.append('idFuncionario', this.userId.toString());
+      postData.append('correo', this.form.value.correo);
+      postData.append('idSexo', this.form.value.sexo);
+      postData.append('idDepartamento', this.form.value.departamento);
+      postData.append('idTipoFuncionario', this.form.value.tipo);
+      postData.append('fechaNacimiento', this.form.value.nacimiento);
+      postData.append('nombre', this.form.value.nombre);
+      postData.append('apellido1', this.form.value.apellido1);
+      postData.append('apellido2', this.form.value.apellido2);
+      postData.append('urlFoto', this.form.value.foto);
+
+      return postData
     }
 
     // Construye el formulario con los campos requeridos.
@@ -161,9 +176,10 @@ export class EdtModalComponent implements OnInit {
           Validators.min(1), 
           Validators.max(255)
         ]],
-        foto: ["", [ 
+        foto: ["", []],
+        urlFoto: ["", [ 
           Validators.required,
-          Validators.pattern('^(.)*.(jpe?g|png|webp)$')
+          Validators.pattern('^(.)*.(jpe?g|png)$')
         ]],
         nombre: ["", [ 
           Validators.required, 

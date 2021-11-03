@@ -9,5 +9,5 @@ export interface Funcionario{
   idSexo:number | string,
   idTipoFuncionario:number | string,
   contrasenia?:string,
-  urlFoto:string | ArrayBuffer | null | undefined;
+  urlFoto:any;
 }

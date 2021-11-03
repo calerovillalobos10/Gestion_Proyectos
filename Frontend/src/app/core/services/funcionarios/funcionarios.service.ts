@@ -7,7 +7,7 @@ import { Injectable, Output, EventEmitter } from '@angular/core';
 })
 export class FuncionariosService {
 
-  private _loginURL = "http://localhost:4000";
+  private _loginURL = "http://localhost:4001";
 
   // Emite la comunicacion entre componente modal y de lista para mostrar el modal
   @Output() modalNeeded: EventEmitter<any> = new EventEmitter();
@@ -35,10 +35,9 @@ export class FuncionariosService {
 
   // Metodo de creacion de funcionarios.
   // Envia todos los datos del funcionario.
-  create(dept: Funcionario) {
+  create(funct: FormData) {
     let status: boolean = false;
-
-    this.http.post<any>(`${this._loginURL}/funcionarios`, dept).subscribe(
+    this.http.post<any>(`${this._loginURL}/funcionarios`, funct).subscribe(
       (res) => {
         status = res['estado'];
       },
@@ -51,10 +50,10 @@ export class FuncionariosService {
 
   // Metodo de actualizacion de funcionarios.
   // Envia id y datos nuevos del funcionario.
-  update(dept: Funcionario) {
+  update(funct: FormData) {
     let status: boolean = false;
 
-    this.http.put<any>(`${this._loginURL}/funcionarios`, dept).subscribe(
+    this.http.post<any>(`${this._loginURL}/funcionarios`, funct).subscribe(
       (res) => {
         status = res['estado'];
       },
