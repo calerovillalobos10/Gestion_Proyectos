@@ -7,7 +7,7 @@ import { Injectable, Output, EventEmitter } from '@angular/core';
 })
 export class FuncionariosService {
 
-  private _loginURL = "http://localhost:4001";
+  private _loginURL = "http://localhost:4000";
 
   // Emite la comunicacion entre componente modal y de lista para mostrar el modal
   @Output() modalNeeded: EventEmitter<any> = new EventEmitter();
@@ -68,13 +68,13 @@ export class FuncionariosService {
     let status: boolean = false;
 
     this.http.delete<any>(`${this._loginURL}/funcionarios/${id}`).subscribe(
-        (res)=>{   
-          status = res['estado'];
-        },
-        (err)=>{
-          status = false;
-        },)
-      
+      (res) => {
+        status = res['estado'];
+      },
+      (err) => {
+        status = false;
+      })
+
     return status;
   }
 
@@ -82,13 +82,29 @@ export class FuncionariosService {
     let funcionarios: Array<Funcionario> = [];
 
     this.http.get<any>(`${this._loginURL}/funcionarios`).subscribe(
-      (res)=>{
+      (res) => {
         funcionarios = res['mensaje'] ? [] : res['dataBD'];
       },
-      (err)=>{
+      (err) => {
         funcionarios = []
-      },)
-      
+      })
+
     return funcionarios;
   }
+
+  // Devuelve si existe un correo o no.
+  validateEmail(email:string) {
+    
+    let status: boolean = false;
+    this.http.post<any>(`${this._loginURL}/email`, {correo: email}).subscribe(
+      (res) => {
+        status = res['estado'];
+      },
+      (err) => {
+        status = false;
+      })
+
+      return status;
+  }
+
 }

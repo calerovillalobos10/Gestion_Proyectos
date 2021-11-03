@@ -17,7 +17,7 @@ export class AddModalComponent implements OnInit {
   public openedModal: boolean;
 
   public departamentos: Array<Departamento>;
-  
+
   public preview: string | ArrayBuffer | null | undefined;
 
   constructor(
@@ -26,11 +26,11 @@ export class AddModalComponent implements OnInit {
     private alertService: AlertService,
     private deptService: DepartamentosService
   ) {
-  
+
     this.formToggle = false
     this.openedModal = false
     this.departamentos = this.deptService.getAll();
-    this.departamentos = [{descripcion: 'TI', idDepartamento: 1},{descripcion: 'RRHH', idDepartamento: 1},]
+    this.departamentos = [{ descripcion: 'TI', idDepartamento: 1 }, { descripcion: 'RRHH', idDepartamento: 1 },]//------Al tener el back ----
 
     this.preview = '';
 
@@ -46,25 +46,32 @@ export class AddModalComponent implements OnInit {
     })
   }
 
-  add_func() { 
-    this.form.markAllAsTouched();
-    if(this.form.valid){
-      // Espera la respuesta del backend.
-      if(this.service.create(this.obtainFunc())){ //-----------------------------------------------------Al tener el back -----------
-          this.closeModal();  
-          this.alertService.promiseAlert('Se agregó correctamente el funcionario').then(()=>{
-          this.service.updateNeeded.emit(true)
-        })
-      }else{
-        // Si el backend envia una respuesta incorrecta.
-        this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
-      }
+  add_func() {
+
+    if (this.form.invalid) {
+      return this.form.markAllAsTouched();
     }
+
+    // Si el email existe mostramos una alerta.
+    if (this.service.validateEmail(this.form.value.correo)) {  //-----------------------------------------------------Al tener el back -----------
+      return this.alertService.simpleAlert('El email ya se encuentra registrado')
+    }
+
+    // Espera la respuesta del backend.
+    if (this.service.create(this.obtainFunc())) { //-----------------------------------------------------Al tener el back -----------
+      this.closeModal();
+      this.alertService.promiseAlert('Se agregó correctamente el funcionario').then(() => {
+        this.service.updateNeeded.emit(true)
+      })
+    } else {
+      // Si el backend envia una respuesta incorrecta.
+      this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
+    }
+
   }
 
   // Metodo que destruye formulario y datos cargados al modal
   async closeModal() {
-   
     this.formToggle = true;
     setTimeout(() => { this.openedModal = false }, 500)
     this.form.reset()
@@ -75,15 +82,15 @@ export class AddModalComponent implements OnInit {
   onFileChange(event: any) {
     if (event.target.files && event.target.files[0]) {
       this.loadPreview(event);
-      this.form.patchValue({foto: event.target.files[0]})
+      this.form.patchValue({ foto: event.target.files[0] })
     } else {
-      this.form.patchValue({foto: ''})
+      this.form.patchValue({ foto: '' })
       this.preview = '';
     }
   }
 
-  
-  loadPreview(event:any){
+
+  loadPreview(event: any) {
     const reader = new FileReader();
     reader.readAsDataURL(event.target.files[0]);
     reader.onload = (event) => {
@@ -91,78 +98,78 @@ export class AddModalComponent implements OnInit {
     }
   }
 
-    // Extrae los datos de un funcionario valido a un objeto funcionario
-    obtainFunc():FormData {
-      const postData = new FormData();
+  // Extrae los datos de un funcionario valido a un objeto funcionario
+  obtainFunc(): FormData {
+    const postData = new FormData();
 
-      postData.append('correo', this.form.value.correo);
-      postData.append('contrasenia', this.form.value.password);
-      postData.append('idSexo', this.form.value.sexo);
-      postData.append('idDepartamento', this.form.value.departamento);
-      postData.append('idTipoFuncionario', this.form.value.tipo);
-      postData.append('fechaNacimiento', this.form.value.nacimiento);
-      postData.append('nombre', this.form.value.nombre);
-      postData.append('apellido1', this.form.value.apellido1);
-      postData.append('apellido2', this.form.value.apellido2);
-      postData.append('urlFoto', this.form.value.foto);
+    postData.append('correo', this.form.value.correo);
+    postData.append('contrasenia', this.form.value.password);
+    postData.append('idSexo', this.form.value.sexo);
+    postData.append('idDepartamento', this.form.value.departamento);
+    postData.append('idTipoFuncionario', this.form.value.tipo);
+    postData.append('fechaNacimiento', this.form.value.nacimiento);
+    postData.append('nombre', this.form.value.nombre);
+    postData.append('apellido1', this.form.value.apellido1);
+    postData.append('apellido2', this.form.value.apellido2);
+    postData.append('urlFoto', this.form.value.foto);
 
-      return postData;
-    }
+    return postData;
+  }
 
-    // Metodo para construir el formulario con validaciones
-    buildForm(){
-      this.form = this.formBuilder.group({
-        correo: ["", [
-            Validators.required,
-            Validators.pattern("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"),
-            Validators.minLength(8),
-            Validators.maxLength(50) ]],
-        password: ["", [ 
-          Validators.required,
-          Validators.minLength(8), 
-          Validators.maxLength(16)
-        ]],
-        rePassword: ["", [ 
-          Validators.required, 
-          Validators.minLength(8), 
-          Validators.maxLength(16)
-        ]],
-        departamento: ["", [ 
-          Validators.required, 
-          Validators.min(1), 
-          Validators.max(255)
-        ]],
-        tipo: ["", [ 
-          Validators.required, 
-          Validators.min(1), 
-          Validators.max(255)
-        ]],
-        foto: ["", []],
-        urlFoto: ["", [ 
-          Validators.required,
-          Validators.pattern('^(.)*.(jpe?g|png)$')
-        ]],
-        nombre: ["", [ 
-          Validators.required, 
-          Validators.minLength(3), 
-          Validators.maxLength(15) 
-        ]],
-        apellido1: ["", [
-          Validators.required, 
-          Validators.minLength(3), 
-          Validators.maxLength(15) 
-        ]],
-        apellido2: ["", [ 
-          Validators.required, 
-          Validators.minLength(3), 
-          Validators.maxLength(15) 
-        ]],
-        sexo: ["", [ 
-          Validators.required, 
-          Validators.min(1), 
-          Validators.max(255) 
-        ]],
-        nacimiento: ["", [ Validators.required ]],
-      })
-    }
+  // Metodo para construir el formulario con validaciones
+  buildForm() {
+    this.form = this.formBuilder.group({
+      correo: ["", [
+        Validators.required,
+        Validators.pattern("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"),
+        Validators.minLength(8),
+        Validators.maxLength(50)]],
+      password: ["", [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(16)
+      ]],
+      rePassword: ["", [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(16)
+      ]],
+      departamento: ["", [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(255)
+      ]],
+      tipo: ["", [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(255)
+      ]],
+      foto: ["", []],
+      urlFoto: ["", [
+        Validators.required,
+        Validators.pattern('^(.)*.(jpe?g|png)$')
+      ]],
+      nombre: ["", [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(15)
+      ]],
+      apellido1: ["", [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(15)
+      ]],
+      apellido2: ["", [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(15)
+      ]],
+      sexo: ["", [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(255)
+      ]],
+      nacimiento: ["", [Validators.required]],
+    })
+  }
 }
