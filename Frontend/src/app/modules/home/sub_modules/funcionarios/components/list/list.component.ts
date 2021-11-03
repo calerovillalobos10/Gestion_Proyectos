@@ -78,6 +78,13 @@ export class ListComponent implements OnInit {
     }
   }
 
+  // Actualiza la tabla
+  updateTable(){
+    this.lastFilter = '';
+    this.filterForm.patchValue({'filter': ''})
+    this.allRows = this.service.getAll() //----------------------------------------------Al tener el back--------------------------------
+  }
+
   // Llama al modal correspondiente de agregar
   add_func(){
     this.service.modalNeeded.emit({subject: 'addModal', status:true});
