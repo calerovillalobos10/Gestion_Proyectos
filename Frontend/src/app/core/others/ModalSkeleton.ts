@@ -8,7 +8,7 @@ export class ModalSkeleton{
   
   constructor(){
     this.formToggle = false
-    this.openedModal = false
+    this.openedModal = true
   }
 
   async closeModal() {

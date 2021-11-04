@@ -16,10 +16,8 @@
  
                 <div class="input_group">
                  
-                  <div class="pdf_previewer">
-                      <!--
-                     
-
+                  <div class="pdf_previewer" >
+               
                           <pdf-viewer
                         [src] = 'pdfSrc'
                         [render-text] = 'true'
@@ -28,12 +26,8 @@
                         [zoom-scale]="'page-fit'"
                         [autoresize]="true"
                         style="display: block;"
-                        >
+                         >
                         </pdf-viewer>
-
-                     
-                      -->
-                   <!-- Aca iria el previewer...-->
                   </div>
 
                 </div>
@@ -46,7 +40,7 @@
                   </label>
 
                   <label class="label"> Acta constitutiva</label>
-                  <ng-container *ngTemplateOutlet="acta_error; context: {error: form.get('acta')?.errors}"></ng-container>
+                  <ng-container *ngTemplateOutlet="urlActa_error; context: {error: form.get('urlActa')?.errors}"></ng-container>
                 </div>
                 
               </div>
@@ -154,10 +148,17 @@
   </p>
 </ng-template>
 
-<ng-template #acta_error let-error="error">
-  <p class="error-input" *ngIf="form.get('acta')?.dirty || form.get('acta')?.touched">
+<ng-template #urlActa_error let-error="error">
+
+  <p class="error-input" *ngIf="form.get('urlActa')?.dirty || form.get('urlActa')?.touched">
+    
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
   </p>
+  <p class="error-input">
+    <span class="login_error" *ngIf="error?.pattern">El formato debe ser PDF </span>
+  </p>
+  
+
 </ng-template>
 
 </ng-container>

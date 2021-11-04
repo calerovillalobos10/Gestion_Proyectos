@@ -13,8 +13,8 @@ import { FuncionariosService } from '@core/services/funcionarios/funcionarios.se
 
 export class AddModalComponent extends ModalSkeleton implements OnInit {
  
-  public pdfSrc = 'https://librosgratisparaleer.com/wp-content/uploads/2021/08/Harry-Potter-y-la-piedra-filosofal-holaebook.pdf'
-
+  public pdfSrc = ''
+  
   public preview: any;
 
   constructor(
@@ -57,21 +57,25 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
   // Metodo para cambiar el preview de la foto del funcionario.
   onFileChange(event: any) {
+    
     if (event.target.files && event.target.files[0]) {
       this.loadPreview(event);
-      this.form.patchValue({ foto: event.target.files[0] })
+      this.form.patchValue({ acta: event.target.files[0] })
     } else {
-      this.form.patchValue({ foto: '' })
+      this.form.patchValue({ acta: '' })
       this.preview = '';
     }
   }
 
   loadPreview(event: any) {
+
     const reader = new FileReader();
-    reader.readAsDataURL(event.target.files[0]);
-    reader.onload = (event) => {
-      this.preview = event.target?.result;
-    }
+    reader.onloadend = (e: any) => {
+      this.pdfSrc = e.target.result;
+    };
+    this.form.patchValue({urlActa: event.target.files[0].name})
+    reader.readAsArrayBuffer(event.target.files[0]);
+
   }
 
   // Extrae los datos de un funcionario valido a un objeto funcionario
@@ -112,7 +116,10 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       [Validators.required
       ]],
       acta: ["", 
-      [Validators.required
+      ],
+      urlActa: ["", 
+      [Validators.required,
+       Validators.pattern('^(.)*.(pdf)$')
       ]],
     })
   }
