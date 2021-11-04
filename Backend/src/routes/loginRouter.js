@@ -1,9 +1,10 @@
 // Importaciones necesarias
 import {Router} from 'express'
-import loginController from '../controllers/loginController'
+import LoginController from '../controllers/loginController'
 
 // Instancia
 const router = Router()
+const loginController = new LoginController()
 
 // Rutas de login
 /*

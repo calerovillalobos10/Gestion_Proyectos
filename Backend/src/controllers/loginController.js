@@ -3,7 +3,7 @@ import { getConnection, sql } from '../database/connection'
 import jwt from 'jsonwebtoken'
 import speakeasy from 'speakeasy'
 
-export default class loginController {
+export default class LoginController {
 
     // Constructor vacío
     constructor() { }
