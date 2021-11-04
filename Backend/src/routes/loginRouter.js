@@ -1,6 +1,6 @@
 // Importaciones necesarias
 import {Router} from 'express'
-import {getNombreCorreo, getToken, getSecret, verifyToken, recuperarToken, verifySecret} from '../controllers/loginController'
+import loginController from '../controllers/loginController'
 
 // Instancia
 const router = Router()
@@ -10,14 +10,14 @@ const router = Router()
     Envía el secret mediante el código, para ver si es válido
     Obtiene el correo del frontend y un pin
 */
-router.post('/autenticar', recuperarToken, verifyToken, async (req, res) => {
+router.post('/autenticar', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     const correo = req.body.correo; // Falta validar este dato
     const pin = req.body.pin; // Falta validar este dato
-    const secret = await getSecret(correo);
+    const secret = await loginController.getSecret(correo);
 
     // Se llama a la función que valida el Pin
-    const validarPin = verifySecret(secret.secretUrl, pin);
+    const validarPin = loginController.verifySecret(secret.secretUrl, pin);
 
     if (validarPin) {
 
@@ -41,12 +41,12 @@ router.post('/autenticar', recuperarToken, verifyToken, async (req, res) => {
 router.post('/login', async (req, res) => {
 
     const dataLogin = req.body; // Falta validar estos datos
-    const dataBD = await getNombreCorreo(dataLogin);
+    const dataBD = await loginController.getNombreCorreo(dataLogin);
 
     if ( dataBD ) {
 
         // Llamado para crear el token del usuario
-        const token = getToken(dataBD, res);
+        const token = loginController.getToken(dataBD, res);
 
         if ( token ) {
 
