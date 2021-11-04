@@ -10,9 +10,9 @@
   left: 25%;
   background-color: var(--clr-base-100);
   color: var(--clr-neutral-100);
-  border-radius:  0 0 .5em 0 ;
+  border-radius:  .5em;
   width: 50vw;
-  padding: 1em;
+  padding: .5em;
 }
 
 .tools{
@@ -91,6 +91,7 @@ content: '';
     max-width: 200px;
     max-height: 100%;
     z-index: 1000;
+    border-radius:  0 0 .5em 0 ;
   }
 
   .hide-bar{

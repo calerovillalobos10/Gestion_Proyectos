@@ -1,8 +1,9 @@
+import { ModalSkeleton } from '@core/others/ModalSkeleton';
 import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
 import { Departamento } from '@core/models/Departamento';
 import { AlertService } from '@core/services/alert/alert.service';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
 
 @Component({
@@ -11,13 +12,9 @@ import { FuncionariosService } from '@core/services/funcionarios/funcionarios.se
   styleUrls: ['./add-modal.component.scss']
 })
 
-export class AddModalComponent implements OnInit {
-  public form!: FormGroup;
-  public formToggle: boolean;
-  public openedModal: boolean;
+export class AddModalComponent extends ModalSkeleton implements OnInit {
 
   public departamentos: Array<Departamento>;
-
   public preview: string | ArrayBuffer | null | undefined;
 
   constructor(
@@ -26,20 +23,19 @@ export class AddModalComponent implements OnInit {
     private alertService: AlertService,
     private deptService: DepartamentosService
   ) {
+    super();
 
-    this.formToggle = false
-    this.openedModal = false
     this.departamentos = this.deptService.getAll();
     this.departamentos = [{ descripcion: 'TI', idDepartamento: 1 }, { descripcion: 'RRHH', idDepartamento: 1 },]//------Al tener el back ----
 
     this.preview = '';
-
     this.buildForm();
   }
 
   ngOnInit(): void {
     this.service.modalNeeded.subscribe(data => {
       if (data.subject === 'addModal') {
+        this.preview = '';
         this.openedModal = data.status
         this.formToggle = !data.status
       }
@@ -67,15 +63,6 @@ export class AddModalComponent implements OnInit {
       // Si el backend envia una respuesta incorrecta.
       this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
     }
-
-  }
-
-  // Metodo que destruye formulario y datos cargados al modal
-  async closeModal() {
-    this.formToggle = true;
-    setTimeout(() => { this.openedModal = false }, 500)
-    this.form.reset()
-    this.preview = '';
   }
 
   // Metodo para cambiar el preview de la foto del funcionario.

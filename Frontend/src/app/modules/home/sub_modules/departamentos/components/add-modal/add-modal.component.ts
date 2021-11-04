@@ -1,7 +1,7 @@
-import { Departamento } from '@core/models/Departamento';
+import { ModalSkeleton } from '@core/others/ModalSkeleton';
 import { AlertService } from '@core/services/alert/alert.service';
 import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -9,20 +9,15 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './add-modal.component.html',
   styleUrls: ['./add-modal.component.scss']
 })
-export class AddModalComponent implements OnInit {
-  public form!: FormGroup;
-  public formToggle: boolean;
-  public openedModal: boolean;
-  
-  
+export class AddModalComponent extends ModalSkeleton implements OnInit {
+
   constructor(
     private formBuilder:FormBuilder,
     private service: DepartamentosService,
     private alertService: AlertService
   ) { 
-    this.formToggle = false
-    this.openedModal = false
-    
+
+    super();
 
     this.form = this.formBuilder.group({
       descripcion: ["",
@@ -60,14 +55,4 @@ export class AddModalComponent implements OnInit {
       }
     }
   }
-
-    // Metodo que destruye formulario y datos cargados al modal
-    async closeModal() {
-      this.formToggle = true;
-      setTimeout(() => { this.openedModal = false }, 500)
-      this.form.reset();
-    }
-
-    
 }
-

@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@swimlane/ngx-datatable": "^20.0.0"
+    "@swimlane/ngx-datatable": "^20.0.0",
+    "ng2-pdf-viewer": "^7.0.1"
   }
 }

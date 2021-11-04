@@ -1,0 +1,163 @@
+
+<div class="primary_box" *ngIf="openedModal" >
+ 
+  <div class="primary_box_container" [ngClass]="{ desaparecer: formToggle }">
+    <button class="btn_close" (click)='closeModal()'><i class="fas fa-window-close"></i></button>
+    <div>
+      <h1 class="title">Registro de solicitud</h1>
+
+      <form [formGroup]="form" (submit)="add_solicitude()" >
+  
+        <div class="row">
+
+          <div class="col mr-1">
+            <div class="row">
+              <div class="col mr-1">
+ 
+                <div class="input_group">
+                 
+                  <div class="pdf_previewer">
+                      <!--
+                     
+
+                          <pdf-viewer
+                        [src] = 'pdfSrc'
+                        [render-text] = 'true'
+                        [fit-to-page]="false"
+                        [original-size]="false"
+                        [zoom-scale]="'page-fit'"
+                        [autoresize]="true"
+                        style="display: block;"
+                        >
+                        </pdf-viewer>
+
+                     
+                      -->
+                   <!-- Aca iria el previewer...-->
+                  </div>
+
+                </div>
+
+                <div class="input_group">
+                  <input class="input" type="file" placeholder=" " id="acta" name="acta" (change)="onFileChange($event)" 
+                  accept="application/pdf" enctype="multipart/form-data" formControlName="acta"/>
+                  <label class="custom-file-upload" for="acta" >
+                    <i class="fas fa-upload"></i> Seleccionar
+                  </label>
+
+                  <label class="label"> Acta constitutiva</label>
+                  <ng-container *ngTemplateOutlet="acta_error; context: {error: form.get('acta')?.errors}"></ng-container>
+                </div>
+                
+              </div>
+            
+            </div>
+          </div>
+
+          <!---------Columna 1 ---------->
+          <div class="col mr-1">
+         
+            <div class="input_group">
+              <select class="select" name="aplicativo" id="aplicativo" formControlName="aplicativo"> 
+                <option selected disabled hidden>Seleccione</option>
+              </select>
+
+              <label class="label" for="aplicativo"> Funcionario Aplicativo</label>
+              <ng-container *ngTemplateOutlet="aplicativo_error; context: {error: form.get('aplicativo')?.errors}"></ng-container>
+            </div>
+
+            <div class="input_group">
+              <select class="select" name="responsable" id="responsable" formControlName="responsable"> 
+                <option selected disabled hidden>Seleccione</option>
+              </select>
+
+              <label class="label" for="responsable"> Funcionario Responsable</label>
+              <ng-container *ngTemplateOutlet="responsable_error; context: {error: form.get('responsable')?.errors}"></ng-container>
+            </div>
+
+  
+            <div class="input_group">
+              <select class="select" name="final" id="final"  formControlName="final">
+                <option selected disabled hidden>Seleccione</option>
+              </select>
+         
+              <label class="label" for="final"> Funcionario Final</label>
+              <ng-container *ngTemplateOutlet="final_error; context: {error: form.get('final')?.errors}"></ng-container>
+            </div>
+
+           
+            <div class="input_group">
+              <input class="input" type="date" id="fechaSolicitud" formControlName="fechaSolicitud"/>
+              <label class="label" for="fechaSolicitud"> Fecha de solicitud</label>
+              <ng-container *ngTemplateOutlet="fechaSolicitud_error; context: {error: form.get('fechaSolicitud')?.errors}"></ng-container>
+            </div>
+
+            <div class="input_group">
+              <input class="input" type="date" id="fechaInicio" formControlName="fechaInicio"/>
+              <label class="label" for="fechaInicio"> Fecha de inicio</label>
+              <ng-container *ngTemplateOutlet="fechaInicio_error; context: {error: form.get('fechaInicio')?.errors}"></ng-container>
+            </div>
+
+            <div class="input_group">
+              <input class="input" type="date" id="fechaFin" formControlName="fechaFin"/>
+              <label class="label" for="fechaFin"> Fecha de fin</label>
+              <ng-container *ngTemplateOutlet="fechaFin_error; context: {error: form.get('fechaFin')?.errors}"></ng-container>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="btn">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-container >
+
+  <!-- Templates de error -->
+
+<ng-template #aplicativo_error let-error="error">
+  <p class="error-input" *ngIf="form.get('aplicativo')?.dirty || form.get('aplicativo')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #responsable_error let-error="error">
+  <p class="error-input" *ngIf="form.get('responsable')?.dirty || form.get('responsable')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #final_error let-error="error">
+  <p class="error-input" *ngIf="form.get('final')?.dirty || form.get('final')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #fechaInicio_error let-error="error">
+  <p class="error-input" *ngIf="form.get('fechaInicio')?.dirty || form.get('fechaInicio')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #fechaFin_error let-error="error">
+  <p class="error-input" *ngIf="form.get('fechaFin')?.dirty || form.get('fechaFin')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #fechaSolicitud_error let-error="error">
+  <p class="error-input" *ngIf="form.get('fechaSolicitud')?.dirty || form.get('fechaSolicitud')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #acta_error let-error="error">
+  <p class="error-input" *ngIf="form.get('acta')?.dirty || form.get('acta')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+</ng-container>

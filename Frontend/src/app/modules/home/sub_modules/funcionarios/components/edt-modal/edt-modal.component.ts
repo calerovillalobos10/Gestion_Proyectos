@@ -1,3 +1,4 @@
+import { ModalSkeleton } from '@core/others/ModalSkeleton';
 import { Departamento } from '@core/models/Departamento';
 import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
 import { AlertService } from '@core/services/alert/alert.service';
@@ -12,17 +13,14 @@ import { FuncionariosService } from '@core/services/funcionarios/funcionarios.se
   templateUrl: './edt-modal.component.html',
   styleUrls: ['./edt-modal.component.scss']
 })
-export class EdtModalComponent implements OnInit {
-  public formToggle: boolean;
-  public openedModal: boolean;
-  
+export class EdtModalComponent extends ModalSkeleton implements OnInit {
+
   private userId: number;
   public preview: string | ArrayBuffer | null | undefined;
   private oldPicture: string;
   private oldMail: string;
 
   public departamentos: Array<Departamento>;
-  public form!: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,9 +28,7 @@ export class EdtModalComponent implements OnInit {
     private alertService: AlertService,
     private deptService: DepartamentosService
   ) {
-    
-    this.formToggle = false
-    this.openedModal = false
+    super();
     
     this.preview = '';
     this.userId = 0
@@ -47,6 +43,7 @@ export class EdtModalComponent implements OnInit {
   ngOnInit(): void {
     this.service.modalNeeded.subscribe(data => {
       if (data.subject === 'editModal') {
+        this.preview = '';
         this.openedModal = data.status
         this.formToggle = !data.status
         this.userId = data.userId
@@ -114,14 +111,6 @@ export class EdtModalComponent implements OnInit {
       // Si el backend envia una respuesta incorrecta.
       this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
     }
-  }
-
-  // Metodo que destruye formulario y datos cargados al modal
-  async closeModal() {
-    this.formToggle = true;
-    setTimeout(() => { this.openedModal = false }, 500)
-    this.form.reset()
-    this.preview = '';
   }
 
   // Metodo para cambiar el preview de la foto del funcionario.
