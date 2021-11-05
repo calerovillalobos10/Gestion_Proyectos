@@ -21,12 +21,12 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
     private service: DepartamentosService,
     private alertService: AlertService,
   ) {
-    
+
     super();
     this.departamentId = 0;
     this.form = this.formBuilder.group({
-      descripcion: ["", [ 
-        Validators.required, 
+      descripcion: ["", [
+        Validators.required,
         Validators.minLength(3),
         Validators.maxLength(30)]]
     })
@@ -38,7 +38,7 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
         this.openedModal = data.status
         this.formToggle = !data.status
         this.departamentId = data.departamentId
-        this.loadEditDept()
+        this.loadEditDept();
       }
     })
   }
@@ -54,20 +54,33 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
 
   // Envia los datos de la edicion del departamento
   edt_dept() {
-    this.form.markAllAsTouched();
-    if(this.form.valid){
-      
-      // Espera la respuesta del back.------------------------------------------------------------------------------Al tener el back---------------
-      if(this.service.update({descripcion:this.form.value.descripcion, idDepartamento:this.departamentId})){
-          this.closeModal();  
-          this.alertService.promiseAlert('Se modificó correctamente el departamento').then(()=>{
-          this.service.updateNeeded.emit(true)
-        })
-      }else{
-        // Si el backend envia una respuesta incorrecta.
-        this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
-      }
+
+    // Verifica si es invalido
+    if (this.form.invalid) {
+      return this.form.markAllAsTouched();
     }
+    
+    // Verifica la existencia del departamento
+    if (this.checkExistance(this.form.value.descripcion, this.departamentId)){
+      return this.alertService.simpleAlert('Ya existe este departamento')
+    }
+
+    // Espera la respuesta del backend.------------------------------------------------------------------------------Al tener el back---------------
+    if (this.service.update({ descripcion: this.form.value.descripcion, idDepartamento: this.departamentId })) {
+      this.closeModal();
+      this.alertService.promiseAlert('Se modificó correctamente el departamento').then(() => {
+        this.service.updateNeeded.emit(true)
+      })
+    } else {
+      // Si el backend envia una respuesta incorrecta.
+      this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
+    }
+  }
+
+  // Valida la existencia del departamento.
+  checkExistance(descripcion: string, id: number) {
+    return this.service.getAll()
+    .some(element => element.descripcion?.toLowerCase() === descripcion.toLowerCase() && element.idDepartamento !== id);
   }
 
 }

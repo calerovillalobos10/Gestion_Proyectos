@@ -127,9 +127,8 @@ export class ListComponent implements OnInit {
   }
 }
 
-
 /* Datos de prueba para eliminar*/
-const fixedData = [{ idDepartamento: 1, descripcion: 'Recursos Humanos' }, { idDepartamento: 2, descripcion: 'Contabilidad' },]
+const fixedData = [{ idDepartamento: 3, descripcion: 'Recursos Humanos' }, { idDepartamento: 6, descripcion: 'Contabilidad' },]
 
 const fixedDelete: any = (filteredRows: any[], id: number) => {
   filteredRows = filteredRows.filter(function (element: { idDepartamento: number; }) {

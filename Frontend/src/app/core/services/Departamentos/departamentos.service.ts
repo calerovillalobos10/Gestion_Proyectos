@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Departamento } from '../../models/Departamento';
 import { Injectable, Output, EventEmitter } from '@angular/core';
-import { timeout } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -91,7 +90,10 @@ export class DepartamentosService {
         departaments = []
       }
     )
-
-    return departaments;
+      return [{descripcion:'contabilidad', idDepartamento:3},{descripcion:'tii', idDepartamento:6}]
+    //return departaments;
   }
+
+  
+
 }
