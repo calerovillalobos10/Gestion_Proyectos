@@ -2,41 +2,57 @@
 import { getConnection, sql } from '../database/connection'
 import jwt from 'jsonwebtoken'
 import speakeasy from 'speakeasy'
+import ValidacionController from '../controllers/validationController'
 
 export default class LoginController {
 
+    validacionController = new ValidacionController()
     // Constructor vacío
-    constructor() { }
+    constructor() {
+
+        //const validacionController = new ValidacionController()
+    }
 
     // Recupera el nombre y el correo del funcionario una vez valido la existencia del mismo en la bd
     getNombreCorreo = async (dataLogin) => {
-
+        
         let pool = null
         let request = null
+        let correoRes = dataLogin.correo
+        let contraseniaRes = dataLogin.contrasenia
 
-        try {
-            pool = await getConnection()
-            request = pool.request()
-            // Parámetros de entrada y salida del sp
-            request.input("correoBE", sql.VarChar(50), dataLogin.correo)
-            request.input("contraseniaBE", sql.VarChar(16), dataLogin.contrasenia)
-            // Ejecución del sp
-            const result = await request.execute('sp_login')
-            // Retorno del objeto con los parámetros que se ocupan en el frontend
+        // Este if se encarga de llamar a las validaciones
+        if ( this.validacionController.verifyEmail(correoRes) && this.validacionController.verifySpecialCharacters(contraseniaRes) && 
+        this.validacionController.verifyMinSize(contraseniaRes, 8) && this.validacionController.verifyMaxSize(correoRes, 50) ) {
 
-            return {
-                nombre: result.recordset[0].nombre,
-                correo: result.recordset[0].correo,
-                dobleAuth: result.recordset[0].dobleAuth,
-                estado: true
+            try {
+                pool = await getConnection()
+                request = pool.request()
+                // Parámetros de entrada y salida del sp
+                request.input("correoBE", sql.VarChar(50), correoRes)
+                request.input("contraseniaBE", sql.VarChar(16), contraseniaRes)
+                // Ejecución del sp
+                const result = await request.execute('sp_login')
+                // Retorno del objeto con los parámetros que se ocupan en el frontend
+
+                return {
+                    nombre: result.recordset[0].nombre,
+                    correo: result.recordset[0].correo,
+                    dobleAuth: result.recordset[0].dobleAuth,
+                    estado: true
+                }
+            } catch (err) {
+
+                console.log(err);
+                return false
+            } finally {
+                // Cerrar la conexión
+                pool.close()
             }
-        } catch (err) {
+        } else {
 
-            console.log(err);
+            console.log('Falló el proceso de validación de datos');
             return false
-        } finally {
-            // Cerrar la conexión
-            pool.close()
         }
     };
 
@@ -152,5 +168,3 @@ export default class LoginController {
     }
 
 }
-
-//TODO Validaciones del pattern para los datos ingresados desde el front
