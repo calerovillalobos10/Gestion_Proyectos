@@ -6,11 +6,12 @@ import ValidacionController from '../controllers/validationController'
 
 export default class LoginController {
 
-    validacionController = new ValidacionController()
+    validacionController;
+ 
     // Constructor vacío
     constructor() {
 
-        //const validacionController = new ValidacionController()
+        this.validacionController = new ValidacionController()
     }
 
     // Recupera el nombre y el correo del funcionario una vez valido la existencia del mismo en la bd
