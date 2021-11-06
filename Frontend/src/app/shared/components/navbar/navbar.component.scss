@@ -5,15 +5,14 @@
 }
 
 .side-bar{
-
-  position: fixed;
-  top: 0%;
+  position: relative;
+  top: -77px;
   left: 25%;
   background-color: var(--clr-base-100);
   color: var(--clr-neutral-100);
-  border-radius: 0  0 1em 1em  ;
-  width: 50%;
-  padding: 1em;
+  border-radius:  .5em;
+  width: 50vw;
+  padding: .5em;
 }
 
 .tools{
@@ -77,4 +76,84 @@ content: '';
 #funcionarios .funcionarios::before
 {
   transform: scaleX(1);
+}
+
+.toolbox{
+  display: none;
+}
+
+
+@media (max-width: 1020px){
+  .side-bar{
+    position: absolute;
+    top: 0;
+    left: 0%;
+    max-width: 200px;
+    max-height: 100%;
+    z-index: 1000;
+    border-radius:  0 0 .5em 0 ;
+  }
+
+  .hide-bar{
+     display: block;
+  }
+
+  .toolbox{
+    display: inline-block;
+    margin-top: .5em;
+    padding-top: .5em;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .side-bar{
+    transition: max-width 0.25s ease-in, max-height 0.25s ease-in;
+    width: 100%;
+    height:100%;
+  }
+
+  
+  .tools{
+    overflow: hidden;
+    max-height: 350px;
+    transition-delay: .5s;
+    transition: max-height 0.25s ease-in;
+   
+  }
+  
+  .hidden_toggle:checked + .side-bar > .tools{
+    max-height: 0px;
+    max-width: 0px;
+  }
+  
+  .hidden_toggle:checked + .side-bar > .tools{
+    max-height: 0px;
+    max-width: 0px;
+  }
+  
+  
+  
+  .hidden_toggle:checked + .side-bar{
+    max-width: 50px;
+    max-height: 50px;
+  }
+  
+  .hidden_toggle:checked + .side-bar  .row .op{
+    display: none;
+  }
+  
+  .hidden_toggle + .side-bar  .row .cl{
+    display: none;
+  }
+  
+  .hidden_toggle:checked + .side-bar  .row .cl{
+    display: inline-block;
+  }
+
+
+}
+
+  
+.hidden_toggle{
+  display: none;
 }

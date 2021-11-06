@@ -8,8 +8,10 @@
   </div>
   <div class="flex-group">
     <div class="user-Group">
-      <em class="usericon fas fa-user"> </em>
-      <span class="username">{{user!.nombre}}</span> 
+      <div class="icon_container">
+        <img appErrLogo class="usericon" src="{{user?.urlFoto}}" alt="">
+      </div>
+      <span class="username">{{user!.nombre}}</span>
     </div>
 
     <a class="btn_exit" (click)="logout()">

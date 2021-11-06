@@ -30,11 +30,14 @@
       "@shared/*" : [
         "src/app/shared/*"
       ],
-      
+      "@angular/*": [ 
+        "../node_modules/@angular/*" 
+      ]    
      
     }
 
   },
+
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,

@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class SolicitudesComponent implements OnInit {
 
   constructor() { }
-
+  public pdfSrc = 'https://librosgratisparaleer.com/wp-content/uploads/2021/08/Harry-Potter-y-la-piedra-filosofal-holaebook.pdf'
   ngOnInit(): void {
   }
 

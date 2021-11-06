@@ -1,0 +1,212 @@
+
+<div class="primary_box" *ngIf="openedModal" >
+ 
+  <div class="primary_box_container" [ngClass]="{ desaparecer: formToggle }">
+    <button class="btn_close" (click)='closeModal()'><i class="fas fa-window-close"></i></button>
+    <div>
+      <h1 class="title">Registro de funcionario</h1>
+
+      <form [formGroup]="form" (submit)="add_func()" >
+        <div class="row">
+          <div class="col mr-1">
+            <div class="input_group">
+              <div class="marcoFoto">
+                <img class="foto" appErrImg src="{{preview}}" alt="userImage">
+              </div>
+            </div>
+          </div>
+          <div class="col ml-1 mt-2">
+            <div class="input_group">
+              <input class="input" type="file" placeholder=" " id="urlFoto" name="urlFoto" (change)="onFileChange($event)" 
+              accept="image/png,image/jpeg" enctype="multipart/form-data" formControlName="urlFoto"/>
+              <label class="custom-file-upload" for="urlFoto" >
+                <i class="fas fa-upload"></i> Seleccionar
+              </label>
+
+              <label class="label"> Foto</label>
+              <ng-container *ngTemplateOutlet="foto_error; context: {error: form.get('urlFoto')?.errors}"></ng-container>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <!---------Columna 1 ---------->
+          <div class="col mr-1">
+            <div class="input_group">
+              <input class="input" type="text" placeholder=" " id="correo" formControlName="correo" />
+              <label class="label" for="correo"> Correo</label>
+              <ng-container *ngTemplateOutlet="correo_error; context: {error: form.get('correo')?.errors}"></ng-container>
+            </div>
+
+            <div class="input_group">
+              <input class="input" type="password" placeholder=" " id="password" formControlName="password" />
+              <label class="label" for="password"> Contraseña</label>
+              <ng-container *ngTemplateOutlet="pass_error; context: {error: form.get('password')?.errors}"></ng-container>
+            </div>
+
+            <div class="input_group">
+              <input class="input" type="password" placeholder=" " id="rePassword" formControlName="rePassword" />
+              <label class="label" for="rePassword"> Repetir contraseña</label>
+              <ng-container *ngTemplateOutlet="repass_error; context: {error: form.get('rePassword')?.errors}"></ng-container>
+            </div>
+
+            <div class="input_group">
+              <select class="select" name="departamento" id="departamento" formControlName="departamento"> 
+                <option selected disabled hidden>Seleccione</option>
+                <option  *ngFor="let departamento of departamentos" value="{{departamento.idDepartamento}}">{{departamento.descripcion}}</option>
+              </select>
+              <label class="label" for="departamento"> Departamento</label>
+              <ng-container *ngTemplateOutlet="departamento_error; context: {error: form.get('departamento')?.errors}"></ng-container>
+            </div>
+
+  
+            <div class="input_group">
+              <select class="select" name="tipo" id="tipo"  formControlName="tipo">
+                <option selected disabled hidden>Seleccione</option>
+                <option value="1">Aplicativo</option>
+                <option value="2">Responable</option>
+                <option value="3">Final</option>
+              </select>
+         
+              <label class="label" for="tipo"> Tipo de funcionario</label>
+              <ng-container *ngTemplateOutlet="tipo_error; context: {error: form.get('tipo')?.errors}"></ng-container>
+            </div>
+
+          </div>
+
+          <!---------Columna 2 ---------->
+          <div class="col ml-1">
+            <div class="input_group">
+              <input class="input" type="text" placeholder=" " id="nombre" formControlName="nombre"/>
+              <label class="label" for="nombre"> Nombre</label>
+              <ng-container *ngTemplateOutlet="nombre_error; context: {error: form.get('nombre')?.errors}"></ng-container>
+            </div>
+
+            <div class="input_group">
+              <input class="input" type="text" placeholder=" " id="apellido1" formControlName="apellido1" />
+              <label class="label" for="apellido1"> Primer apellido</label>
+              <ng-container *ngTemplateOutlet="apellido1_error; context: {error: form.get('apellido1')?.errors}"></ng-container>
+            </div>
+            <div class="input_group">
+              <input class="input" type="text" placeholder=" " id="apellido2" formControlName="apellido2" />
+              <label class="label" for="apellido2"> Segundo apellido</label>
+              <ng-container *ngTemplateOutlet="apellido2_error; context: {error: form.get('apellido2')?.errors}"></ng-container>
+            </div>
+
+            <div class="input_group">
+              <select class="select" name="sexo" id="sexo"  formControlName="sexo">
+                <option selected disabled hidden>Seleccione</option>
+                <option value="1">Hombre</option>
+                <option value="2">Mujer</option>
+              </select>
+         
+              <label class="label" for="sexo"> Sexo</label>
+              <ng-container *ngTemplateOutlet="sexo_error; context: {error: form.get('sexo')?.errors}"></ng-container>
+            </div>
+
+            <div class="input_group">
+              <input class="input" type="date" id="nacimiento" formControlName="nacimiento"/>
+              <label class="label" for="nacimiento"> Fecha de nacimiento</label>
+              <ng-container *ngTemplateOutlet="nacimiento_error; context: {error: form.get('nacimiento')?.errors}"></ng-container>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="btn">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-container >
+
+  <!-- Templates de error -->
+
+<ng-template #correo_error let-error="error">
+  
+  <p class="error-input" *ngIf="form.get('correo')?.dirty || form.get('correo')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.pattern && !error?.minlength">El formato del correo no es válido </span>
+  </p>
+</ng-template>
+
+<ng-template #pass_error let-error="error">
+  <p class="error-input" *ngIf="form.get('password')?.dirty || form.get('password')?.touched">
+    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #repass_error let-error="error">
+  <p class="error-input" *ngIf="form.get('rePassword')?.dirty || form.get('rePassword')?.touched">
+    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="!error && form.value.password !== form.value.rePassword">Las constraseñas no coinciden</span>
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #departamento_error let-error="error">
+  <p class="error-input" *ngIf="form.get('departamento')?.dirty || form.get('departamento')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #tipo_error let-error="error">
+  <p class="error-input" *ngIf="form.get('tipo')?.dirty || form.get('tipo')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #nombre_error let-error="error">
+  <p class="error-input" *ngIf="form.get('nombre')?.dirty || form.get('nombre')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
+  </p>
+</ng-template>
+
+<ng-template #apellido1_error let-error="error">
+  <p class="error-input" *ngIf="form.get('apellido1')?.dirty || form.get('apellido1')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
+  </p>
+</ng-template>
+
+
+<ng-template #apellido2_error let-error="error">
+  <p class="error-input" *ngIf="form.get('apellido2')?.dirty || form.get('apellido2')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
+    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
+  </p>
+</ng-template>
+
+
+<ng-template #sexo_error let-error="error">
+  <p class="error-input" *ngIf="form.get('sexo')?.dirty || form.get('sexo')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #nacimiento_error let-error="error">
+  <p class="error-input" *ngIf="form.get('nacimiento')?.dirty || form.get('nacimiento')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #foto_error let-error="error">
+
+  <p class="error-input" *ngIf="form.get('urlFoto')?.dirty || form.get('urlFoto')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.pattern">El formato de la imagen no es válido</span>
+  </p>
+</ng-template>
+
+</ng-container>

@@ -6,6 +6,8 @@ import { HeaderComponent } from './components/header/header.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { LoginTransitionComponent } from './transitions/login-transition/login-transition.component';
 import { LogoutTransitionComponent } from './transitions/logout-transition/logout-transition.component';
+import { ErrLogoDirective } from '@core/directives/images/err-logo.directive';
+
 
 @NgModule({
   declarations: [
@@ -13,7 +15,9 @@ import { LogoutTransitionComponent } from './transitions/logout-transition/logou
     HeaderComponent,
     NavbarComponent,
     LoginTransitionComponent,
-    LogoutTransitionComponent
+    LogoutTransitionComponent,
+  
+    ErrLogoDirective
   ],
   imports: [
     CommonModule,

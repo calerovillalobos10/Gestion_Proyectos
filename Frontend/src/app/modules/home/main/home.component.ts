@@ -8,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  public logging:boolean = false;
+  public logging:boolean;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) { 
+    this.logging = false;
+  }
 
   ngOnInit(): void {
     this.authService.logining.subscribe(data => {

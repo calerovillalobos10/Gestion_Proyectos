@@ -5,12 +5,13 @@ import { TokenInterceptor } from '@core/interceptors/Tokens';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ErrImgDirective } from './core/directives/images/err-img.directive';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    ErrImgDirective,
+
+
   ],
   imports: [
     BrowserModule,

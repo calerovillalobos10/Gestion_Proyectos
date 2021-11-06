@@ -6,6 +6,10 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
+
+/*
+  Este guard valida que el usuario tenga una cuenta aciva antes de avanzar.
+*/
 export class AuthGuard implements CanActivate {
   
   constructor(private auth:AuthService, private router:Router){}

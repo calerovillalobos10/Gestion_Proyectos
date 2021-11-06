@@ -1,6 +1,7 @@
 .header {
   width: 100vw;
   color: var(--clr-neutral-200);
+
 }
 
 .header .container {
@@ -40,19 +41,29 @@
   user-select: none;
 }
 
-.usericon {
-  font-size: 1.5em;
+.icon_container{
+  border: 1px solid white;
+  border-radius: 100%;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  transform: translateY(-10px);
   margin-top: 0.5rem;
+}
+
+.usericon {
   display: block;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 100%;
 }
 
 .username {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  max-width: 15ch;
-
-  max-width: 15ch;
+  max-width: 10ch;
   font-size: 1em;
   padding-top: 0.8em;
   padding-left: 0.4em;
@@ -66,3 +77,15 @@
   -webkit-user-drag: none;
 }
 
+
+@media (max-width: 1500px){
+.username{
+  display: none;
+}
+}
+
+@media (max-width: 1020px){
+  .head-logo{
+    opacity: 0;
+  }
+}

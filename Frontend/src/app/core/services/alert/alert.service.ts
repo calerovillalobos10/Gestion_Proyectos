@@ -39,6 +39,20 @@ export class AlertService {
     })
   }
 
+  // Metodo de confirmacion de eliminacion.
+  confirmAlert(title: string, message: string){
+    return Swal.fire({
+      title: title,
+      text: message,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si, eliminar',
+      cancelButtonText: 'No, cancelar',
+      allowOutsideClick: false
+    })
+  }
+
+  // Metodo de alerta de google auth
   googleAuthAlert(){
     return Swal.fire({
       title: 'Authenticador de Google',
@@ -51,14 +65,11 @@ export class AlertService {
       preConfirm: async (login) => {
         let response = await this.authService.googleAuth(login);
         if (!response) {
-          Swal.showValidationMessage(
-            `Código no válido.`
-          )
+          Swal.showValidationMessage(`Código no válido.`)
         }
         return response;
       },
       allowOutsideClick: false
     })
   }
-
 }

@@ -9,7 +9,6 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-
   public user?:Usuario;
 
   constructor(
@@ -27,7 +26,6 @@ export class HeaderComponent implements OnInit {
       setTimeout(() => {
         this.router.navigate(['/login'])
       },500)
-   
   }
 
 }
