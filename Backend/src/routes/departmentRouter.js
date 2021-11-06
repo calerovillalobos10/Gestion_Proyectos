@@ -9,10 +9,12 @@ const departmentController = new DepartmentController()
 
 // Rutas de department
 
-router.post('/insertDepartment', async (req, res) => {
+// Se encarga de comunicarse con el controller para insertar un departamento
+router.post('/department', async (req, res) => {
 
     const verifyDepartment = departmentController.verifyDepartment(req.body.descripcion)
 
+    // Valida si ya existe un departamento con esa descripción
     if ( (await verifyDepartment).estado ) {
         // Se llama a la función inserta el departamento
         const verifyInsert = departmentController.modifyDepartmentId(req.body)
@@ -39,6 +41,7 @@ router.post('/insertDepartment', async (req, res) => {
     }
 })
 
+// Se encarga de comunicarse con el controller para recuperar un listado de departamentos
 router.get('/listDepartment', async (req, res) => {
 
     // Se llama a la función recupera la lista
@@ -60,6 +63,7 @@ router.get('/listDepartment', async (req, res) => {
     }
 })
 
+// Se encarga de comunicarse con el controller para recuperar un objeto departamento
 router.get('/department', async (req, res) => {
 
     // Se llama a la función recupera el departamento por el id
@@ -81,7 +85,8 @@ router.get('/department', async (req, res) => {
     }
 })
 
-router.delete('/deleteDepartment', async (req, res) => {
+// Se encarga de comunicarse con el controller para eliminar un departamento
+router.delete('/department', async (req, res) => {
 
     // Se llama a la función elimina el departamento por el id
     const verifyDelete = departmentController.deleteDepartmentId(req.body)
@@ -101,7 +106,8 @@ router.delete('/deleteDepartment', async (req, res) => {
     }
 })
 
-router.put('/modifyDepartment', async (req, res) => {
+// Se encarga de comunicarse con el controller para modificar un departamento
+router.put('/department', async (req, res) => {
 
     // Se llama a la función modifica el departamento por el id
     const departament = new Department(req.body.id, req.body.descripcion, req.body.estado)
