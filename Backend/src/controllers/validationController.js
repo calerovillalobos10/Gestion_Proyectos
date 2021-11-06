@@ -36,5 +36,5 @@ export default class validationController {
     verifyNumber = (number) => ( number >= 0 && Number.isInteger(number) ) ? true : false
 
     // Esta función verifica que el argumento ingresado sea solo texto 
-    verifyText = () => {}
+    verifyText = (text) => /[a-zA-Z]/.test(text)
 }
