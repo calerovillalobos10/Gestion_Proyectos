@@ -56,6 +56,7 @@ router.post('/login', async (req, res) => {
                 "nombre": dataBD.nombre,
                 "correo": dataBD.correo,
                 "dobleAuth": dataBD.dobleAuth,
+                "urlFoto": dataBD.urlFoto,
                 "estado": dataBD.estado,
             })
         }

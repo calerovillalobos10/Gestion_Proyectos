@@ -33,8 +33,8 @@ export class AuthService {
         this.loadDataToken(tokenPayload);
       
       // Si es valido me permite acceder.
-          this.router.navigate(['/inicio'])
-          //this.router.navigate(['/login'])
+          this.router.navigate(['/departamentos'])
+          //this.router.navigate(['/inicio'])
      
       }else{
         // Si es invalido se elimina.
@@ -90,7 +90,7 @@ export class AuthService {
 
   // Carga los datos en memoria apartir del token seleccionado
   loadDataToken(tokenPayload:any){
-    this.userData = {correo: tokenPayload['correo'], nombre: tokenPayload['nombre'], dobleAuth: tokenPayload['dobleAuth'] }
+    this.userData = {correo: tokenPayload['correo'], nombre: tokenPayload['nombre'], dobleAuth: tokenPayload['dobleAuth'], urlFoto: tokenPayload['urlFoto'] }
   }
 
   logoutUser(){

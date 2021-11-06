@@ -15,16 +15,16 @@ Authorization: Barrer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhQkQiOnsibm9tY
 
 
 ###
-GET  http://localhost:4000/department
+POST  http://localhost:4000/departmentById
 Content-Type: application/json
 Authorization: Barrer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhQkQiOnsibm9tYnJlIjoiTHVpcyIsImNvcnJlbyI6Ikx1aXNAZ21haWwuY29tIiwiZG9ibGVBdXRoIjp0cnVlLCJlc3RhZG8iOnRydWV9LCJpYXQiOjE2MzYxNjc5NzQsImV4cCI6MTYzNjIwMzk3NH0.yWelE8eQVoY56N9zs5BYFJDSaHvUWdZXx1xipsn6nQM
 
 {
-  "id": 1
+  "id": 12
 }
 
 ###
-DELETE http://localhost:4000/department
+POST http://localhost:4000/deleteDepartment
 Content-Type: application/json
 Authorization: Barrer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhQkQiOnsibm9tYnJlIjoiTHVpcyIsImNvcnJlbyI6Ikx1aXNAZ21haWwuY29tIiwiZG9ibGVBdXRoIjp0cnVlLCJlc3RhZG8iOnRydWV9LCJpYXQiOjE2MzYxNjc5NzQsImV4cCI6MTYzNjIwMzk3NH0.yWelE8eQVoY56N9zs5BYFJDSaHvUWdZXx1xipsn6nQM
 
@@ -38,7 +38,7 @@ Content-Type: application/json
 Authorization: Barrer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhQkQiOnsibm9tYnJlIjoiTHVpcyIsImNvcnJlbyI6Ikx1aXNAZ21haWwuY29tIiwiZG9ibGVBdXRoIjp0cnVlLCJlc3RhZG8iOnRydWV9LCJpYXQiOjE2MzYxNjc5NzQsImV4cCI6MTYzNjIwMzk3NH0.yWelE8eQVoY56N9zs5BYFJDSaHvUWdZXx1xipsn6nQM
 
 {
-  "descripcion": "Gerencia"
+  "descripcion": "Gerencias2"
 }
 
 

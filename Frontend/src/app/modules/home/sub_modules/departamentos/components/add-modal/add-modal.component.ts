@@ -1,3 +1,4 @@
+import { Departamento } from '@core/models/Departamento';
 import { ModalSkeleton } from '@core/others/ModalSkeleton';
 import { AlertService } from '@core/services/alert/alert.service';
 import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
@@ -10,6 +11,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./add-modal.component.scss']
 })
 export class AddModalComponent extends ModalSkeleton implements OnInit {
+  private allRows: Array<Departamento> = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -23,10 +25,11 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       descripcion: ["",
         [
           Validators.required,
-          Validators.minLength(3),
+          Validators.minLength(2),
           Validators.maxLength(30)
         ]]
     })
+
   }
 
   ngOnInit(): void {
@@ -34,6 +37,16 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       if (data.subject === 'addModal') {
         this.openedModal = data.status
         this.formToggle = !data.status
+      
+        this.service.getAll().subscribe(
+          (res) => {
+            this.allRows = !res['estado'] ? [] : res['list'];
+          },
+          (err) => {
+            this.allRows = [];
+          }
+        )
+
       }
     })
   }
@@ -48,20 +61,27 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     }
 
     // Espera la respuesta del backend.
-    if (this.service.create({ descripcion: this.form.value.descripcion })) {  //-------------------------------Al tener el back-----------
-      this.closeModal();
-      this.alertService.promiseAlert('Se agregó correctamente el departamento').then(() => {
-        this.service.updateNeeded.emit(true)
+
+    this.service.create({ descripcion: this.form.value.descripcion }).subscribe(
+      (res) => {
+        if(res['estado']){
+          this.closeModal();
+          this.alertService.promiseAlert('Se agregó correctamente el departamento').then(() => {
+            this.service.updateNeeded.emit(true)
+          })
+        }else{
+          this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
+        }
+      },
+      (err) => {
+        this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
       })
-    } else {
-      // Si el backend envia una respuesta incorrecta.
-      this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
-    }
+
   }
 
   // Valida la existencia del departamento.
   checkExistance(descripcion: string) {
-    return this.service.getAll().some(element => element.descripcion?.toLowerCase() === descripcion.toLowerCase());
+    return this.allRows.some(element => element.descripcion?.toLowerCase() === descripcion.toLowerCase());
   }
 
 }

@@ -14,7 +14,8 @@ import { Departamento } from '@core/models/Departamento';
 
 export class EdtModalComponent extends ModalSkeleton implements OnInit {
 
-  public departamentId: number;
+  private allRows: Array<Departamento> = [];
+  public departamentId: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -27,9 +28,18 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
     this.form = this.formBuilder.group({
       descripcion: ["", [
         Validators.required,
-        Validators.minLength(3),
+        Validators.minLength(2),
         Validators.maxLength(30)]]
     })
+
+    this.service.getAll().subscribe(
+      (res) => {
+        this.allRows = !res['estado'] ? [] : res['list'];
+      },
+      (err) => {
+        this.allRows = [];
+      }
+    )
   }
 
   ngOnInit(): void {
@@ -39,17 +49,37 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
         this.formToggle = !data.status
         this.departamentId = data.departamentId
         this.loadEditDept();
+
+        this.service.getAll().subscribe(
+          (res) => {
+            this.allRows = !res['estado'] ? [] : res['list'];
+          },
+          (err) => {
+            this.allRows = [];
+          }
+        )
+
       }
     })
   }
 
   // Esta funcion tiene que traer del back el usuario a editar.
   loadEditDept() {
-    //const departmentData: Departamento = this.service.getById(this.departamentId); //-------------------------Al tener el back---------------
-    const departmentData: Departamento = { descripcion: 'Luis@gmail.com' }
-    this.form.patchValue({
-      descripcion: departmentData.descripcion
-    })
+   
+    this.service.getById(this.departamentId)
+    .subscribe(
+      (res) => {
+     
+        if(res['department']){
+          this.form.patchValue({ descripcion: res['department']?.descripcion })
+        }
+
+      },
+      (err) => {
+        this.alertService.promiseAlert('No se pudo obtener el departamento')
+        .then(()=>this.closeModal())
+      })
+
   }
 
   // Envia los datos de la edicion del departamento
@@ -65,22 +95,29 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
       return this.alertService.simpleAlert('Ya existe este departamento')
     }
 
-    // Espera la respuesta del backend.------------------------------------------------------------------------------Al tener el back---------------
-    if (this.service.update({ descripcion: this.form.value.descripcion, idDepartamento: this.departamentId })) {
-      this.closeModal();
-      this.alertService.promiseAlert('Se modificó correctamente el departamento').then(() => {
-        this.service.updateNeeded.emit(true)
+    this.service.update({ descripcion: this.form.value.descripcion, idDepartamento: this.departamentId }).subscribe(
+      (res) => {
+
+        console.log(this.departamentId)
+
+        if (res['estado']){
+          this.closeModal();
+          this.alertService.promiseAlert('Se modificó correctamente el departamento').then(() => {
+            this.service.updateNeeded.emit(true)
+          })
+        }else{
+          this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
+        }
+       },
+      (err) => {
+         this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
       })
-    } else {
-      // Si el backend envia una respuesta incorrecta.
-      this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
-    }
+
   }
 
   // Valida la existencia del departamento.
   checkExistance(descripcion: string, id: number) {
-    return this.service.getAll()
-    .some(element => element.descripcion?.toLowerCase() === descripcion.toLowerCase() && element.idDepartamento !== id);
+      return this.allRows.some(element => element.descripcion?.toLowerCase() === descripcion.toLowerCase() && element.idDepartamento !== id);
   }
 
 }

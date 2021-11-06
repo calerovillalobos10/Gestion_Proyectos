@@ -25,7 +25,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   ) {
     super();
 
-    this.departamentos = this.deptService.getAll();
+    
     this.departamentos = [{ descripcion: 'TI', idDepartamento: 1 }, { descripcion: 'RRHH', idDepartamento: 1 },]//------Al tener el back ----
 
     this.preview = '';

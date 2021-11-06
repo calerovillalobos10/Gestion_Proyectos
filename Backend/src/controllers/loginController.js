@@ -39,6 +39,7 @@ export default class LoginController {
                     nombre: result.recordset[0].nombre,
                     correo: result.recordset[0].correo,
                     dobleAuth: result.recordset[0].dobleAuth,
+                    urlFoto: result.recordset[0].urlFoto,
                     estado: true
                 }
             } catch (err) {

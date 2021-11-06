@@ -1,3 +1,4 @@
+import { Departamento } from '@core/models/Departamento';
 import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
 import { AlertService } from '@core/services/alert/alert.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
@@ -36,9 +37,9 @@ export class ListComponent implements OnInit {
     })
 
     this.columns = [
-      { name: 'idDepartamento', title: 'Código', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl, width: 20 },
-      { name: 'descripcion', title: 'Nombre', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl, width: 150},
-      { name: 'acciones', title: 'Acciones', headerTemplate: this.hdrTpl, cellTemplate: this.actionTmpl, width:10 }];
+     
+      { name: 'descripcion', title: 'Nombre', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl, width: 250 },
+      { name: 'acciones', title: 'Acciones', headerTemplate: this.hdrTpl, cellTemplate: this.actionTmpl, width: 10 }];
   }
 
   constructor(
@@ -53,9 +54,17 @@ export class ListComponent implements OnInit {
   }
 
   loadTable() {
-    this.allRows = this.service.getAll();
-    this.allRows = fixedData;
-    this.applyFilter();
+    this.service.getAll().subscribe(
+      (res) => {
+        this.allRows = !res['estado'] ? [] : res['list'];
+        this.applyFilter();
+      },
+      (err) => {
+        this.allRows = [];
+        this.applyFilter();
+      }
+    )
+    
   }
 
   // Actualiza el ultimo filtro utilizado
@@ -81,8 +90,17 @@ export class ListComponent implements OnInit {
   // Actualiza la tabla
   updateTable() {
     this.lastFilter = '';
-    this.filterForm.patchValue({'filter': ''})
-    this.allRows = this.service.getAll() //----------------------------------------------Al tener el back--------------------------------
+    this.filterForm.patchValue({ 'filter': '' })
+    this.service.getAll().subscribe(
+      (res) => {
+        this.allRows = !res['estado'] ? [] : res['list'];
+        this.applyFilter();
+      },
+      (err) => {
+        this.allRows = [];
+        this.applyFilter();
+      }
+    )
   }
 
   add_dept() {
@@ -102,16 +120,21 @@ export class ListComponent implements OnInit {
         if (res.isConfirmed) {
 
           // Confirmacion del servidor.
+          this.service.deleteById(id).subscribe(
+            (res)=>{
+              
+             
 
-          if (this.service.deleteById(id)) {
-            this.alertService.simpleAlert('Se eliminó el registro');
-            this.loadTable();
-          } else {
-            this.alertService.simpleAlert('Surgió un error al eliminar'); //----------------------------------------------Al tener el back--------------------------------
-          }
-
-          this.filteredRows = fixedDelete(this.filteredRows, id);
-          this.alertService.simpleAlert('Se eliminó el registro');
+              if(res['estado']){
+                this.alertService.simpleAlert('Se eliminó el registro');
+                this.loadTable();
+              }else{
+                this.alertService.simpleAlert('Surgió un error al eliminar');
+              }
+            },
+            (err)=>{
+              this.alertService.simpleAlert('Surgió un error al eliminar'); 
+            })
         }
       })
   }
@@ -125,14 +148,4 @@ export class ListComponent implements OnInit {
     });
     return dept;
   }
-}
-
-/* Datos de prueba para eliminar*/
-const fixedData = [{ idDepartamento: 3, descripcion: 'Recursos Humanos' }, { idDepartamento: 6, descripcion: 'Contabilidad' },]
-
-const fixedDelete: any = (filteredRows: any[], id: number) => {
-  filteredRows = filteredRows.filter(function (element: { idDepartamento: number; }) {
-    return element.idDepartamento !== id;
-  })
-  return filteredRows;
 }

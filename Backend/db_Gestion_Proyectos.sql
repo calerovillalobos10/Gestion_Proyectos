@@ -168,7 +168,7 @@ BEGIN
 	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
-	SELECT F.nombre, F.correo, F.dobleAuth
+	SELECT F.nombre, F.correo,F.urlFoto, F.dobleAuth
 	FROM tb_Funcionarios as F
 	WHERE @correoBE = F.correo AND PWDCOMPARE(@contraseniaBE, F.contrasenia) = 1
 END
@@ -279,7 +279,7 @@ AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
+	
 
     -- Insert statements for procedure here
 	UPDATE tb_Departamentos SET descripcion = @descripcionBE

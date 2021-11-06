@@ -66,7 +66,7 @@ router.get('/listDepartment', loginController.recuperarToken, loginController.ve
 })
 
 // Se encarga de comunicarse con el controller para recuperar un objeto departamento
-router.get('/department', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
+router.post('/departmentById', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     // Se llama a la función recupera el departamento por el id
     const department = await departmentController.recoverDepartmentId(req.body)
@@ -88,7 +88,7 @@ router.get('/department', loginController.recuperarToken, loginController.verify
 })
 
 // Se encarga de comunicarse con el controller para eliminar un departamento
-router.delete('/department', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
+router.post('/deleteDepartment', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     // Se llama a la función elimina el departamento por el id
     const verifyDelete = await departmentController.deleteDepartment(req.body)

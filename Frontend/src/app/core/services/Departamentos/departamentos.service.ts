@@ -19,79 +19,30 @@ export class DepartamentosService {
     private http: HttpClient
   ) { }
 
-
   // Metodo de obtencion por id.
   // Obtiene solo un departamento.
-
-  getById(id: number): Departamento | undefined {
-    let departament = undefined;
-    const res = this.http.get<any>(`${this._loginURL}/departamentos/${id}`).subscribe(
-      (res) => {
-        departament = res['mensaje'] ? [] : res['dataBD'];
-      },
-      (err) => {
-        departament = undefined;
-      })
-    return departament;
+  getById(id: number){
+    return this.http.post<any>(`${this._loginURL}/departmentById/`, {id: id})
   }
 
   // Metodo de creacion de departamento.
   // Envia solo descripcion del departamento.
   create(dept: Departamento) {
-    let status: boolean = false;
-
-    this.http.post<any>(`${this._loginURL}/departamentos`, dept).subscribe(
-      (res) => {
-        status = res['estado'];
-      },
-      (err) => {
-        status = false;
-      })
-
-    return status;
+    return this.http.post<any>(`${this._loginURL}/department`, dept)
   }
 
   // Metodo de actualizacion de departamento.
   // Envia id y descripcion nueva del departamento.
   update(dept: Departamento) {
-    let status: boolean = false;
-
-      this.http.put<any>(`${this._loginURL}/departamentos`, dept).subscribe(
-        (res) => {
-          status = res['estado'];
-         },
-        (err) => {
-          status = false;
-        })
-    return status;
+    return this.http.put<any>(`${this._loginURL}/department`, {id: dept.idDepartamento, descripcion: dept.descripcion});
   }
 
   deleteById(id: number) {
-    let status: boolean = false;
-
-    this.http.delete<any>(`${this._loginURL}/departamentos/${id}`).subscribe(
-      (res)=>{
-        status = res['estado'];
-      },
-      (err)=>{
-        status = false;
-      })
-   
-    return status;
+    return this.http.post<any>(`${this._loginURL}/deleteDepartment`, {id: id})
   }
 
-  getAll(): Array<Departamento> {
-    let departaments: Array<Departamento> = [];
-    this.http.get<any>(`${this._loginURL}/departamentos`).subscribe(
-      (res) => {
-        departaments = res['mensaje'] ? [] : res['dataBD'];
-      },
-      (err) => {
-        departaments = []
-      }
-    )
-      
-    return departaments;
+  getAll() {
+    return this.http.get<any>(`${this._loginURL}/listDepartment`)
   }
   
 }

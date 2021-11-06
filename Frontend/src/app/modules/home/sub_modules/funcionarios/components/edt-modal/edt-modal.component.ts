@@ -35,7 +35,6 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
     this.oldMail = '';
     this.oldPicture = '';
 
-    this.departamentos = this.deptService.getAll();
     this.departamentos = [{ descripcion: 'TI', idDepartamento: 1 }, { descripcion: 'RRHH', idDepartamento: 2 }]//-- Al tener el back ----------------------
     this.buildForm();
   }
