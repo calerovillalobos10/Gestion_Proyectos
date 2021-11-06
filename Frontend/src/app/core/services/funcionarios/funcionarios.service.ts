@@ -89,6 +89,7 @@ export class FuncionariosService {
         funcionarios = []
       })
 
+    return fixedData;// Cambiar esto luego
     return funcionarios;
   }
 
@@ -108,3 +109,17 @@ export class FuncionariosService {
   }
 
 }
+
+const fixedData:Array<Funcionario> = [
+  {idFuncionario:1, nombre: 'Alberto', apellido1: 'Salas', apellido2: 'Rojas', idDepartamento: 'Legal', idSexo: 'Hombre', idTipoFuncionario: 'Final', correo: 'Luis@grs.com', fechaNacimiento: '18-05-95', urlFoto: 'https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/foto-de-perfil-para-instagram-1024x538.png' },
+{idFuncionario:2, nombre: 'Juan', apellido1: 'Leiton', apellido2: 'Ulate', idDepartamento: 'TI', idSexo: 'Hombre', idTipoFuncionario: 'Aplicativo', correo: 'Luis@grs.com', fechaNacimiento: '18-05-95', urlFoto: 'https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/foto-de-perfil-para-instagram-1024x538.png' },
+{idFuncionario:3, nombre: 'Marcos', apellido1: 'Brenes', apellido2: 'Elizondo', idDepartamento: 'RH', idSexo: 'Hombre', idTipoFuncionario: 'Aplicativo', correo: 'Luis@grs.com', fechaNacimiento: '18-05-95', urlFoto: 'https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/foto-de-perfil-para-instagram-1024x538.png' },
+{idFuncionario:4, nombre: 'Pedro', apellido1: 'Gomez', apellido2: 'Pereira', idDepartamento: 'Contabilidad', idSexo: 'Hombre', idTipoFuncionario: 'Responsable', correo: 'Luis@grs.com', fechaNacimiento: '18-05-95', urlFoto: 'https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/foto-de-perfil-para-instagram-1024x538.png' },
+{idFuncionario:5, nombre: 'Luis', apellido1: 'Herrera', apellido2: 'Hernandez', idDepartamento: 'TI', idSexo: 'Hombre', idTipoFuncionario: 'Responsable', correo: 'Luis@grs.com', fechaNacimiento: '18-05-95', urlFoto: 'https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/foto-de-perfil-para-instagram-1024x538.png' },
+{idFuncionario:6, nombre: 'Ana', apellido1: 'Pereira', apellido2: 'Rojas', idDepartamento: 'Medico', idSexo: 'Mujer', idTipoFuncionario: 'Final', correo: 'Luis@grs.com', fechaNacimiento: '18-05-95', urlFoto: 'https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/foto-de-perfil-para-instagram-1024x538.png' },
+{idFuncionario:7, nombre: 'Maria', apellido1: 'Gomez', apellido2: 'Brenes', idDepartamento: 'Seguridad', idSexo: 'Mujer', idTipoFuncionario: 'Responsable', correo: 'Luis@grs.com', fechaNacimiento: '18-05-95', urlFoto: 'https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/foto-de-perfil-para-instagram-1024x538.png' },
+{idFuncionario:8, nombre: 'Mario', apellido1: 'Herrera', apellido2: 'Primer apellido', idDepartamento: 'Ventas', idSexo: 'Hombre', idTipoFuncionario: 'Aplicativo', correo: 'Luis@grs.com', fechaNacimiento: '18-05-95', urlFoto: 'https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/foto-de-perfil-para-instagram-1024x538.png' },
+{idFuncionario:9, nombre: 'Geonathan', apellido1: 'Elizondo', apellido2: 'Primer apellido', idDepartamento: 'Ventas', idSexo: 'Hombre', idTipoFuncionario: 'Final', correo: 'Luis@grs.com', fechaNacimiento: '18-05-95', urlFoto: 'https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/foto-de-perfil-para-instagram-1024x538.png' },
+{idFuncionario:10, nombre: 'Abril', apellido1: 'Mata', apellido2: 'Palo', idDepartamento: 'RH', idSexo: 'Mujer', idTipoFuncionario: 'Final', correo: 'Luis@grs.com', fechaNacimiento: '18-05-95', urlFoto: 'https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/foto-de-perfil-para-instagram-1024x538.png' },
+{idFuncionario:11, nombre: 'Mufasa', apellido1: 'Reyes', apellido2: 'Iglesias', idDepartamento: 'Contabilidad', idSexo: 'Hombre', idTipoFuncionario: 'Aplicativo', correo: 'Luis@grs.com', fechaNacimiento: '18-05-95', urlFoto: 'https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/foto-de-perfil-para-instagram-1024x538.png' },
+{idFuncionario:13, nombre: 'Timon', apellido1: 'Salas', apellido2: 'Quito', idDepartamento: 'Gerencia', idSexo: 'Hombre', idTipoFuncionario: 'Responsable', correo: 'Luis@grs.com', fechaNacimiento: '18-05-95', urlFoto: 'https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/foto-de-perfil-para-instagram-1024x538.png' }];

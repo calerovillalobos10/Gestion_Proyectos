@@ -5,7 +5,7 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 })
 
 /*  Esta directiva carga una imagen por defecto
-    al detectar una imagen invalida.*/
+    al detectar una imagen invalida en el header.*/
 
 export class ErrImgDirective {
 

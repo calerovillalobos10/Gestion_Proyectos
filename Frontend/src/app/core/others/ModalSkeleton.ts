@@ -1,5 +1,8 @@
 import { FormGroup } from "@angular/forms";
 
+/*
+  Componentes compartidos de los modales de la aplicacion.
+*/
 export class ModalSkeleton{
 
   public formToggle: boolean;
@@ -13,7 +16,7 @@ export class ModalSkeleton{
 
   async closeModal() {
     this.formToggle = true;
-    setTimeout(() => { this.openedModal = false }, 500)
+    setTimeout(() =>  this.openedModal = false , 500)
     this.form.reset()
   }
   

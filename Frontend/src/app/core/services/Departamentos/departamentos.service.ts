@@ -90,10 +90,8 @@ export class DepartamentosService {
         departaments = []
       }
     )
-      return [{descripcion:'contabilidad', idDepartamento:3},{descripcion:'tii', idDepartamento:6}]
-    //return departaments;
+      
+    return departaments;
   }
-
   
-
 }

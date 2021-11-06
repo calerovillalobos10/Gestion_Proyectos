@@ -4,6 +4,11 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 import { Injectable } from '@angular/core';
 
 @Injectable()
+
+/*
+  Este objeto inserta en las peticiones 
+  el token si existe
+*/
 export class TokenInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>,
