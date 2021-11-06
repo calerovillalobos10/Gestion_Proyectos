@@ -19,7 +19,7 @@ router.post('/department', loginController.recuperarToken, loginController.verif
     // Valida si ya existe un departamento con esa descripción
     if ( (await verifyDepartment).estado ) {
         // Se llama a la función inserta el departamento
-        const verifyInsert = await departmentController.modifyDepartmentId(req.body)
+        const verifyInsert = await departmentController.insertDepartment(req.body)
 
         if (verifyInsert) {
 
@@ -91,7 +91,7 @@ router.get('/department', loginController.recuperarToken, loginController.verify
 router.delete('/department', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     // Se llama a la función elimina el departamento por el id
-    const verifyDelete = await departmentController.deleteDepartmentId(req.body)
+    const verifyDelete = await departmentController.deleteDepartment(req.body)
 
     if (verifyDelete) {
 
@@ -113,7 +113,7 @@ router.put('/department', loginController.recuperarToken, loginController.verify
 
     // Se llama a la función modifica el departamento por el id
     const departament = new Department(req.body.id, req.body.descripcion, req.body.estado)
-    const verifyModify = await departmentController.modifyDepartmentId(departament)
+    const verifyModify = await departmentController.modifyDepartment(departament)
 
     if (verifyModify) {
 
