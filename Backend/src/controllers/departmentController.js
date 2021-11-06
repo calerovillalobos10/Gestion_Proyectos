@@ -46,7 +46,7 @@ export default class DeparmentController{
         let descripcionRes = dataLogin.descripcion
 
         // Este if se encarga de llamar a las validaciones
-        if ( descripcionRes != null && this.validacionController.verifySpecialCharacters(descripcionRes) && this.validacionController.verifyMinSize(descripcionRes, 5)
+        if ( descripcionRes != null && this.validacionController.verifySpecialCharacters(descripcionRes) && this.validacionController.verifyMinSize(descripcionRes, 2)
             && this.validacionController.verifyMaxSize(descripcionRes, 30) ) {
 
             try {
@@ -118,7 +118,7 @@ export default class DeparmentController{
         let descripcionRes = dataLogin.descripcion
 
         // Este if se encarga de llamar a las validaciones
-        if ( descripcionRes != null && this.validacionController.verifySpecialCharacters(descripcionRes) && this.validacionController.verifyMinSize(descripcionRes, 5)
+        if ( descripcionRes != null && this.validacionController.verifySpecialCharacters(descripcionRes) && this.validacionController.verifyMinSize(descripcionRes, 2)
             && this.validacionController.verifyMaxSize(descripcionRes, 30) ) {
 
             try {
