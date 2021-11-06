@@ -6,7 +6,7 @@ export default class validationController {
     // Esta función valida que no entren caracteres especiales dentro de los parámetros ingresados, para evitar vulnerabilidades o sql injection
     verifySpecialCharacters = (characters) => {
 
-        const patern = /[*%<>)(]/
+        const patern = /[*%<>)(}{]/
 
         return !patern.test(characters)
     }
@@ -27,18 +27,14 @@ export default class validationController {
     }
 
     // Esta función verifica el tamaño máximo de los caracteres ingresados
-    verifyMaxSize = (characters, size) => {
-
-        return ( characters.length > size ) ? false : true
-    }
+    verifyMaxSize = (characters, size) => ( characters.length > size ) ? false : true
 
     // Esta función verifica el tamaño mínimo de los caracteres ingresados
-    verifyMinSize = (characters, size) => {
+    verifyMinSize = (characters, size) => ( characters.length < size ) ? false : true
 
-        return ( characters.length < size ) ? false : true
-    }
+    // Esta función verifica que el dato ingresado sea un número entero positivo
+    verifyNumber = (number) => ( number >= 0 && Number.isInteger(number) ) ? true : false
 
-    verifyNumber = () => {}
-
+    // Esta función verifica que el argumento ingresado sea solo texto 
     verifyText = () => {}
 }

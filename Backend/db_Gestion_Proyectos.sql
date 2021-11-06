@@ -190,3 +190,99 @@ BEGIN
 	WHERE @correoBE = F.correo
 END
 GO
+
+CREATE PROCEDURE sp_listDepartment
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT idDepartamento, descripcion, estado
+	FROM tb_Departamentos
+	WHERE estado != 0
+END
+GO
+
+CREATE PROCEDURE sp_insertDepartment
+	-- Add the parameters for the stored procedure here
+(
+@descripcionBE VARCHAR(30)
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	INSERT INTO tb_Departamentos (descripcion) values (@descripcionBE)
+END
+GO
+
+CREATE PROCEDURE sp_recoverDepartmentId 
+	-- Add the parameters for the stored procedure here
+(
+@idDepartamentoBE int
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT idDepartamento, descripcion, estado
+	FROM tb_Departamentos
+END
+GO
+
+CREATE PROCEDURE sp_verifyDepartment 
+	-- Add the parameters for the stored procedure here
+(
+@descripcionBE VARCHAR(30)
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT descripcion FROM tb_Departamentos WHERE descripcion = @descripcionBE
+END
+GO
+
+CREATE PROCEDURE sp_sp_deleteDepartment
+(
+@idDepartamentoBE int
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	UPDATE tb_Departamentos SET estado = 0
+	WHERE idDepartamento = @idDepartamentoBE
+END
+GO
+
+CREATE PROCEDURE sp_modifyDepartment
+(
+@idDepartamentoBE int,
+@descripcionBE varchar(30)
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	UPDATE tb_Departamentos SET descripcion = @descripcionBE
+	WHERE idDepartamento = @idDepartamentoBE
+END
+GO

@@ -24,7 +24,7 @@ export default class LoginController {
 
         // Este if se encarga de llamar a las validaciones
         if ( this.validacionController.verifyEmail(correoRes) && this.validacionController.verifySpecialCharacters(contraseniaRes) && 
-        this.validacionController.verifyMinSize(contraseniaRes, 8) && this.validacionController.verifyMaxSize(correoRes, 50) ) {
+        this.validacionController.verifyMinSize(contraseniaRes, 8) && this.validacionController.verifyMaxSize(correoRes, 50) && correoRes != null && contraseniaRes != null ) {
 
             try {
                 pool = await getConnection()
@@ -35,7 +35,6 @@ export default class LoginController {
                 // Ejecución del sp
                 const result = await request.execute('sp_login')
                 // Retorno del objeto con los parámetros que se ocupan en el frontend
-
                 return {
                     nombre: result.recordset[0].nombre,
                     correo: result.recordset[0].correo,
