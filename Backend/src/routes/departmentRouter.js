@@ -38,7 +38,7 @@ router.post('/department', loginController.recuperarToken, loginController.verif
 
         res.json({
             "mensaje": (await verifyDepartment).mensaje,
-            "estado": (await verifyDepartment).estado,
+            "estado": true,
         })
     }
 })
@@ -112,7 +112,7 @@ router.delete('/department', loginController.recuperarToken, loginController.ver
 router.put('/department', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     // Se llama a la función modifica el departamento por el id
-    const departament = new Department(req.body.id, req.body.descripcion, req.body.estado)
+    const departament = new Department(req.body.id, req.body.descripcion, 1)
     const verifyModify = await departmentController.modifyDepartment(departament)
 
     if (verifyModify) {
@@ -124,7 +124,7 @@ router.put('/department', loginController.recuperarToken, loginController.verify
     } else {
         // Si sucede algún error se le notifica al frontend
         res.json({
-            "mensaje": "No se pudo eliminar el departamento",
+            "mensaje": "No se pudo modificar el departamento",
             "estado": false,
         })
     }

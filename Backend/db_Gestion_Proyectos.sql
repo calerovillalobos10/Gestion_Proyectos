@@ -254,9 +254,9 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_sp_deleteDepartment
+CREATE PROCEDURE sp_deleteDepartment
 (
-@idDepartamentoBE int
+@idDepartmentBE int
 )
 AS
 BEGIN
@@ -266,7 +266,7 @@ BEGIN
 
     -- Insert statements for procedure here
 	UPDATE tb_Departamentos SET estado = 0
-	WHERE idDepartamento = @idDepartamentoBE
+	WHERE idDepartamento = @idDepartmentBE
 END
 GO
 

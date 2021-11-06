@@ -7,3 +7,47 @@ Content-Type: application/json
   "contrasenia":"12345678"
 }
 
+###
+GET  http://localhost:4000/listDepartment
+Content-Type: application/json
+Authorization: Barrer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhQkQiOnsibm9tYnJlIjoiTHVpcyIsImNvcnJlbyI6Ikx1aXNAZ21haWwuY29tIiwiZG9ibGVBdXRoIjp0cnVlLCJlc3RhZG8iOnRydWV9LCJpYXQiOjE2MzYxNjc5NzQsImV4cCI6MTYzNjIwMzk3NH0.yWelE8eQVoY56N9zs5BYFJDSaHvUWdZXx1xipsn6nQM
+
+
+
+###
+GET  http://localhost:4000/department
+Content-Type: application/json
+Authorization: Barrer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhQkQiOnsibm9tYnJlIjoiTHVpcyIsImNvcnJlbyI6Ikx1aXNAZ21haWwuY29tIiwiZG9ibGVBdXRoIjp0cnVlLCJlc3RhZG8iOnRydWV9LCJpYXQiOjE2MzYxNjc5NzQsImV4cCI6MTYzNjIwMzk3NH0.yWelE8eQVoY56N9zs5BYFJDSaHvUWdZXx1xipsn6nQM
+
+{
+  "id": 1
+}
+
+###
+DELETE http://localhost:4000/department
+Content-Type: application/json
+Authorization: Barrer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhQkQiOnsibm9tYnJlIjoiTHVpcyIsImNvcnJlbyI6Ikx1aXNAZ21haWwuY29tIiwiZG9ibGVBdXRoIjp0cnVlLCJlc3RhZG8iOnRydWV9LCJpYXQiOjE2MzYxNjc5NzQsImV4cCI6MTYzNjIwMzk3NH0.yWelE8eQVoY56N9zs5BYFJDSaHvUWdZXx1xipsn6nQM
+
+{
+  "id": 1
+}
+
+###
+POST http://localhost:4000/department
+Content-Type: application/json
+Authorization: Barrer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhQkQiOnsibm9tYnJlIjoiTHVpcyIsImNvcnJlbyI6Ikx1aXNAZ21haWwuY29tIiwiZG9ibGVBdXRoIjp0cnVlLCJlc3RhZG8iOnRydWV9LCJpYXQiOjE2MzYxNjc5NzQsImV4cCI6MTYzNjIwMzk3NH0.yWelE8eQVoY56N9zs5BYFJDSaHvUWdZXx1xipsn6nQM
+
+{
+  "descripcion": "Gerencia"
+}
+
+
+###
+PUT http://localhost:4000/department
+Content-Type: application/json
+Authorization: Barrer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhQkQiOnsibm9tYnJlIjoiTHVpcyIsImNvcnJlbyI6Ikx1aXNAZ21haWwuY29tIiwiZG9ibGVBdXRoIjp0cnVlLCJlc3RhZG8iOnRydWV9LCJpYXQiOjE2MzYxNjc5NzQsImV4cCI6MTYzNjIwMzk3NH0.yWelE8eQVoY56N9zs5BYFJDSaHvUWdZXx1xipsn6nQM
+
+{
+  "id": 1,
+  "descripcion": "Gerencia"
+}

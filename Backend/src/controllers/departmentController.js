@@ -114,12 +114,12 @@ export default class DeparmentController{
         
         let pool = null
         let request = null
-        let idDepartamentoRes = dataLogin.id
-        let descripcionRes = dataLogin.descripcion
+        let idDepartamentoRes = dataLogin.getIdDepartamento
+        let descripcionRes = dataLogin.getDescripcion
 
         // Este if se encarga de llamar a las validaciones
-        if ( descripcionRes != null && this.validacionController.verifySpecialCharacters(descripcionRes) && this.validacionController.verifyMinSize(descripcionRes, 2)
-            && this.validacionController.verifyMaxSize(descripcionRes, 30) ) {
+        if ( descripcionRes != null && this.validacionController.verifySpecialCharacters(descripcionRes)  && this.validacionController.verifyMinSize(descripcionRes, 2)
+        && this.validacionController.verifyMaxSize(descripcionRes, 30) && idDepartamentoRes != null ) {
 
             try {
                 // Conección a la base
@@ -191,7 +191,7 @@ export default class DeparmentController{
         let request = null
 
         // Este if se encarga de llamar a las validaciones
-        if ( idDepartmentRes != null && this.validacionController.verifySpecialCharacters(idDepartmentRes) && verifyText(description) ) {
+        if ( description != null && this.validacionController.verifySpecialCharacters(description) && this.validacionController.verifyText(description) ) {
 
             try {
                 // Conección a la base
@@ -202,7 +202,7 @@ export default class DeparmentController{
                 // Ejecución del sp
                 const result = await request.execute('sp_verifyDepartment')
                 // validación sobre la inserción del objeto
-                return ( result ) ? {mensaje:'El departamento ingresado ya existe', estado: false} : {estado: true}
+                return ( result ) ? {mensaje:'Se ingresó correctamente el departamento', estado: false} : {estado: true}
             } catch (err) {
 
                 console.log(err);
