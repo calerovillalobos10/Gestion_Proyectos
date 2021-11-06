@@ -1,23 +1,25 @@
 // Importaciones necesarias
 import {Router} from 'express'
+import LoginController from '../controllers/loginController'
 import Department from '../models/department'
 import DepartmentController from '../controllers/departmentController'
 
 // Instancia
 const router = Router()
+const loginController = new LoginController()
 const departmentController = new DepartmentController()
 
 // Rutas de department
 
 // Se encarga de comunicarse con el controller para insertar un departamento
-router.post('/department', async (req, res) => {
+router.post('/department', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     const verifyDepartment = departmentController.verifyDepartment(req.body.descripcion)
 
     // Valida si ya existe un departamento con esa descripción
     if ( (await verifyDepartment).estado ) {
         // Se llama a la función inserta el departamento
-        const verifyInsert = departmentController.modifyDepartmentId(req.body)
+        const verifyInsert = await departmentController.modifyDepartmentId(req.body)
 
         if (verifyInsert) {
 
@@ -42,10 +44,10 @@ router.post('/department', async (req, res) => {
 })
 
 // Se encarga de comunicarse con el controller para recuperar un listado de departamentos
-router.get('/listDepartment', async (req, res) => {
+router.get('/listDepartment', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     // Se llama a la función recupera la lista
-    const list = departmentController.listDepartment()
+    const list = await departmentController.listDepartment()
 
     if (list) {
 
@@ -64,10 +66,10 @@ router.get('/listDepartment', async (req, res) => {
 })
 
 // Se encarga de comunicarse con el controller para recuperar un objeto departamento
-router.get('/department', async (req, res) => {
+router.get('/department', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     // Se llama a la función recupera el departamento por el id
-    const department = departmentController.recoverDepartmentId(req.body)
+    const department = await departmentController.recoverDepartmentId(req.body)
 
     if (department) {
 
@@ -86,10 +88,10 @@ router.get('/department', async (req, res) => {
 })
 
 // Se encarga de comunicarse con el controller para eliminar un departamento
-router.delete('/department', async (req, res) => {
+router.delete('/department', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     // Se llama a la función elimina el departamento por el id
-    const verifyDelete = departmentController.deleteDepartmentId(req.body)
+    const verifyDelete = await departmentController.deleteDepartmentId(req.body)
 
     if (verifyDelete) {
 
@@ -107,11 +109,11 @@ router.delete('/department', async (req, res) => {
 })
 
 // Se encarga de comunicarse con el controller para modificar un departamento
-router.put('/department', async (req, res) => {
+router.put('/department', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     // Se llama a la función modifica el departamento por el id
     const departament = new Department(req.body.id, req.body.descripcion, req.body.estado)
-    const verifyModify = departmentController.modifyDepartmentId(departament)
+    const verifyModify = await departmentController.modifyDepartmentId(departament)
 
     if (verifyModify) {
 
