@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 
 import { SolicitudesRoutingModule } from './solicitudes-routing.module';
 import { SolicitudesComponent } from './pages/solicitudes/solicitudes.component';
+import { DataTablesModule } from 'angular-datatables';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { SolicitudesComponent } from './pages/solicitudes/solicitudes.component'
     SolicitudesRoutingModule,
     NgxDatatableModule,
     ReactiveFormsModule,
-    PdfViewerModule
+    PdfViewerModule,
+    DataTablesModule
   ]
 })
 export class SolicitudesModule { }

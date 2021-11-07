@@ -3,7 +3,6 @@ import { AlertService } from '@core/services/alert/alert.service';
 import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-
 import { Departamento } from '@core/models/Departamento';
 
 @Component({
@@ -58,7 +57,6 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
             this.allRows = [];
           }
         )
-
       }
     })
   }
@@ -79,7 +77,6 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
         this.alertService.promiseAlert('No se pudo obtener el departamento')
         .then(()=>this.closeModal())
       })
-
   }
 
   // Envia los datos de la edicion del departamento
@@ -112,7 +109,6 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
       (err) => {
          this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
       })
-
   }
 
   // Valida la existencia del departamento.

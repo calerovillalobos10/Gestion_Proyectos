@@ -1,3 +1,4 @@
+import { AlertService } from '@core/services/alert/alert.service';
 import { Funcionario } from '@core/models/Funcionario';
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
 import { Component, OnInit } from '@angular/core';
@@ -9,22 +10,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetModalComponent implements OnInit {
 
-  public formToggle:boolean;
-  public userId:number;
-  public openedModal:boolean;
-  public funcionario:Funcionario | undefined
+  public formToggle: boolean;
+  public openedModal: boolean;
+  public userId: number;
+  public funcionario: Funcionario | undefined
 
   constructor(
-    private service:FuncionariosService
+    private service: FuncionariosService,
+    private alertService: AlertService
   ) {
     this.userId = 0;
     this.formToggle = false
     this.openedModal = false
-   }
+  }
 
   ngOnInit(): void {
-    this.service.modalNeeded.subscribe(data =>{
-      if(data.subject === 'detModal'){
+    this.service.modalNeeded.subscribe(data => {
+      if (data.subject === 'detModal') {
         this.openedModal = data.status
         this.formToggle = !data.status
         this.userId = data.userId; // Obtener este usuario y mostrarlo
@@ -33,27 +35,36 @@ export class DetModalComponent implements OnInit {
     })
   }
 
-  async loadUser(){
-    
-
-     //const userData: Funcionario = await this.service.getById(this.userId); --------------------------------------- Al tener el back ----------------------
-
-    const userData: Funcionario =
-    {
-      correo: 'Luis@gmail.com', idTipoFuncionario: '1', idDepartamento: '2', nombre: 'Luis', apellido1: "apellido1",
-      apellido2: "apellido2", fechaNacimiento: '18/09/1995', idSexo: '1', urlFoto: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHuc8zYUjuM2C66ip1xdDpS2qMa2yYnN5TbQ&usqp=CAU'
-    }
-
-    this.funcionario = userData;
+  async loadUser() {
+    this.service.getById(this.userId).subscribe(
+      res => {
+        if (res['estado']) {
+          this.funcionario = res['funcionario']
+        } else {
+          this.closeOnError();
+        }
+      },
+      err => {
+        this.closeOnError();
+      }
+    )
   }
 
   async closeModal() {
-    
     this.formToggle = true;
-    setTimeout(()=>{
+    setTimeout(() => {
       this.openedModal = false
       this.funcionario = undefined;
     }, 500)
+  }
+
+  // Este metodo cierra el modal mostrando una alerta de error.
+  closeOnError() {
+    this.alertService.promiseAlert('Surgio un error al cargar el funcionario').then(
+      () => {
+        this.closeModal();
+      }
+    )
   }
 
 }

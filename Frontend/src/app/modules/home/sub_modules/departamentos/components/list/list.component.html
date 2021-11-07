@@ -1,38 +1,7 @@
 <div class="row table_tools">
-  <form [formGroup]="filterForm" (submit)="filterTable()">
-    <div class="input_group">
-      <input
-        type="text"
-        class="filter_text"
-        placeholder="Buscar..."
-        id="filter"
-        name="filter"
-        formControlName="filter"
-      />
-      <button type="submit" class="button_submit">
-        <i class="fas fa-search filter_crud"></i>
-      </button>
-      <i class="fas fa-sync-alt filter_crud" (click)="updateTable()" title="Actualiza el listado"></i>
-    </div>
-  </form>
+  <div></div>
   <i class="fas fa-plus-square add_crud" (click)="add_dept()"></i>
 </div>
-
-<ngx-datatable
- 
-  class="material"
-  [rows]="filteredRows"
-  [columns]="columns"
-  [columnMode]="ColumnMode.force"
-  [headerHeight]="50"
-  [footerHeight]="50"
-  [scrollbarH]="true"
-  [limit]="8"
-
-  [rowHeight]="55"
-  [messages]="{emptyMessage: 'No hay registros que mostrar',  totalMessage: 'totales'}"
->
-</ngx-datatable>
 
 <ng-template #hdrTpl let-column="column">{{ column.title }} </ng-template>
 
@@ -52,3 +21,35 @@
     </div>
   </div>
 </ng-template>
+
+
+<table
+  id="example"
+  class="display responsive nowrap"
+  style="width: 100%"
+  datatable
+  [dtOptions]="dtOptions"
+  [dtTrigger]="dtTrigger"
+>
+  <thead>
+    <tr>
+      <th>Departamento</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let depto of allRows">
+      <td>{{ depto.descripcion }}</td>
+      <td>
+        <div class="row action_wrap">
+          <div class="action_btn edi" (click)="editDept(depto.idDepartamento)">
+            <i class="fas fa-user-edit"></i>
+          </div>
+          <div class="action_btn del" (click)="deleteDept(depto.idDepartamento)">
+            <i class="fas fa-trash-alt"></i>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

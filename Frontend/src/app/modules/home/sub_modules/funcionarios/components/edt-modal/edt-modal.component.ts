@@ -20,7 +20,7 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
   private oldPicture: string;
   private oldMail: string;
 
-  public departamentos: Array<Departamento>;
+  public departamentos: Array<Departamento> = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -29,13 +29,22 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
     private deptService: DepartamentosService
   ) {
     super();
-    
+
     this.preview = '';
     this.userId = 0
     this.oldMail = '';
     this.oldPicture = '';
 
-    this.departamentos = [{ descripcion: 'TI', idDepartamento: 1 }, { descripcion: 'RRHH', idDepartamento: 2 }]//-- Al tener el back ----------------------
+    this.deptService.getAll().subscribe(
+      res => {
+          this.departamentos = !res['estado'] ? [] : res['list'];
+      }, 
+      err =>{
+        this.departamentos = [];
+      }
+    )
+
+    this.departamentos = [{ descripcion: 'TI', idDepartamento: 1 }, { descripcion: 'RRHH', idDepartamento: 2 }]
     this.buildForm();
   }
 
@@ -54,28 +63,35 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
   // Esta funcion tiene que traer del back el usuario a editar.
   async loadEditUser() {
 
-    //const userData: Funcionario = await this.service.getById(this.userId); //-------------------------------Al tener el back----------------------
+    this.service.getById(this.userId).subscribe(
+      res => {
 
-    const userData: Funcionario =
-    {
-      correo: 'Luis@gmail.com', idTipoFuncionario: '1', idDepartamento: '33', nombre: 'Luis', apellido1: "apellido1",
-      apellido2: "apellido2", fechaNacimiento: '1995-09-09', idSexo: '1', urlFoto: 'http://localhost:4200/assets/images/not_found_user.png'
-    }
+        if (res['estado']) {
+          const userData: Funcionario = res['funcionario']
+          this.loadUserData(userData);
+        } else {
+          this.closeOnError();
+        }
+      },
+      err => {
+        this.closeOnError();
+      }
+    );
+  }
 
+  // Carga los datos del usuario al form
+  loadUserData(userData: Funcionario) {
     // Guardamos la foto anterior por si no se modifica.
     this.oldPicture = userData.urlFoto;
 
     // Guardamos el correo anterior para detectar si se modifica.
     this.oldMail = userData.correo;
 
-    // Esto valida si no esta conteneido el departamento enviado.
-    if (!this.departamentos.some(e => e.idDepartamento == userData.idDepartamento)) { }
-
     this.form.patchValue({
       correo: userData.correo,
       nombre: userData.nombre,
-      apellido1: userData.apellido1,
-      apellido2: userData.apellido2,
+      apellido1: userData.apellido_1,
+      apellido2: userData.apellido_2,
       departamento: userData.idDepartamento,
       urlFoto: this.oldPicture,
       tipo: userData.idTipoFuncionario,
@@ -96,20 +112,40 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
     }
 
     // Si el email existe mostramos una alerta.
-    if (this.oldMail !== this.form.value.correo && this.service.validateEmail(this.form.value.correo)) {  //-----Al tener el back -------
-      return this.alertService.simpleAlert('El nuevo email ya se encuentra registrado')
-    }
+    if (this.oldMail !== this.form.value.correo) {
 
-    // Envia datos y espera la respuesta del backend.
-    if (this.service.update(this.obtainFunc())) { //--------------------------------------- Al tener el back ----------------------
-      this.closeModal();
-      this.alertService.promiseAlert('Se agregó correctamente el funcionario').then(() => {
-        this.service.updateNeeded.emit(true)
-      })
-    } else {
-      // Si el backend envia una respuesta incorrecta.
-      this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
+      this.service.validateEmail(this.form.value.correo).subscribe(
+        res => {
+          // Si es true el email esta en el sistema.
+          if (res['estado']) {
+            return this.alertService.simpleAlert('El email ya se encuentra registrado')
+          } else {
+            this.proceedUpdate();
+          }
+        },
+        err => {
+          return this.alertService.simpleAlert('No se pudo validar el email')
+        })
     }
+  }
+
+  // Procede con la modificacion al asegurarse que los valores son validos.
+  proceedUpdate() {
+    // Envia datos y espera la respuesta del backend.
+    this.service.update(this.obtainFunc()).subscribe(
+      res => {
+        if (res['estado']) {
+          this.closeModal();
+          this.alertService.promiseAlert('Se agregó correctamente el funcionario').then(() => {
+            this.service.updateNeeded.emit(true)
+          })
+        } else {
+          this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
+        }
+      },
+      err => {
+        this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
+      })
   }
 
   // Metodo para cambiar el preview de la foto del funcionario.
@@ -152,6 +188,15 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
     postData.append('urlFoto', this.form.value.foto);
 
     return postData
+  }
+
+  // Este metodo cierra el modal mostrando una alerta de error.
+  closeOnError() {
+    this.alertService.promiseAlert('Surgio un error al cargar el funcionario').then(
+      () => {
+        this.closeModal();
+      }
+    )
   }
 
   // Construye el formulario con los campos requeridos.

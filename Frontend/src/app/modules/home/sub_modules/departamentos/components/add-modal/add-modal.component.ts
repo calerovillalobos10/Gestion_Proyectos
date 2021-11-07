@@ -46,7 +46,6 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
             this.allRows = [];
           }
         )
-
       }
     })
   }
@@ -56,12 +55,12 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     if (this.form.invalid) {
       return this.form.markAllAsTouched();
     }
+    
     if (this.checkExistance(this.form.value.descripcion)) {
       return this.alertService.simpleAlert('Ya existe este departamento')
     }
 
     // Espera la respuesta del backend.
-
     this.service.create({ descripcion: this.form.value.descripcion }).subscribe(
       (res) => {
         if(res['estado']){
@@ -76,7 +75,6 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       (err) => {
         this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
       })
-
   }
 
   // Valida la existencia del departamento.

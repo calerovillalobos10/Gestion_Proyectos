@@ -33,8 +33,7 @@ export class AuthService {
         this.loadDataToken(tokenPayload);
       
       // Si es valido me permite acceder.
-          this.router.navigate(['/departamentos'])
-          //this.router.navigate(['/inicio'])
+          this.router.navigate(['/funcionarios'])
      
       }else{
         // Si es invalido se elimina.

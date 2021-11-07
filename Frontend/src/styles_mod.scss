@@ -267,3 +267,16 @@ input[type="date"] {
   font-size: .8em;
   user-select: none;
 }
+
+.action_wrap{
+  width: 100%;
+  justify-content: center;
+}
+
+.action_wrap .edi{
+  margin-right: .5em;
+}
+
+.action_wrap .del{
+  margin-left: .5em;
+}

@@ -1,7 +1,7 @@
 
 import { ErrorTailorModule } from '@ngneat/error-tailor';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { DataTablesModule } from 'angular-datatables';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -10,6 +10,7 @@ import { DepartamentosComponent } from './pages/departamentos/departamentos.comp
 import { AddModalComponent } from './components/add-modal/add-modal.component';
 import { ListComponent } from './components/list/list.component';
 import { EdtModalComponent } from './components/edt-modal/edt-modal.component';
+import { DatatableComponent } from '@swimlane/ngx-datatable';
 
 @NgModule({
   declarations: [
@@ -21,16 +22,12 @@ import { EdtModalComponent } from './components/edt-modal/edt-modal.component';
   imports: [
     CommonModule,
     DepartamentosRoutingModule,
-    NgxDatatableModule,
     ReactiveFormsModule,
+    DataTablesModule,
     ErrorTailorModule.forRoot({
-      errors: {
-        useValue: {
-         
-        }
-
-      }
+      errors: { useValue: {} }
     })
   ]
 })
+
 export class DepartamentosModule { }

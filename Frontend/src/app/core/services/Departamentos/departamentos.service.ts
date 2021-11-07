@@ -37,10 +37,14 @@ export class DepartamentosService {
     return this.http.put<any>(`${this._loginURL}/department`, {id: dept.idDepartamento, descripcion: dept.descripcion});
   }
 
+  // Metodo de eliminación de departamento.
+  // Envia id del departamento.
   deleteById(id: number) {
     return this.http.post<any>(`${this._loginURL}/deleteDepartment`, {id: id})
   }
 
+  // Metodo de listado de departamentos.
+  // Obtiene todos los departamentos.
   getAll() {
     return this.http.get<any>(`${this._loginURL}/listDepartment`)
   }
