@@ -16,8 +16,8 @@
   <thead>
     <tr>
       <th>Id</th>
-      <th>idTrimestre</th>
-      <th>Aplicativo</th>
+      <th>Trimestre</th>
+      <th>Aplicante</th>
       <th>Solicitud #</th>
       <th>Fecha</th>
       
@@ -25,15 +25,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>1</td>
-      <td>Primer trimestre</td>
-      <td>Esteban Quito</td>
-      <td>3565</td>
-      <td>03/01/2021</td>
-      
-
-      
+    <tr *ngFor="let avance of allRows">
+      <td>{{ avance.idAvance }}</td>
+      <td>{{ avance.trimestre }}</td>
+      <td>{{ avance.funcionarioAplicativo }}</td>
+      <td>{{ avance.solicitud }}</td>
+      <td>{{ avance.fehaAvance }}</td>
       <td>
         <div class="row action_wrap">
 

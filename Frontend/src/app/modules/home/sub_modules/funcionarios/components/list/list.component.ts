@@ -14,8 +14,7 @@ export class ListComponent implements OnInit {
 
   public dtOptions: any = {};
   public dtTrigger: Subject<any> = new Subject<any>();
-  public filterForm!: FormGroup;
-
+ 
   public allRows: Array<Funcionario>;
  
   ngOnInit(): void {
@@ -51,11 +50,6 @@ export class ListComponent implements OnInit {
       })
   }
 
-  // Actualiza la tabla
-  updateTable() {
-    this.filterForm.patchValue({ 'filter': '' })
-    this.loadTable();
-  }
 
   // Llama al modal correspondiente de agregar
   add_func() {

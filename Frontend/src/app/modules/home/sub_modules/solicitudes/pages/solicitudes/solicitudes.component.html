@@ -29,16 +29,14 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>1</td>
-      <td>Roman Brenes</td>
-      <td>Ignacio Salas</td>
-      <td>Esteban Quito</td>
-      <td>18/09/2020</td>
-      <td>02/01/2021</td>
-      <td>05/06/2021</td>
-
-      
+    <tr *ngFor="let solicitud of allRows">
+      <td>{{ solicitud.idSolicitud }}</td>
+      <td>{{ solicitud.funcionarioAplicativo }}</td>
+      <td>{{ solicitud.funcionarioResponsable }}</td>
+      <td>{{ solicitud.funcionarioFinal }}</td>
+      <td>{{ solicitud.fechaSolicitud }}</td>
+      <td>{{ solicitud.fechaInicio }}</td>
+      <td>{{ solicitud.fechaFin }}</td>
       <td>
         <div class="row action_wrap">
 

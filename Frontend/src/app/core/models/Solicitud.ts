@@ -1,9 +1,10 @@
 
 export interface Solicitud{
-  funcionarioResponsable:number,
-  funcionarioAplicativo:number, 
-  funcionarioFinal:number,
-  fehaSolicitud:string,
+  idSolicitud?:number;
+  funcionarioResponsable:number | string,
+  funcionarioAplicativo:number| string,
+  funcionarioFinal:number| string,
+  fechaSolicitud:string,
   fechaInicio:string,
   fechaFin:string,
   documentoActa:any,

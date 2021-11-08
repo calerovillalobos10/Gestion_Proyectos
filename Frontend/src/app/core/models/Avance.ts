@@ -1,10 +1,10 @@
+import { Solicitud } from '@core/models/Solicitud';
 
 export interface Avance{
-  funcionarioResponsable:number,
-  funcionarioAplicativo:number, 
-  funcionarioFinal:number,
-  fehaSolicitud:string,
-  fechaInicio:string,
-  fechaFin:string,
-  documentoActa:any,
+  idAvance?:number;
+  trimestre:string;
+  funcionarioAplicativo:number | string, 
+  fehaAvance:string,
+  solicitud: number,
+  documento:any,
 } 

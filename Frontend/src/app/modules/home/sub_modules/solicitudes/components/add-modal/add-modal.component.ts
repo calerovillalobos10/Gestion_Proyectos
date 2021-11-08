@@ -283,7 +283,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
             funcionarioResponsable: 2, 
             fechaInicio: '2020-01-03', 
             fechaFin: '2020-01-05', 
-            fehaSolicitud: "2020-01-02", 
+            fechaSolicitud: "2020-01-02", 
             documentoActa:"../../../assets/book/book.pdf"},
             id);
       }
@@ -310,12 +310,11 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       final: solicitude.funcionarioFinal,
       fechaInicio: solicitude.fechaInicio,
       fechaFin: solicitude.fechaFin,
-      fechaSolicitud: solicitude.fehaSolicitud,
+      fechaSolicitud: solicitude.fechaSolicitud,
       urlActa:this.oldDocument
     })
     this.form.controls['fechaInicio'].enable();
     this.form.controls['fechaFin'].enable();
     this.pdfSrc = this.oldDocument;
   }
-
 }
