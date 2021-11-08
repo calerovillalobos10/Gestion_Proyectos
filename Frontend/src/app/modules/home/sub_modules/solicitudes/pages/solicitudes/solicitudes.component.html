@@ -3,6 +3,12 @@
 
 <app-add-modal></app-add-modal>
 
+<div class="row table_tools">
+  <div></div>
+  <i class="fas fa-plus-square add_crud" (click)='addSolicitude()'></i>
+</div>
+
+
 <table
   id="example"
   class="display responsive nowrap"
@@ -12,22 +18,44 @@
 >
   <thead>
     <tr>
-      <th>Descripcion</th>
-      <th>Position</th>
-      <th>Office</th>
-      <th>Age</th>
-      <th>Start date</th>
-      <th>Salary</th>
+      <th>Id</th>
+      <th>Aplicativo</th>
+      <th>Responsable</th>
+      <th>Final</th>
+      <th>Solicitado el</th>
+      <th>Inicio</th>
+      <th>Fin</th>
+      <th>Acciones</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>Tiger Nixon</td>
-      <td>System Architect</td>
-      <td>Edinburgh</td>
-      <td>61</td>
-      <td>2011/04/25</td>
-      <td>$320,800</td>
+      <td>1</td>
+      <td>Roman Brenes</td>
+      <td>Ignacio Salas</td>
+      <td>Esteban Quito</td>
+      <td>18/09/2020</td>
+      <td>02/01/2021</td>
+      <td>05/06/2021</td>
+
+      
+      <td>
+        <div class="row action_wrap">
+
+          <div class="action_btn det" (click)="detailsSolicitude(1)">
+            <i class="far fa-id-card"></i>
+          </div>
+
+          <div class="action_btn edi" (click)="editSolicitude(1)">
+            <i class="fas fa-user-edit"></i>
+          </div>
+          <div class="action_btn del" (click)="deleteSolicitude(1)">
+            <i class="fas fa-trash-alt"></i>
+          </div>
+          
+        </div>
+      </td>
+
     </tr>
   </tbody>
 </table>

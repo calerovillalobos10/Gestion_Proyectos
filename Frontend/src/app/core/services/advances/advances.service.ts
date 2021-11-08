@@ -1,6 +1,6 @@
 import { Avance } from './../../models/Avance';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +8,12 @@ import { Injectable } from '@angular/core';
 export class AdvancesService {
 
   private _loginURL = "http://localhost:4000";
+
+  // Emite la comunicacion entre componente modal y de lista para mostrar el modal
+  @Output() modalNeeded: EventEmitter<any> = new EventEmitter();
+
+  // Emite la comunicacion entre el modal y la lista para indicar que se registro el funcionario
+  @Output() updateNeeded: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     private http:HttpClient
@@ -19,12 +25,12 @@ export class AdvancesService {
   }
 
   // Metodo de creacion de avance.  
-  create(adv: Avance) {
+  create(adv: FormData) {
     return this.http.post<any>(`${this._loginURL}/avances`, adv)
   }
 
   // Metodo de actualizacion de avance. 
-  update(adv: Avance) {
+  update(adv: FormData) {
     return  this.http.put<any>(`${this._loginURL}/avances`, adv)
   }
 

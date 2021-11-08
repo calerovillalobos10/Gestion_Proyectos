@@ -1,2 +1,57 @@
 <h1 class="crud_title">Avances</h1>
 <div class="mb-5"></div>
+
+<div class="row table_tools">
+  <div></div>
+  <i class="fas fa-plus-square add_crud" (click)='addAdvance()'></i>
+</div>
+
+<table
+  id="example"
+  class="display responsive nowrap"
+  style="width: 100%"
+  datatable
+  [dtOptions]="dtOptions"
+>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>idTrimestre</th>
+      <th>Aplicativo</th>
+      <th>Solicitud #</th>
+      <th>Fecha</th>
+      
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Primer trimestre</td>
+      <td>Esteban Quito</td>
+      <td>3565</td>
+      <td>03/01/2021</td>
+      
+
+      
+      <td>
+        <div class="row action_wrap">
+
+          <div class="action_btn det" (click)="detailsAdvance(1)">
+            <i class="far fa-id-card"></i>
+          </div>
+
+          <div class="action_btn edi" (click)="editAdvance(1)">
+            <i class="fas fa-user-edit"></i>
+          </div>
+          <div class="action_btn del" (click)="deleteAdvance(1)">
+            <i class="fas fa-trash-alt"></i>
+          </div>
+          
+        </div>
+      </td>
+
+    </tr>
+  </tbody>
+</table>
+<app-add-modal></app-add-modal>

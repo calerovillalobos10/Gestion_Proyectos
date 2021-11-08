@@ -29,11 +29,22 @@ export class AuthService {
     if(stored){
 
       if(await this.validateToken()){
+
+        
         const tokenPayload = this.openToken(stored)['dataBD'];
         this.loadDataToken(tokenPayload);
       
       // Si es valido me permite acceder.
-          this.router.navigate(['/funcionarios'])
+        const route = (document.referrer).split('/');
+        let destination = route[route.length-1];
+             
+    
+        if(destination.toLowerCase() == 'login' || destination == ''){
+          destination = 'inicio';
+        }
+   
+
+          this.router.navigate([`/${destination}`])
      
       }else{
         // Si es invalido se elimina.

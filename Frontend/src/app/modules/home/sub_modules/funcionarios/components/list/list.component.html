@@ -25,6 +25,7 @@
       <th>Tipo de funcionario</th>
       <th>Nacimiento</th>
       <th>Correo</th>
+      <th>Acciones</th>
     </tr>
   </thead>
   <tbody>
@@ -40,6 +41,23 @@
       <td>{{ person.idTipoFuncionario }}</td>
       <td>{{ person.fechaNacimiento }}</td>
       <td>{{ person.correo }}</td>
+
+      <td>
+        <div class="row action_wrap">
+
+          <div class="action_btn det" (click)="deleteFunc(person.idFuncionario)">
+            <i class="far fa-id-card"></i>
+          </div>
+
+          <div class="action_btn edi" (click)="editFunc(person.idFuncionario)">
+            <i class="fas fa-user-edit"></i>
+          </div>
+          <div class="action_btn del" (click)="deleteFunc(person.idFuncionario)">
+            <i class="fas fa-trash-alt"></i>
+          </div>
+          
+        </div>
+      </td>
     </tr>
   </tbody>
 </table>

@@ -3,27 +3,8 @@
   <i class="fas fa-plus-square add_crud" (click)="add_dept()"></i>
 </div>
 
-<ng-template #hdrTpl let-column="column">{{ column.title }} </ng-template>
-
-<ng-template #lineTmpl let-row="row" let-value="value">
-  <p class="limited_colum">
-    {{ value }}
-  </p>
-</ng-template>
-
-<ng-template #actionTmpl let-row="row" let-value="value">
-  <div class="row wrap ">
-    <div class="action_btn edi " (click)="editDept(row.idDepartamento)">
-      <i class="fas fa-user-edit"></i>
-    </div>
-    <div class="action_btn del" (click)="deleteDept(row.idDepartamento)">
-      <i class="fas fa-trash-alt"></i>
-    </div>
-  </div>
-</ng-template>
-
-
 <table
+
   id="example"
   class="display responsive nowrap"
   style="width: 100%"

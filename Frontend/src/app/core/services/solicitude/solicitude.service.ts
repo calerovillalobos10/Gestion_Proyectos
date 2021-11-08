@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 
 import { Solicitud } from '@core/models/Solicitud';
 
@@ -9,6 +9,12 @@ import { Solicitud } from '@core/models/Solicitud';
 export class SolicitudeService {
 
   private _loginURL = "http://localhost:4000";
+
+  // Emite la comunicacion entre componente modal y de lista para mostrar el modal
+  @Output() modalNeeded: EventEmitter<any> = new EventEmitter();
+
+  // Emite la comunicacion entre el modal y la lista para indicar que se registro el funcionario
+  @Output() updateNeeded: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     private http:HttpClient
@@ -20,12 +26,12 @@ export class SolicitudeService {
   }
 
   // Metodo de creacion de solicitud.  METHOD: Post
-  create(sol: Solicitud) {
+  create(sol: FormData) {
     return this.http.post<any>(`${this._loginURL}/solicitudes`, sol)
   }
 
   // Metodo de actualizacion de solicitud.  METHOD: Put
-  update(dept: Solicitud) {
+  update(dept: FormData) {
     return  this.http.put<any>(`${this._loginURL}/solicitudes`, dept)
   }
 

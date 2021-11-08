@@ -1,9 +1,9 @@
+import { SolicitudeService } from '@core/services/solicitude/solicitude.service';
 import { ModalSkeleton } from '@core/others/ModalSkeleton';
 
 import { AlertService } from '@core/services/alert/alert.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
 
 @Component({
   selector: 'app-add-modal',
@@ -19,7 +19,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private service: FuncionariosService,
+    private service: SolicitudeService,
     private alertService: AlertService,
   ) {
     super();
@@ -38,12 +38,10 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   }
 
   add_solicitude() {
-
     if (this.form.invalid) {
       return this.form.markAllAsTouched();
     }
 
-   
     if (this.service.create(this.obtainSolicitude())) { //-----------------------------------------------------Al tener el back -----------
       this.closeModal();
       this.alertService.promiseAlert('Se agregó correctamente el funcionario').then(() => {
@@ -68,14 +66,12 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   }
 
   loadPreview(event: any) {
-
     const reader = new FileReader();
     reader.onloadend = (e: any) => {
       this.pdfSrc = e.target.result;
     };
     this.form.patchValue({urlActa: event.target.files[0].name})
     reader.readAsArrayBuffer(event.target.files[0]);
-
   }
 
   // Extrae los datos de un funcionario valido a un objeto funcionario
@@ -106,10 +102,12 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       final: ["", [
         Validators.required,
       ]],
-      fechaInicio: ["", 
+      fechaInicio: [
+        {value:"", disabled:true},
       [Validators.required
       ]],
-      fechaFin: ["", 
+      fechaFin: [
+        {value:"", disabled:true},
       [Validators.required
       ]],
       fechaSolicitud: ["", 
@@ -123,4 +121,54 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       ]],
     })
   }
+
+  // Validaciones para la fecha de solicitud.
+  // Desactiva la fecha inicial y la final.
+  validateSolcitudeDate(){
+    let primal = new Date('01-01-2021');
+
+    this.form.patchValue({
+      fechaInicio: '',
+      fechaFin: '',
+    })
+
+    if(this.form.value.fechaSolicitud !== '' && new Date(this.form.value.fechaSolicitud) > primal){
+      this.form.controls['fechaSolicitud'].setErrors(null);
+      this.form.controls['fechaInicio'].enable();
+    }else{
+      this.form.controls['fechaSolicitud'].setErrors({'incorrectDate': true});
+      this.form.controls['fechaInicio'].disable();
+    }
+    this.form.controls['fechaFin'].disable();
+  }
+
+  // Validaciones para la fecha inicial.
+  // Desactiva la fecha final.
+  validateInitDate(){
+    this.form.patchValue({
+      fechaFin: '',
+    })
+
+    if(this.form.value.fechaSolicitud !== '' && this.isBefore(this.form.value.fechaInicio,this.form.value.fechaSolicitud)){
+      this.form.controls['fechaInicio'].setErrors(null);
+      this.form.controls['fechaFin'].enable();
+    }else{
+      this.form.controls['fechaInicio'].setErrors({'incorrectDate': true});
+      this.form.controls['fechaFin'].disable();
+    }
+  }
+
+  // Validaciones para la fecha final
+  validateEndDate(){
+    if(this.isBefore(this.form.value.fechaInicio,this.form.value.fechaFin)){
+      this.form.controls['fechaFin'].setErrors({'incorrectDate': true});
+    }else{
+      this.form.controls['fechaFin'].setErrors(null);
+    }
+  }
+  // Este metodo valida su una fecha esta antes que otra.
+  isBefore(start: Date, end: Date){
+    return start > end
+  }
+
 }

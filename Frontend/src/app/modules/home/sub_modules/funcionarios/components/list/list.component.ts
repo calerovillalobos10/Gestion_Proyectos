@@ -1,5 +1,5 @@
 import { Funcionario } from '@core/models/Funcionario';
-import { FuncionariosService } from './../../../../../../core/services/funcionarios/funcionarios.service';
+import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
 import { AlertService } from '@core/services/alert/alert.service';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { Component, OnInit, TemplateRef, ViewChild, HostListener } from '@angular/core';
@@ -20,16 +20,13 @@ export class ListComponent implements OnInit {
  
   ngOnInit(): void {
     this.setTableOptions();
-
     this.loadTable();
-    
 
     this.service.updateNeeded.subscribe((data) => {
       if (data) {
         this.loadTable();
       }
     })
-
   }
 
   ColumnMode = ColumnMode;
@@ -42,17 +39,16 @@ export class ListComponent implements OnInit {
   }
 
   loadTable() {
-
+    
     this.service.getAll().subscribe(
       res => {
         this.allRows = res['estado'] ? res['list'] : [];
       },
       err => {
-        this.allRows = [];
+        this.allRows = [{nombre: 'Luis', apellido_1: 'Leiton', apellido_2:'Iglesias', urlFoto:'', correo: 'Luis@gmail', fechaNacimiento:'18/09/1995',idDepartamento:1, idSexo: 1, idTipoFuncionario:1, idFuncionario:1}];
 
       this.dtTrigger.next();
       })
-
   }
 
   // Actualiza la tabla
@@ -71,11 +67,10 @@ export class ListComponent implements OnInit {
     this.service.modalNeeded.emit({ subject: 'detModal', status: true, userId: id });
   }
 
-  async deleteFunc(id: number) {
+  async deleteFunc(id: any) {
     const func: any = this.getFunc(id);
-    this.alertService.confirmAlert('¿Está seguro de eliminar?', `Registro: ${func.nombre} ${func.apellido1} ${func.apellido2}`)
+    this.alertService.confirmAlert('¿Está seguro de eliminar?', `Registro: ${func.nombre} ${func.apellido_1} ${func.apellido_2}`)
       .then(async (res) => {
-
         // Confirmacion del usuario
         if (res.isConfirmed) {
           this.proceedDelete(id);
@@ -84,7 +79,7 @@ export class ListComponent implements OnInit {
   }
 
   // Procede con la eliminacion de un registro luego de que el usuario lo confirma.
-  proceedDelete(id:number) {
+  proceedDelete(id:any) {
     // Confirmacion del servidor.
     this.service.deleteById(id).subscribe(
       res => {
@@ -102,7 +97,7 @@ export class ListComponent implements OnInit {
   }
 
   // Llama al modal correspondiente de editar
-  editFunc(id: number) {
+  editFunc(id: any) {
     this.service.modalNeeded.emit({ subject: 'editModal', status: true, userId: id });
   }
 
@@ -121,36 +116,44 @@ export class ListComponent implements OnInit {
   setTableOptions() {
     this.dtOptions = {
       destroy: true,
+      processing: true,
       dom: 'Bfrtip',
-      buttons:[
+      buttons: [
         {
-            extend: "copy",
-            className: "btn_table copy",
-            text: "<i class='far fa-copy'></i>",
-            tag: "data-toggle='tooltip' data-placement='top' title='Copiar al Portapapeles'"
+          extend: "copy",
+          className: "btn_table copy",
+          text: "<i class='far fa-copy'></i>",
+          tag: "data-toggle='tooltip' data-placement='top' title='Copiar al Portapapeles'"
         },
         {
-            extend: "excel",
-            className: "btn_table excel",
-            text: "<i class='far fa-file-excel'></i>",
-            tag: "data-toggle='tooltip' title='Descargar en excel'"
+          extend: "excel",
+          className: "btn_table excel",
+          text: "<i class='far fa-file-excel'></i>",
+          tag: "data-toggle='tooltip' title='Descargar en excel'"
         },
         {
-            extend: "pdf",
-            className: "btn_table pdf",
-            text: "<i class='far fa-file-pdf'></i>",
-            tag: "data-toggle='tooltip' data-placement='top' title='Descargar en pdf'"
+          extend: "pdf",
+          className: "btn_table pdf",
+          text: "<i class='far fa-file-pdf'></i>",
+          tag: "data-toggle='tooltip' data-placement='top' title='Descargar en pdf'"
         }
-    ],
+      ],
       language: {
-        "url": '//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json'
+        "url": '//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json',
+        buttons: {
+          copyTitle: 'Copiado al portapapeles',
+          copySuccess: {
+            _: 'Copiadas %d filas',
+            1: 'Copiada 1 fila'
+          },
+        }
       },
-      responsive: true,
-      scrollY:    '50vh',
-      paging:     false,
-      colReorder: false
-    }
 
+      responsive: true,
+      scrollY: '50vh',
+      paging: false,
+      colReorder: false,
+    }
   }
 
 }
