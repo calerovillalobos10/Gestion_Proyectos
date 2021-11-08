@@ -74,7 +74,8 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
         }
       },
       err => {
-        this.closeOnError();
+        //this.closeOnError();
+        this.loadUserData({apellido_1:'assd', apellido_2: 'asd', nombre: 'asd', correo: 'asd', idDepartamento: 1, fechaNacimiento: "1001-01-01", idSexo: 1, idTipoFuncionario: 1, urlFoto: 'https://miracomosehace.com/wp-content/uploads/2020/05/hombre-gorra-camara-1.jpg'});
       }
     );
   }
@@ -154,8 +155,6 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
       this.loadPreview(event);
       this.form.patchValue({ foto: event.target.files[0] })
       this.form.patchValue({ urlFoto: event.target.files[0].name })
-
-      console.log(this.form.value.urlFoto);
 
     } else {
       this.form.patchValue({ urlFoto: this.oldPicture })

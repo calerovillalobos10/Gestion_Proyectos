@@ -109,3 +109,14 @@ table.dataTable > thead .sorting_asc_disabled:after,
 table.dataTable > thead .sorting_desc_disabled:after {
   content: "" !important;
 }
+
+
+#datatables_buttons_info{
+  animation: disapear_copy 2s forwards;
+}
+
+@keyframes disapear_copy {
+  50% {  transform: scale(1); }
+ 
+  100% {  transform: scale(0); }
+}

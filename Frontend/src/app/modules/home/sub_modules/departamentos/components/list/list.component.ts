@@ -24,8 +24,6 @@ export class ListComponent implements OnInit, OnDestroy {
     private service: DepartamentosService,
   ) { }
 
-
-
   ngOnInit(): void {
     this.service.updateNeeded.subscribe((data) => {
       if (data) {
@@ -146,11 +144,12 @@ export class ListComponent implements OnInit, OnDestroy {
 
   rerender(): void {
     /*
-        this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-          dtInstance.destroy();
-          this.dtTrigger.next();
-        });*/
-
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.destroy();
+        this.dtTrigger.next();
+    });
+    */
+    $('#data').DataTable().destroy();  
     this.dtTrigger.next();
   }
 

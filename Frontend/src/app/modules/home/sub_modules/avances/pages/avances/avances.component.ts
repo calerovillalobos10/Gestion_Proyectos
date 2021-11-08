@@ -1,4 +1,5 @@
-import { AdvancesService } from './../../../../../../core/services/advances/advances.service';
+import { Subject } from 'rxjs';
+import { AdvancesService } from '@core/services/advances/advances.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -9,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 export class AvancesComponent implements OnInit {
 
   dtOptions: any = {};
-
+  public dtTrigger: Subject<any> = new Subject<any>();
 
   constructor(
     private service: AdvancesService
@@ -20,7 +21,9 @@ export class AvancesComponent implements OnInit {
   }
 
   deleteAdvance(id:any){}
-  detailsAdvance(id:any){}
+  detailsAdvance(id:any){
+    this.service.modalNeeded.emit({ subject: 'detailsModal', status: true });
+  }
 
   addAdvance() {
     this.service.modalNeeded.emit({ subject: 'addModal', status: true });
@@ -34,7 +37,7 @@ export class AvancesComponent implements OnInit {
     this.dtOptions = {
       destroy: true,
       processing: true,
-      dom: 'Bfrtip',
+      dom: 'Bfrtilp',
       buttons: [
         {
           extend: "copy",
@@ -72,4 +75,11 @@ export class AvancesComponent implements OnInit {
       colReorder: false,
     }
   }
+
+  rerender(): void {
+
+    $('#data').DataTable().destroy();  
+    this.dtTrigger.next();
+  }
+
 }

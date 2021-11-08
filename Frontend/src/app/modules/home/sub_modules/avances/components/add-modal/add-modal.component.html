@@ -33,9 +33,9 @@
                 </div>
 
                 <div class="input_group">
-                  <input class="input" type="file" placeholder=" " id="documento" name="documento" (change)="onFileChange($event)" 
-                  accept="application/pdf" enctype="multipart/form-data" formControlName="documento"/>
-                  <label class="custom-file-upload" for="documento" >
+                  <input class="input" type="file" placeholder=" " id="urlDocumento" name="urlDocumento" (change)="onFileChange($event)" 
+                  accept="application/pdf" enctype="multipart/form-data" formControlName="urlDocumento"/>
+                  <label class="custom-file-upload" for="urlDocumento" >
                     <i class="fas fa-upload"></i> Seleccionar
                   </label>
 
@@ -65,6 +65,7 @@
             <div class="input_group">
               <select class="select" name="aplicativo" id="aplicativo" formControlName="aplicativo"> 
                 <option selected disabled hidden>Seleccione</option>
+                <option *ngFor="let func of aplicativo" value="{{func.idFuncionario}}">{{func.nombre}}</option>
               </select>
  
               <label class="label" for="aplicativo"> Funcionario Aplicativo</label>
@@ -72,8 +73,9 @@
             </div>
 
             <div class="input_group">
-              <select class="select" name="solicitud" id="solicitud" formControlName="solicitud"> 
+              <select class="select" name="solicitud" id="solicitud" formControlName="solicitud" (change)="validateSolicitude($event)"> 
                 <option selected disabled hidden>Seleccione</option>
+                <option *ngFor="let soli of solicitudes" value="{{soli.idSolicitud}}"> {{soli.idSolicitud}} encargado {{soli.funcionarioResponsable}} periodo ({{soli.fechaInicio | date: 'dd/MM/yyyy'}}) - ({{soli.fechaFin  | date: 'dd/MM/yyyy'}})</option>
               </select>
  
               <label class="label" for="solicitud"> Solicitud </label>
@@ -81,12 +83,10 @@
             </div>
 
             <div class="input_group">
-              <input class="input" type="date" id="fechaAvance" formControlName="fechaAvance"/>
+              <input class="input" type="date" id="fechaAvance" formControlName="fechaAvance" (change)="validateDate()" title="{{form.get('solicitud')?.valid ? '' : 'Se habilita al seleccionar una solicitud válida'}}"/>
               <label class="label" for="fechaSolicitud"> Fecha de avance</label>
               <ng-container *ngTemplateOutlet="fechaAvance_error; context: {error: form.get('fechaAvance')?.errors}"></ng-container>
             </div>
-
-
           </div>
         </div>
 
@@ -110,8 +110,10 @@
 
 
 <ng-template #fechaAvance_error let-error="error">
-  <p class="error-input" *ngIf="form.get('fechaInicio')?.dirty || form.get('fechaInicio')?.touched">
+  <p class="error-input" *ngIf="form.get('fechaAvance')?.dirty || form.get('fechaAvance')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.incorrectDateInit">La fecha no puede ser previa al inicio del proyecto </span>
+    <span class="login_error" *ngIf="error?.incorrectDateEnd">La fecha no puede ser posterior al fin del proyecto </span>
   </p>
 </ng-template>
 

@@ -4,7 +4,7 @@
   <div class="primary_box_container" [ngClass]="{ desaparecer: formToggle }">
     <button class="btn_close" (click)='closeModal()'><i class="fas fa-window-close"></i></button>
     <div>
-      <h1 class="title">Registro de solicitud</h1>
+      <h1 class="title"> {{modalType == 'registro' ? 'Registro' : 'Edición'}}  de solicitud</h1>
 
       <form [formGroup]="form" (submit)="add_solicitude()" >
   
@@ -33,9 +33,9 @@
                 </div>
 
                 <div class="input_group">
-                  <input class="input" type="file" placeholder=" " id="acta" name="acta" (change)="onFileChange($event)" 
-                  accept="application/pdf" enctype="multipart/form-data" formControlName="acta"/>
-                  <label class="custom-file-upload" for="acta" >
+                  <input class="input" type="file" placeholder=" " id="urlActa" name="urlActa" (change)="onFileChange($event)" 
+                  accept="application/pdf" enctype="multipart/form-data" />
+                  <label class="custom-file-upload" for="urlActa" >
                     <i class="fas fa-upload"></i> Seleccionar
                   </label>
 
@@ -54,6 +54,7 @@
             <div class="input_group">
               <select class="select" name="aplicativo" id="aplicativo" formControlName="aplicativo"> 
                 <option selected disabled hidden>Seleccione</option>
+                <option *ngFor="let func of aplicativo" value="{{func.idFuncionario}}">{{func.nombre}}</option>
               </select>
 
               <label class="label" for="aplicativo"> Funcionario Aplicativo</label>
@@ -63,6 +64,7 @@
             <div class="input_group">
               <select class="select" name="responsable" id="responsable" formControlName="responsable"> 
                 <option selected disabled hidden>Seleccione</option>
+                <option *ngFor="let func of responsable" value="{{func.idFuncionario}}">{{func.nombre}}</option>
               </select>
 
               <label class="label" for="responsable"> Funcionario Responsable</label>
@@ -73,6 +75,7 @@
             <div class="input_group">
               <select class="select" name="final" id="final"  formControlName="final">
                 <option selected disabled hidden>Seleccione</option>
+                <option *ngFor="let func of final" value="{{func.idFuncionario}}">{{func.nombre}}</option>
               </select>
          
               <label class="label" for="final"> Funcionario Final</label>
@@ -101,7 +104,7 @@
         </div>
 
         <div class="row">
-          <button class="btn">Registrar</button>
+          <button class="btn">{{modalType == 'registro' ? 'Registrar' : 'Editar'}}</button>
         </div>
       </form>
     </div>

@@ -47,7 +47,7 @@ export class ListComponent implements OnInit {
       err => {
         this.allRows = [{nombre: 'Luis', apellido_1: 'Leiton', apellido_2:'Iglesias', urlFoto:'', correo: 'Luis@gmail', fechaNacimiento:'18/09/1995',idDepartamento:1, idSexo: 1, idTipoFuncionario:1, idFuncionario:1}];
 
-      this.dtTrigger.next();
+        this.rerender();
       })
   }
 
@@ -63,7 +63,7 @@ export class ListComponent implements OnInit {
   }
 
   // Llama al modal correspondiente de detalles
-  detailsFunc(id: number) {
+  detailsFunc(id: any) {
     this.service.modalNeeded.emit({ subject: 'detModal', status: true, userId: id });
   }
 
@@ -154,6 +154,11 @@ export class ListComponent implements OnInit {
       paging: false,
       colReorder: false,
     }
+  }
+
+  rerender(): void {
+    $('#data').DataTable().destroy();  
+    this.dtTrigger.next();
   }
 
 }

@@ -49,4 +49,14 @@ export class FuncionariosService {
     return this.http.post<any>(`${this._loginURL}/email`, {correo: email})
   }
 
+  /*
+    Filtra segun el tipo
+    1. Aplicativo
+    2. Responsable
+    3. Final
+  */
+    filterFunctionary(all:any, type: number){
+      return all.filter((element:any) => element.tipoFuncionario === type)
+    }
+
 }

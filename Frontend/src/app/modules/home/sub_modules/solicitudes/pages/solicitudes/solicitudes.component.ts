@@ -1,4 +1,5 @@
-import { SolicitudeService } from './../../../../../../core/services/solicitude/solicitude.service';
+import { Subject } from 'rxjs';
+import { SolicitudeService } from '@core/services/solicitude/solicitude.service';
 import { Component, OnInit } from '@angular/core';
 
 
@@ -10,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 export class SolicitudesComponent implements OnInit {
 
   dtOptions: any = {};
-
+  public dtTrigger: Subject<any> = new Subject<any>();
 
   constructor(
     private service:SolicitudeService
@@ -20,16 +21,18 @@ export class SolicitudesComponent implements OnInit {
     this.setTableOptions();
   }
 
-
   deleteSolicitude(id:any){}
-  detailsSolicitude(id:any){}
+
+  detailsSolicitude(id:any){
+    this.service.modalNeeded.emit({ subject: 'detailsModal', status: true });
+  }
 
   addSolicitude() {
     this.service.modalNeeded.emit({ subject: 'addModal', status: true });
   }
 
   editSolicitude(id: number) {
-    this.service.modalNeeded.emit({ subject: 'editModal', status: true, departamentId: id });
+    this.service.modalNeeded.emit({ subject: 'edtModal', status: true, departamentId: id });
   }
 
   setTableOptions() {
@@ -74,4 +77,12 @@ export class SolicitudesComponent implements OnInit {
       colReorder: false,
     }
   }
+
+  rerender(): void {
+    $('#data').DataTable().destroy();  
+    this.dtTrigger.next();
+  }
+
+
+
 }
