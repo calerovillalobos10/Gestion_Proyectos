@@ -60,8 +60,10 @@ export class AvancesComponent implements OnInit {
     this.service.modalNeeded.emit({ subject: 'addModal', status: true });
   }
 
-  editAdvance(id: number) {
-    this.service.modalNeeded.emit({ subject: 'edtModal', status: true, departamentId: id });
+  editAdvance(id:any) {
+   
+
+    this.service.modalNeeded.emit({ subject: 'edtModal', status: true, advanceId: id });
   }
 
   setTableOptions() {

@@ -1,5 +1,4 @@
 import { HttpClient } from '@angular/common/http';
-import { Funcionario } from './../../models/Funcionario';
 import { Injectable, Output, EventEmitter } from '@angular/core';
 
 @Injectable({
@@ -58,5 +57,4 @@ export class FuncionariosService {
     filterFunctionary(all:any, type: number){
       return all.filter((element:any) => element.tipoFuncionario === type)
     }
-
 }

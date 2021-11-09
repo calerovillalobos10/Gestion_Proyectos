@@ -41,14 +41,14 @@
       <td>
         <div class="row action_wrap">
 
-          <div class="action_btn det" (click)="detailsSolicitude(1)">
+          <div class="action_btn det" (click)="detailsSolicitude(solicitud.idSolicitud)">
             <i class="fas fa-list-alt"></i>
           </div>
 
-          <div class="action_btn edi" (click)="editSolicitude(1)">
+          <div class="action_btn edi" (click)="editSolicitude(solicitud.idSolicitud)">
             <i class="fas fa-edit"></i>
           </div>
-          <div class="action_btn del" (click)="deleteSolicitude(1)">
+          <div class="action_btn del" (click)="deleteSolicitude(solicitud.idSolicitud)">
             <i class="fas fa-trash-alt"></i>
           </div>
           

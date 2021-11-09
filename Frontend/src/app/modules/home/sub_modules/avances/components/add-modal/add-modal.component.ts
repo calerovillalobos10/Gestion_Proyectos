@@ -58,7 +58,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
       if (data.subject === 'edtModal') {
         this.modalType = 'edicion'
-        this.loadEditModal(data.id);
+        this.loadEditModal(data.advanceId);
         this.openedModal = data.status
         this.formToggle = !data.status
       }
@@ -116,19 +116,6 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     )
   }
 
-
-  // Extrae los datos de un avance valido a un objeto FormData
-  obtainAdvance(): FormData {
-    const postData = new FormData();
-
-    postData.append('aplicativo', this.form.value.aplicativo);
-    postData.append('trimestre', this.form.value.trimestre);
-    postData.append('solicitud', this.form.value.solicitud);
-    postData.append('fechaAvance', this.form.value.fechaAvance);
-    postData.append('documento', this.form.value.documento);
-
-    return postData;
-  }
 
   // Metodo para cambiar el preview de la foto del funcionario.
   onFileChange(event: any) {
@@ -192,7 +179,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
 
   // Extrae los datos de un funcionario valido a un objeto funcionario
-  obtainSolicitude(): FormData {
+  obtainAdvance(): FormData {
     const postData = new FormData();
 
     postData.append('idAvance', this.idAdvance + '');

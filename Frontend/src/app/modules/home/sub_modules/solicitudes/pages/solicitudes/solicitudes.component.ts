@@ -58,8 +58,8 @@ export class SolicitudesComponent implements OnInit {
     this.service.modalNeeded.emit({ subject: 'addModal', status: true });
   }
 
-  editSolicitude(id: number) {
-    this.service.modalNeeded.emit({ subject: 'edtModal', status: true, departamentId: id });
+  editSolicitude(id: any) {
+    this.service.modalNeeded.emit({ subject: 'edtModal', status: true, solicitudeId: id });
   }
 
   setTableOptions() {

@@ -55,7 +55,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
       if (data.subject === 'edtModal') {
         this.modalType = 'edicion'
-        this.loadEditModal(data.id);
+        this.loadEditModal(data.solicitudeId);
         this.openedModal = data.status
         this.formToggle = !data.status
       }

@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Output, EventEmitter } from '@angular/core';
 
-import { Solicitud } from '@core/models/Solicitud';
-
 @Injectable({
   providedIn: 'root'
 })
