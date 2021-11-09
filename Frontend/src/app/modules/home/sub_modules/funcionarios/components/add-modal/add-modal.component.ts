@@ -27,9 +27,9 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
     this.deptService.getAll().subscribe(
       res => {
-          this.departamentos = !res['estado'] ? [] : res['list'];
-      }, 
-      err =>{
+        this.departamentos = !res['estado'] ? [] : res['list'];
+      },
+      err => {
         this.departamentos = [];
       }
     )
@@ -69,12 +69,12 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       },
       err => {
         return this.alertService.simpleAlert('Surgio un error al validar el email')
-      }      
+      }
     )
   }
 
   // Luego de validar procede a insertar en la base.
-  proceedCreate(){
+  proceedCreate() {
     // Espera la respuesta del backend.
     this.service.create(this.obtainFunc()).subscribe(
       res => {
@@ -87,7 +87,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
           this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
         }
       },
-      err => { 
+      err => {
         this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
       }
     )
@@ -95,18 +95,24 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
   // Metodo para cambiar el preview de la foto del funcionario.
   onFileChange(event: any) {
-    const size = (event.target.files[0].size/1048576)
 
-    if(size > 1.25){
-      this.form.patchValue({ urlFoto: '' })
-      this.form.get('urlFoto')?.setErrors({'sizeError':true})
-    }else{
-      this.form.get('urlFoto')?.setErrors(null)
-    }
-
+    // Si hay un archivo en el evento
     if (event.target.files && event.target.files[0]) {
-      this.loadPreview(event);
-      this.form.patchValue({ foto: event.target.files[0] })
+      const size = (event.target.files[0].size / 1048576)
+
+      // Si el archivo supera el limite
+      if (size > 1.25) {
+        this.form.patchValue({ urlFoto: '' })
+        this.form.get('urlFoto')?.setErrors({ 'sizeError': true })
+      } else {
+        this.form.get('urlFoto')?.setErrors(null)
+      }
+
+      // Si no existen errores
+      if (!this.form.get('urlFoto')?.errors) {
+        this.loadPreview(event);
+        this.form.patchValue({ foto: event.target.files[0] })
+      }
     } else {
       this.form.patchValue({ foto: '' })
       this.preview = '';
