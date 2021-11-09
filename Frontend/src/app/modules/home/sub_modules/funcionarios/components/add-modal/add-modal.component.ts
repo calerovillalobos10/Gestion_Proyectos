@@ -95,6 +95,15 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
   // Metodo para cambiar el preview de la foto del funcionario.
   onFileChange(event: any) {
+    const size = (event.target.files[0].size/1048576)
+
+    if(size > 1.25){
+      this.form.patchValue({ urlFoto: '' })
+      this.form.get('urlFoto')?.setErrors({'sizeError':true})
+    }else{
+      this.form.get('urlFoto')?.setErrors(null)
+    }
+
     if (event.target.files && event.target.files[0]) {
       this.loadPreview(event);
       this.form.patchValue({ foto: event.target.files[0] })

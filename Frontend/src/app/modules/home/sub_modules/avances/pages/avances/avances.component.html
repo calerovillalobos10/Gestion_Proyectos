@@ -7,11 +7,12 @@
 </div>
 
 <table
-  id="example"
+  id="data"
   class="display responsive nowrap"
   style="width: 100%"
   datatable
   [dtOptions]="dtOptions"
+  [dtTrigger]="dtTrigger"
 >
   <thead>
     <tr>
@@ -30,16 +31,16 @@
       <td>{{ avance.trimestre }}</td>
       <td>{{ avance.funcionarioAplicativo }}</td>
       <td>{{ avance.solicitud }}</td>
-      <td>{{ avance.fehaAvance }}</td>
+      <td>{{ avance.fechaAvance| date: 'dd/MM/yyyy' }}</td>
       <td>
         <div class="row action_wrap">
 
           <div class="action_btn det" (click)="detailsAdvance(1)">
-            <i class="far fa-id-card"></i>
+            <i class="fas fa-list-alt"></i>
           </div>
 
           <div class="action_btn edi" (click)="editAdvance(1)">
-            <i class="fas fa-user-edit"></i>
+            <i class="fas fa-edit"></i>
           </div>
           <div class="action_btn del" (click)="deleteAdvance(1)">
             <i class="fas fa-trash-alt"></i>

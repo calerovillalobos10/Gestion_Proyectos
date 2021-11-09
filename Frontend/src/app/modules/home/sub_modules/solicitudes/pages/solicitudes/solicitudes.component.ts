@@ -17,18 +17,16 @@ export class SolicitudesComponent implements OnInit {
   public allRows: Array<Solicitud> = [];
 
   constructor(
-    private service:SolicitudeService,
+    private service: SolicitudeService,
     private alertService: AlertService
-  ) {
-
-    this.loadTable()
-   }
+  ) {}
 
   ngOnInit(): void {
     this.setTableOptions();
+    this.loadTable()
   }
 
-  deleteSolicitude(id:any){
+  deleteSolicitude(id: any) {
 
     const solicitud: Solicitud | undefined = this.getSolicitude(id);
     this.alertService.confirmAlert('¿Está seguro de eliminar?', `Registro: ${solicitud!.idSolicitud}`)
@@ -41,18 +39,18 @@ export class SolicitudesComponent implements OnInit {
   }
   proceedDelete(id: any) {
     this.service.deleteById(id).subscribe(res => {
-      if(res['estado']){
+      if (res['estado']) {
         this.alertService.simpleAlert('Surgió un error al eliminar');
-      }else{
+      } else {
         this.alertService.simpleAlert('Surgió un error al eliminar');
       }
     },
-    err => {
-      this.alertService.simpleAlert('Surgió un error al eliminar');
-    })
+      err => {
+        this.alertService.simpleAlert('Surgió un error al eliminar');
+      })
   }
 
-  detailsSolicitude(id:any){
+  detailsSolicitude(id: any) {
     this.service.modalNeeded.emit({ subject: 'detailsModal', status: true });
   }
 
@@ -107,27 +105,26 @@ export class SolicitudesComponent implements OnInit {
     }
   }
 
-  
+
   loadTable() {
-    
     this.service.getAll().subscribe(
       res => {
         this.allRows = res['estado'] ? res['list'] : [];
       },
       err => {
-        this.allRows = [{fechaInicio: "2020-02-01", fechaFin: "2020-05-05", fechaSolicitud: "2020-01-01", funcionarioAplicativo: 'Luis A', funcionarioResponsable: 'Luis B', funcionarioFinal: 'Luis C', idSolicitud: 1, documentoActa: '../../../assets/book/book.pdf'}];
-
+        this.allRows = [{ fechaInicio: "2020-02-01", fechaFin: "2020-05-05", fechaSolicitud: "2020-01-01", funcionarioAplicativo: 'Luis A', funcionarioResponsable: 'Luis B', funcionarioFinal: 'Luis C', idSolicitud: 1, documentoActa: '../../../assets/book/book.pdf' }];
         this.rerender();
-      })
+      }
+    )
   }
 
 
   rerender(): void {
-    $('#data').DataTable().destroy();  
+    $('#data').DataTable().destroy();
     this.dtTrigger.next();
   }
 
-  // Obtiene el funcionario de la lista.
+  // Obtiene una solicitud de la lista.
   getSolicitude(id: number) {
     let solicitude: Solicitud | undefined = undefined;
     this.allRows.forEach((element) => {
@@ -137,6 +134,4 @@ export class SolicitudesComponent implements OnInit {
     });
     return solicitude;
   }
-
-
 }

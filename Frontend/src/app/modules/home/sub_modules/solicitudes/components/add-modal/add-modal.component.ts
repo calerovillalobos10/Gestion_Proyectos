@@ -1,3 +1,4 @@
+import { AdvancesService } from './../../../../../../core/services/advances/advances.service';
 import { Solicitud } from '@core/models/Solicitud';
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
 import { SolicitudeService } from '@core/services/solicitude/solicitude.service';
@@ -51,11 +52,12 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
         this.openedModal = data.status
         this.formToggle = !data.status
       }
-      if (data.subject === 'edtModal'){
+
+      if (data.subject === 'edtModal') {
         this.modalType = 'edicion'
         this.loadEditModal(data.id);
         this.openedModal = data.status
-        this.formToggle = !data.status 
+        this.formToggle = !data.status
       }
     })
   }
@@ -66,22 +68,24 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     if (this.form.invalid) {
       return this.form.markAllAsTouched();
     }
-    
 
-    if(this.modalType == 'registro'){
+
+    if (this.modalType == 'registro') {
       this.createSolicitude();
-    }else{
+    } else {
       this.updateSolicitude();
     }
   }
 
-  createSolicitude(){
+  createSolicitude() {
     this.service.create(this.obtainSolicitude()).subscribe(
       res => {
         if (res['estado']) {
-          this.closeModal();
+          this.closeAndEraseModal();
           this.alertService.promiseAlert('Se agregó correctamente la solicitud').then(() => {
             this.service.updateNeeded.emit(true)
+            this.oldDocument = '';
+            this.idSolicitude = -1;
           })
         } else {
           this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
@@ -93,13 +97,15 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     )
   }
 
-  updateSolicitude(){
+  updateSolicitude() {
     this.service.update(this.obtainSolicitude()).subscribe(
       res => {
         if (res['estado']) {
-          this.closeModal();
+          this.closeAndEraseModal();
           this.alertService.promiseAlert('Se modificó correctamente la solicitud').then(() => {
             this.service.updateNeeded.emit(true)
+            this.oldDocument = '';
+            this.idSolicitude = -1;
           })
         } else {
           this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
@@ -114,24 +120,37 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   // Metodo para cambiar el preview de la foto del funcionario.
   onFileChange(event: any) {
 
+
+    // Si hay un archivo en el evento
     if (event.target.files && event.target.files[0]) {
-      this.loadPreview(event);
-      this.form.patchValue({ acta: event.target.files[0] })
-
-      this.form.patchValue({ acta: event.target.files[0] })
-      this.form.patchValue({ urlActa: event.target.files[0].name })
-    } else {
-
-      if(this.modalType == 'edicion'){
-        this.form.patchValue({ urlActa: this.oldDocument })
-        this.form.patchValue({ acta: '' })
-        this.pdfSrc = this.oldDocument;
-      }else{
-        this.form.patchValue({ urlActa: '' })
+      const size = (event.target.files[0].size / 1048576)
+     
+      // Si el archivo supera el limite
+      if (size > 1.25) {
         this.form.patchValue({ acta: '' })
         this.pdfSrc = '';
-      }      
+        this.form.get('urlActa')?.setErrors({ 'sizeError': true })
+      } else {
+        this.form.get('urlActa')?.setErrors(null)
+      }
+
+      // Si no existen errores
+      if (!this.form.get('urlActa')?.errors) {
+        this.loadPreview(event);
+        this.form.patchValue({ acta: event.target.files[0] })
+        this.form.patchValue({ urlActa: event.target.files[0].name })
+      }
+    } else {
+      this.form.patchValue({ acta: '' })
+      if (this.modalType == 'edicion') {
+        this.form.patchValue({ urlActa: this.oldDocument })
+        this.pdfSrc = this.oldDocument;
+      } else {
+        this.form.patchValue({ urlActa: '' })
+        this.pdfSrc = '';
+      }
     }
+
   }
 
   loadPreview(event: any) {
@@ -140,6 +159,20 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     reader.onloadend = (e: any) => {
       this.pdfSrc = e.target.result;
     };
+  }
+
+  
+  resetDocument(){
+    this.form.patchValue({ acta: '' })
+
+    if (this.modalType == 'edicion') {
+      this.form.patchValue({ urlActa: this.oldDocument })
+      this.pdfSrc = this.oldDocument;
+    }else {
+      this.form.patchValue({ urlActa: '' })
+      this.pdfSrc = ' ';
+    }
+    
   }
 
   // Extrae los datos de una solicitud valido a un objeto FormData
@@ -265,12 +298,12 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
   // Metodo para cargar modal para edicion 
   loadEditModal(id: number) {
-    this.serviceFunctionary.getById(id).subscribe(
+    this.service.getById(id).subscribe(
       (res) => {
 
-        if(res['estado']){
+        if (res['estado']) {
           this.patchData(res['solicitud'], id);
-        }else{
+        } else {
           this.onErrorClose();
         }
 
@@ -278,29 +311,28 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
         //this.onErrorClose();----------------------------------------------
         this.patchData(
           {
-            funcionarioAplicativo: 1, 
-            funcionarioFinal: 3, 
-            funcionarioResponsable: 2, 
-            fechaInicio: '2020-01-03', 
-            fechaFin: '2020-01-05', 
-            fechaSolicitud: "2020-01-02", 
-            documentoActa:"../../../assets/book/book.pdf"},
-            id);
+            funcionarioAplicativo: 1,
+            funcionarioFinal: 3,
+            funcionarioResponsable: 2,
+            fechaInicio: '2020-01-03',
+            fechaFin: '2020-01-05',
+            fechaSolicitud: "2020-01-02",
+            documentoActa: "../../../assets/book/book.pdf"
+          },
+          id);
       }
     ))
   }
 
-   // Metodo de cierre en form debido a error
-  onErrorClose(){
+  // Metodo de cierre en form debido a error
+  onErrorClose() {
     this.alertService.promiseAlert('Surgio un error al cargar la solicitud').then(() => {
-      this.closeModal();
-      this.form.reset();
-      this.pdfSrc = '';
+      this.closeAndEraseModal();
     })
   }
 
   // Este metodo coloca los datos a editar en el formulario
-  patchData(solicitude:Solicitud, id:number){
+  patchData(solicitude: Solicitud, id: number) {
     this.oldDocument = solicitude.documentoActa;
     this.idSolicitude = id;
 
@@ -311,10 +343,18 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       fechaInicio: solicitude.fechaInicio,
       fechaFin: solicitude.fechaFin,
       fechaSolicitud: solicitude.fechaSolicitud,
-      urlActa:this.oldDocument
+      urlActa: this.oldDocument
     })
     this.form.controls['fechaInicio'].enable();
     this.form.controls['fechaFin'].enable();
     this.pdfSrc = this.oldDocument;
   }
+
+  closeAndEraseModal(){
+    this.pdfSrc = '';
+    this.oldDocument = '';
+    this.idSolicitude = -1;
+    this.closeModal();
+  }
+
 }

@@ -1,3 +1,4 @@
+import { FunctionaryPipe } from './../../../../core/pipes/functionary.pipe';
 import { DataTablesModule } from 'angular-datatables';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { EdtModalComponent } from './components/edt-modal/edt-modal.component';
@@ -22,7 +23,7 @@ import { DetModalComponent } from './components/det-modal/det-modal.component';
     EdtModalComponent,
     ErrImgDirective,
     DetModalComponent,
-    
+    FunctionaryPipe
   ],
   imports: [
     CommonModule,

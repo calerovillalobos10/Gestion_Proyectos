@@ -2,7 +2,7 @@
 <div class="primary_box" *ngIf="openedModal" >
  
   <div class="primary_box_container" [ngClass]="{ desaparecer: formToggle }">
-    <button class="btn_close" (click)='closeModal()'><i class="fas fa-window-close"></i></button>
+    <button class="btn_close" (click)='closeAndEraseModal()'><i class="fas fa-window-close"></i></button>
     <div>
       <h1 class="title"> {{modalType == 'registro' ? 'Registro' : 'Edición'}}  de solicitud</h1>
 
@@ -40,6 +40,7 @@
                   </label>
 
                   <label class="label"> Acta constitutiva</label>
+                  <i class="fas fa-undo undo_button" (click)='resetDocument()'></i>
                   <ng-container *ngTemplateOutlet="urlActa_error; context: {error: form.get('urlActa')?.errors}"></ng-container>
                 </div>
                 
@@ -130,7 +131,6 @@
 <ng-template #final_error let-error="error">
   <p class="error-input" *ngIf="form.get('final')?.dirty || form.get('final')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
-   
   </p>
 </ng-template>
 
@@ -159,12 +159,14 @@
 <ng-template #urlActa_error let-error="error">
 
   <p class="error-input" *ngIf="form.get('urlActa')?.dirty || form.get('urlActa')?.touched">
-    
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
   </p>
+
   <p class="error-input">
     <span class="login_error" *ngIf="error?.pattern">El formato debe ser PDF </span>
+    <span class="login_error" *ngIf="error?.sizeError">Solo se permiten archivos con un tamaño maximo de 1.25mb </span>
   </p>
+
   
 </ng-template>
 

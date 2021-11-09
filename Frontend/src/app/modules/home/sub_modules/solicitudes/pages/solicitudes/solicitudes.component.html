@@ -10,11 +10,12 @@
 
 
 <table
-  id="example"
+  id="data"
   class="display responsive nowrap"
   style="width: 100%"
   datatable
   [dtOptions]="dtOptions"
+  [dtTrigger]="dtTrigger"
 >
   <thead>
     <tr>
@@ -34,18 +35,18 @@
       <td>{{ solicitud.funcionarioAplicativo }}</td>
       <td>{{ solicitud.funcionarioResponsable }}</td>
       <td>{{ solicitud.funcionarioFinal }}</td>
-      <td>{{ solicitud.fechaSolicitud }}</td>
-      <td>{{ solicitud.fechaInicio }}</td>
-      <td>{{ solicitud.fechaFin }}</td>
+      <td>{{ solicitud.fechaSolicitud | date: 'dd/MM/yyyy'}}</td>
+      <td>{{ solicitud.fechaInicio | date: 'dd/MM/yyyy'}}</td>
+      <td>{{ solicitud.fechaFin | date: 'dd/MM/yyyy'}}</td>
       <td>
         <div class="row action_wrap">
 
           <div class="action_btn det" (click)="detailsSolicitude(1)">
-            <i class="far fa-id-card"></i>
+            <i class="fas fa-list-alt"></i>
           </div>
 
           <div class="action_btn edi" (click)="editSolicitude(1)">
-            <i class="fas fa-user-edit"></i>
+            <i class="fas fa-edit"></i>
           </div>
           <div class="action_btn del" (click)="deleteSolicitude(1)">
             <i class="fas fa-trash-alt"></i>

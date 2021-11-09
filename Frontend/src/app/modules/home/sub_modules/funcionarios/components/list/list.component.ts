@@ -44,7 +44,7 @@ export class ListComponent implements OnInit {
         this.allRows = res['estado'] ? res['list'] : [];
       },
       err => {
-        this.allRows = [{nombre: 'Luis', apellido_1: 'Leiton', apellido_2:'Iglesias', urlFoto:'', correo: 'Luis@gmail', fechaNacimiento:'18/09/1995',idDepartamento:1, idSexo: 1, idTipoFuncionario:1, idFuncionario:1}];
+        this.allRows = [{nombre: 'Luis', apellido_1: 'Leiton', apellido_2:'Iglesias', urlFoto:'', correo: 'Luis@gmail', fechaNacimiento:'1995-09-09',idDepartamento:1, idSexo: 1, idTipoFuncionario:1, idFuncionario:1}];
 
         this.rerender();
       })

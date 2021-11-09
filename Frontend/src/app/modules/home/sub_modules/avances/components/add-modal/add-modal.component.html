@@ -2,9 +2,9 @@
 <div class="primary_box" *ngIf="openedModal" >
  
   <div class="primary_box_container" [ngClass]="{ desaparecer: formToggle }">
-    <button class="btn_close" (click)='closeModal()'><i class="fas fa-window-close"></i></button>
+    <button class="btn_close" (click)='closeAndEraseModal()'><i class="fas fa-window-close"></i></button>
     <div>
-      <h1 class="title">Registro de avance</h1>
+      <h1 class="title">{{modalType == 'registro' ? 'Registro' : 'Edición'}} de avance</h1>
 
       <form [formGroup]="form" (submit)="add_solicitude()" >
   
@@ -34,12 +34,13 @@
 
                 <div class="input_group">
                   <input class="input" type="file" placeholder=" " id="urlDocumento" name="urlDocumento" (change)="onFileChange($event)" 
-                  accept="application/pdf" enctype="multipart/form-data" formControlName="urlDocumento"/>
+                  accept="application/pdf" enctype="multipart/form-data"/>
                   <label class="custom-file-upload" for="urlDocumento" >
                     <i class="fas fa-upload"></i> Seleccionar
                   </label>
 
                   <label class="label"> Documento</label>
+                  <i class="fas fa-undo undo_button" (click)='resetDocument()'></i>
                   <ng-container *ngTemplateOutlet="urlDocumento_error; context: {error: form.get('urlDocumento')?.errors}"></ng-container>
                 </div>
               </div>
@@ -91,7 +92,7 @@
         </div>
 
         <div class="row">
-          <button class="btn">Registrar</button>
+          <button class="btn">{{modalType == 'registro' ? 'Registrar' : 'Editar'}}</button>
         </div>
       </form>
     </div>
@@ -136,6 +137,7 @@
   </p>
   <p class="error-input">
     <span class="login_error" *ngIf="error?.pattern">El formato debe ser PDF </span>
+    <span class="login_error" *ngIf="error?.sizeError">Solo se permiten archivos con un tamaño maximo de 1.25mb </span>
   </p>
   
 

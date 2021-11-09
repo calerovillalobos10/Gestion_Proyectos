@@ -22,14 +22,9 @@
               <label class="custom-file-upload" for="urlFoto">
                 <i class="fas fa-upload"></i> Seleccionar
               </label>
-
-              <ng-container *ngIf=" form.get('urlFoto')?.errors">
-                <p class="error-input">
-                  <span class="login_error">El formato de la imagen no es válido</span>
-                </p>
-              </ng-container>
               <label class="label"> Foto</label>
-              
+              <i class="fas fa-undo undo_button" (click)='resetPicture()'></i>
+              <ng-container *ngTemplateOutlet="foto_error; context: {error: form.get('urlFoto')?.errors}"></ng-container>
             </div>
           </div>
         </div>
@@ -196,9 +191,10 @@
 </ng-template>
 
 <ng-template #foto_error let-error="error">
-  
-  <p class="error-input" *ngIf="form.get('urlFoto')?.dirty || form.get('urlFoto')?.touched">
+ 
+  <p class="error-input">
     <span class="login_error" *ngIf="error?.pattern">El formato de la imagen no es válido</span>
+    <span class="login_error" *ngIf="error?.sizeError">Solo se admiten imagenes de hasta 1.25mb</span>
   </p>
 </ng-template>
 

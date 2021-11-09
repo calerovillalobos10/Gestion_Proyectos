@@ -19,12 +19,11 @@ export class AvancesComponent implements OnInit {
   constructor(
     private service: AdvancesService,
     private alertService: AlertService
-  ) {
-    this.loadTable();
-  }
+  ) {}
 
   ngOnInit(): void {
     this.setTableOptions();
+    this.loadTable();
   }
 
   deleteAdvance(id:any){
@@ -62,7 +61,7 @@ export class AvancesComponent implements OnInit {
   }
 
   editAdvance(id: number) {
-    this.service.modalNeeded.emit({ subject: 'editModal', status: true, departamentId: id });
+    this.service.modalNeeded.emit({ subject: 'edtModal', status: true, departamentId: id });
   }
 
   setTableOptions() {
@@ -116,7 +115,7 @@ export class AvancesComponent implements OnInit {
         this.allRows = res['estado'] ? res['list'] : [];
       },
       err => {
-        this.allRows = [{  fehaAvance: "2020-02-01", funcionarioAplicativo: 'Luis A', trimestre: 'Primer Trimestre', idAvance: 1, solicitud: 1, documento: '../../../assets/book/book.pdf'}];
+        this.allRows = [{  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis A', trimestre: 'Primer Trimestre', idAvance: 1, solicitud: 1, documento: '../../../assets/book/book.pdf'}];
 
         this.rerender();
       })
@@ -139,6 +138,5 @@ export class AvancesComponent implements OnInit {
     });
     return solicitude;
   }
-
 
 }

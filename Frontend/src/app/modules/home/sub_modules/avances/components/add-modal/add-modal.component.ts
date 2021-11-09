@@ -1,3 +1,4 @@
+import { Avance } from './../../../../../../core/models/Avance';
 import { SolicitudeService } from '@core/services/solicitude/solicitude.service';
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
 import { AdvancesService } from '@core/services/advances/advances.service';
@@ -21,6 +22,11 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   public solicitudes: any;
   private selectedSolicitude: any;
 
+  private oldDocument: string;
+  private idAdvance: number;
+
+  public modalType: string;
+
   constructor(
     private formBuilder: FormBuilder,
     private service: AdvancesService,
@@ -31,6 +37,11 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     super();
     this.pdfSrc = '';
 
+    this.modalType = 'registro';
+
+    this.oldDocument = '';
+    this.idAdvance = -1;
+
     this.loadSolicitude();
     this.loadFunctionaries();
     this.buildForm();
@@ -40,10 +51,18 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     this.service.modalNeeded.subscribe(data => {
       if (data.subject === 'addModal') {
         this.pdfSrc = '';
+        this.modalType = 'registro'
         this.openedModal = data.status
         this.formToggle = !data.status
       }
-      
+
+      if (data.subject === 'edtModal') {
+        this.modalType = 'edicion'
+        this.loadEditModal(data.id);
+        this.openedModal = data.status
+        this.formToggle = !data.status
+      }
+
     })
   }
 
@@ -52,24 +71,53 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       return this.form.markAllAsTouched();
     }
 
+    if (this.modalType == 'registro') {
+      this.createAdvance();
+    } else {
+      this.updateAdvance();
+    }
+
+  }
+
+
+  createAdvance() {
     this.service.create(this.obtainAdvance()).subscribe(
       res => {
-        if(res['estado']){
-          this.closeModal();
+        if (res['estado']) {
+          this.closeAndEraseModal();
           this.alertService.promiseAlert('Se agregó correctamente el el avance').then(() => {
             this.service.updateNeeded.emit(true)
           })
-        }else{
+        } else {
           this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
         }
       },
       err => {
         this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
       }
-      )
-    }
+    )
+  }
 
-      // Extrae los datos de un avance valido a un objeto FormData
+  updateAdvance() {
+    this.service.update(this.obtainAdvance()).subscribe(
+      res => {
+        if (res['estado']) {
+          this.closeAndEraseModal();
+          this.alertService.promiseAlert('Se modificó correctamente el el avance').then(() => {
+            this.service.updateNeeded.emit(true)
+          })
+        } else {
+          this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
+        }
+      },
+      err => {
+        this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
+      }
+    )
+  }
+
+
+  // Extrae los datos de un avance valido a un objeto FormData
   obtainAdvance(): FormData {
     const postData = new FormData();
 
@@ -78,20 +126,47 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     postData.append('solicitud', this.form.value.solicitud);
     postData.append('fechaAvance', this.form.value.fechaAvance);
     postData.append('documento', this.form.value.documento);
-  
+
     return postData;
   }
 
   // Metodo para cambiar el preview de la foto del funcionario.
   onFileChange(event: any) {
 
-    if (event.target.files && event.target.files[0]) {
-      this.loadPreview(event);
-      this.form.patchValue({ documento: event.target.files[0] })
-    } else {
+
+
+
+
+  // Si hay un archivo en el evento
+  if (event.target.files && event.target.files[0]) {
+    const size = (event.target.files[0].size / 1048576)
+   
+    // Si el archivo supera el limite
+    if (size > 1.25) {
       this.form.patchValue({ documento: '' })
       this.pdfSrc = '';
+      this.form.get('urlDocumento')?.setErrors({ 'sizeError': true })
+    } else {
+      this.form.get('urlDocumento')?.setErrors(null)
     }
+
+    // Si no existen errores
+    if (!this.form.get('urlDocumento')?.errors) {
+      this.loadPreview(event);
+      this.form.patchValue({ documento: event.target.files[0] })
+      this.form.patchValue({ urlDocumento: event.target.files[0].name })
+    }
+  } else {
+    this.form.patchValue({ documento: '' })
+    if (this.modalType == 'edicion') {
+      this.form.patchValue({ urlDocumento: this.oldDocument })
+      this.pdfSrc = this.oldDocument;
+    } else {
+      this.form.patchValue({ urlDocumento: '' })
+      this.pdfSrc = '';
+    }
+  }
+
   }
 
   loadPreview(event: any) {
@@ -101,10 +176,26 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       this.pdfSrc = e.target.result;
     };
   }
+
+  resetDocument(){
+    this.form.patchValue({ documento: '' })
+
+    if (this.modalType == 'edicion') {
+      this.form.patchValue({ urlDocumento: this.oldDocument })
+      this.pdfSrc = this.oldDocument;
+    }else {
+      this.form.patchValue({ urlDocumento: '' })
+      this.pdfSrc = ' ';
+    }
+    
+  }
+
+
   // Extrae los datos de un funcionario valido a un objeto funcionario
   obtainSolicitude(): FormData {
     const postData = new FormData();
 
+    postData.append('idAvance', this.idAdvance + '');
     postData.append('idTrimestre', this.form.value.trimestre);
     postData.append('idFuncionario_Aplicativo', this.form.value.aplicativo);
     postData.append('idSolicitud', this.form.value.solicitud);
@@ -143,36 +234,36 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     })
   }
 
-  validateSolicitude(event:any){
-    this.selectedSolicitude = this.solicitudes.filter((element:any)=> element.idSolicitud == event.target.value);
+  validateSolicitude(event: any) {
+    this.selectedSolicitude = this.solicitudes.filter((element: any) => element.idSolicitud == event.target.value);
 
     this.form.patchValue({
       fechaAvance: '',
     })
 
-    if(this.selectedSolicitude){
+    if (this.selectedSolicitude) {
       this.selectedSolicitude = this.selectedSolicitude[0];
       this.form.get('fechaAvance')?.enable()
-    }else{
+    } else {
       this.form.get('fechaAvance')?.disable()
     }
-   
+
   }
 
-  validateDate(){
-    if(this.isBefore(this.selectedSolicitude.fechaInicio, this.form.value.fechaAvance)){
-      return this.form.controls['fechaAvance'].setErrors({'incorrectDateInit': true});
-    }else{
+  validateDate() {
+    if (this.isBefore(this.selectedSolicitude.fechaInicio, this.form.value.fechaAvance)) {
+      return this.form.controls['fechaAvance'].setErrors({ 'incorrectDateInit': true });
+    } else {
       this.form.controls['fechaAvance'].setErrors(null);
     }
 
-    if(this.isBefore(this.form.value.fechaAvance, this.selectedSolicitude.fechaFin )){
-      return this.form.controls['fechaAvance'].setErrors({'incorrectDateEnd': true});
-    }else{
+    if (this.isBefore(this.form.value.fechaAvance, this.selectedSolicitude.fechaFin)) {
+      return this.form.controls['fechaAvance'].setErrors({ 'incorrectDateEnd': true });
+    } else {
       this.form.controls['fechaAvance'].setErrors(null);
     }
   }
-  
+
   // Carga el array de solicitudes
   loadSolicitude() {
     this.serviceSolicitude.getAll().subscribe(
@@ -182,13 +273,13 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       },
 
       err => {
-        this.solicitudes = [{ idSolicitud: '1', funcionarioResponsable: 'Luis', fechaInicio:'2021-11-11', fechaFin:'2021-11-14' }];// [];
+        this.solicitudes = [{ idSolicitud: '1', funcionarioResponsable: 'Luis', fechaInicio: '2021-11-11', fechaFin: '2021-11-14' }];// [];
       }
     )
   }
 
   // Este metodo valida su una fecha esta antes que otra.
-  isBefore(start: Date, end: Date){
+  isBefore(start: Date, end: Date) {
     return start > end
   }
 
@@ -209,5 +300,66 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     )
   }
 
+
+  //----------------------------------------------------------------------------------------------------------------------
+
+  // Metodo para cargar modal para edicion 
+  loadEditModal(id: number) {
+    this.service.getById(id).subscribe(
+      (res) => {
+
+        if (res['estado']) {
+          this.patchData(res['avance'], id);
+        } else {
+          this.onErrorClose();
+        }
+
+      }, (err => {
+        //this.onErrorClose();----------------------------------------------
+        this.patchData(
+          {
+            funcionarioAplicativo: 1,
+            trimestre: 3,
+            fechaAvance: '2020-01-03',
+            solicitud: 1,
+            documento: "../../../assets/book/book.pdf"
+          },
+          id);
+      }
+    ))
+  }
+
+  // Metodo de cierre en form debido a error
+  onErrorClose() {
+    this.alertService.promiseAlert('Surgio un error al cargar la solicitud').then(() => {
+      this.closeAndEraseModal();
+    
+    })
+  }
+
+  // Este metodo coloca los datos a editar en el formulario
+  patchData(advance: Avance, id: number) {
+
+    this.oldDocument = advance.documento;
+    this.idAdvance = id;
+   
+    this.form.patchValue({
+      aplicativo: advance.funcionarioAplicativo,
+      trimestre: advance.trimestre,
+      fechaAvance: advance.fechaAvance,
+      solicitud: advance.solicitud,
+      urlDocumento: this.oldDocument
+    })
+    this.form.controls['fechaAvance'].enable();
+    this.pdfSrc = this.oldDocument;
+  }
+
+
+  closeAndEraseModal(){
+    this.pdfSrc = '';
+    this.oldDocument = '';
+    this.idAdvance = -1;
+    this.closeModal();
+  }
 
 }

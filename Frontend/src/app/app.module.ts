@@ -5,13 +5,12 @@ import { TokenInterceptor } from '@core/interceptors/Tokens';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { FunctionaryPipe } from './core/pipes/functionary.pipe';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-
-
   ],
   imports: [
     BrowserModule,

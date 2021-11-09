@@ -2,9 +2,9 @@ import { Solicitud } from '@core/models/Solicitud';
 
 export interface Avance{
   idAvance?:number;
-  trimestre:string;
+  trimestre:number | string,
   funcionarioAplicativo:number | string, 
-  fehaAvance:string,
+  fechaAvance:string,
   solicitud: number,
   documento:any,
 } 

@@ -37,9 +37,9 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
 
     this.deptService.getAll().subscribe(
       res => {
-          this.departamentos = !res['estado'] ? [] : res['list'];
-      }, 
-      err =>{
+        this.departamentos = !res['estado'] ? [] : res['list'];
+      },
+      err => {
         this.departamentos = [];
       }
     )
@@ -75,7 +75,7 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
       },
       err => {
         //this.closeOnError();
-        this.loadUserData({apellido_1:'assd', apellido_2: 'asd', nombre: 'asd', correo: 'asd', idDepartamento: 1, fechaNacimiento: "1001-01-01", idSexo: 1, idTipoFuncionario: 1, urlFoto: 'https://miracomosehace.com/wp-content/uploads/2020/05/hombre-gorra-camara-1.jpg'});
+        this.loadUserData({ apellido_1: 'assd', apellido_2: 'asd', nombre: 'asd', correo: 'asd', idDepartamento: 1, fechaNacimiento: "1001-01-01", idSexo: 1, idTipoFuncionario: 1, urlFoto: 'https://miracomosehace.com/wp-content/uploads/2020/05/hombre-gorra-camara-1.jpg' });
       }
     );
   }
@@ -151,16 +151,36 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
 
   // Metodo para cambiar el preview de la foto del funcionario.
   onFileChange(event: any) {
+    // Si hay un archivo en el evento
     if (event.target.files && event.target.files[0]) {
-      this.loadPreview(event);
-      this.form.patchValue({ foto: event.target.files[0] })
-      this.form.patchValue({ urlFoto: event.target.files[0].name })
+      const size = (event.target.files[0].size / 1048576)
 
+      // Si el archivo supera el limite
+      if (size > 1.25) {
+        this.form.patchValue({ foto: '' })
+        this.preview = '';
+        this.form.get('urlFoto')?.setErrors({ 'sizeError': true })
+      } else {
+        this.form.get('urlFoto')?.setErrors(null)
+      }
+
+      // Si no existen errores
+      if (!this.form.get('urlFoto')?.errors) {
+          this.loadPreview(event);
+          this.form.patchValue({ foto: event.target.files[0] })
+          this.form.patchValue({ urlFoto: event.target.files[0].name })
+      }
     } else {
       this.form.patchValue({ urlFoto: this.oldPicture })
       this.form.patchValue({ foto: '' })
       this.preview = this.oldPicture;
     }
+  }
+
+  resetPicture(){
+    this.form.patchValue({ urlFoto: this.oldPicture })
+    this.form.patchValue({ foto: '' })
+    this.preview = this.oldPicture;
   }
 
   loadPreview(event: any) {
