@@ -51,7 +51,7 @@ export class SolicitudesComponent implements OnInit {
   }
 
   detailsSolicitude(id: any) {
-    this.service.modalNeeded.emit({ subject: 'detailsModal', status: true });
+    this.service.modalNeeded.emit({ subject: 'detModal', status: true, solicitudeId: id  });
   }
 
   addSolicitude() {

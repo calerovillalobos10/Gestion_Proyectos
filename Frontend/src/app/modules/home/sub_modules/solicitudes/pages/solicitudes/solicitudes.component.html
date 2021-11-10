@@ -1,13 +1,10 @@
 <h1 class="crud_title">Solicitudes</h1>
 <div class="mb-5"></div>
 
-<app-add-modal></app-add-modal>
-
 <div class="row table_tools">
   <div></div>
   <i class="fas fa-plus-square add_crud" (click)='addSolicitude()'></i>
 </div>
-
 
 <table
   id="data"
@@ -51,10 +48,13 @@
           <div class="action_btn del" (click)="deleteSolicitude(solicitud.idSolicitud)">
             <i class="fas fa-trash-alt"></i>
           </div>
-          
         </div>
       </td>
 
     </tr>
   </tbody>
 </table>
+
+<app-add-modal></app-add-modal>
+<app-det-modal></app-det-modal>
+<app-related-advances></app-related-advances>

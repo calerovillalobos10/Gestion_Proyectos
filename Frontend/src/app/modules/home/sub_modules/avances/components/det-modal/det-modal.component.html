@@ -1,0 +1,81 @@
+<div class="primary_box" *ngIf="openedModal" >
+ 
+  <div class="primary_box_container" [ngClass]="{ desaparecer: formToggle }">
+    <button class="btn_close" (click)='closeModal()'><i class="fas fa-window-close"></i></button>
+    <div>
+      <h1 class="title">Detalles de avance</h1>
+
+      <div class="row">
+        <div class="col">
+                  
+      <div class="pdf_previewer" >
+               
+        <pdf-viewer
+        [src] = 'pdfSrc'
+        [render-text] = 'true'
+        [fit-to-page]="false"
+        [original-size]="false"
+        [zoom-scale]="'page-fit'"
+        [autoresize]="true"
+        style="display: block;"
+         >
+        </pdf-viewer>
+      </div>
+        </div>
+
+        <a href="{{pdfSrc}}" download="Avance-{{advanceId}}" class="download_button">
+          <i class="fas fa-download" title="Descargar documento."></i>
+        </a>
+
+        <div class="col">
+    
+          <table>
+            <tr>
+              <td>
+                <p class="user_data">Trimestre </p>
+              </td>
+              <td>
+                <span>{{avance!.trimestre | trimestre}}</span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <p class="user_data">Aplicante</p>
+              </td>
+              <td>
+                <span>{{funcionario_Aplicativo!.nombre}} {{funcionario_Aplicativo!.apellido_1}} {{funcionario_Aplicativo!.apellido_2}}</span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <p class="user_data">Solicitud</p>
+              </td>
+              <td>
+                <span>{{avance!.solicitud}}</span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <p class="user_data">Fecha de avance</p>
+              </td>
+              <td>
+                <span>{{avance!.fechaAvance}}</span>
+              </td>
+            </tr>
+          </table>
+
+        </div>
+
+      </div>
+
+       
+    
+
+    
+    </div>
+  </div>
+</div>
+

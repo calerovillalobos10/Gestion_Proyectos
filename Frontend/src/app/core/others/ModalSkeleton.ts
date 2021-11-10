@@ -17,7 +17,9 @@ export class ModalSkeleton{
   async closeModal() {
     this.formToggle = true;
     setTimeout(() =>  this.openedModal = false , 500)
-    this.form.reset()
+    if(this.form){
+      this.form.reset()
+    }
   }
   
 }

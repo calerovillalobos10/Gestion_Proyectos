@@ -1,3 +1,4 @@
+import { TrimestrePipe } from './../core/pipes/trimestre.pipe';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -16,6 +17,7 @@ import { ErrLogoDirective } from '@core/directives/images/err-logo.directive';
     NavbarComponent,
     LoginTransitionComponent,
     LogoutTransitionComponent,
+    TrimestrePipe,
   
     ErrLogoDirective
   ],
@@ -29,6 +31,7 @@ import { ErrLogoDirective } from '@core/directives/images/err-logo.directive';
     NavbarComponent,
     LoginTransitionComponent,
     LogoutTransitionComponent,
+    TrimestrePipe
   ]
   
 })

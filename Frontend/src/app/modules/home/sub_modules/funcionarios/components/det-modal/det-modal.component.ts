@@ -60,7 +60,7 @@ export class DetModalComponent implements OnInit {
 
   // Este metodo cierra el modal mostrando una alerta de error.
   closeOnError() {
-    this.alertService.promiseAlert('Surgio un error al cargar el funcionario').then(
+    this.alertService.promiseAlertError('Surgio un error al cargar el funcionario').then(
       () => {
         this.closeModal();
       }

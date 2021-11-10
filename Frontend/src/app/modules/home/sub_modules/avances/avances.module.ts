@@ -1,3 +1,6 @@
+import { SharedModule } from './../../../../shared/shared.module';
+
+import { DetModalComponent } from './components/det-modal/det-modal.component';
 import { AddModalComponent } from './components/add-modal/add-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -12,9 +15,12 @@ import { AvancesComponent } from './pages/avances/avances.component';
 @NgModule({
   declarations: [
     AvancesComponent,
-    AddModalComponent
+    DetModalComponent,
+    AddModalComponent,
+
   ],
   imports: [
+    SharedModule,
     CommonModule,
     AvancesRoutingModule,
     ReactiveFormsModule,

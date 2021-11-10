@@ -50,10 +50,8 @@ export class AvancesComponent implements OnInit {
     })
   }
 
-
-
   detailsAdvance(id:any){
-    this.service.modalNeeded.emit({ subject: 'detailsModal', status: true });
+    this.service.modalNeeded.emit({ subject: 'detModal', status: true.valueOf, advanceId: id });
   }
 
   addAdvance() {
@@ -61,8 +59,6 @@ export class AvancesComponent implements OnInit {
   }
 
   editAdvance(id:any) {
-   
-
     this.service.modalNeeded.emit({ subject: 'edtModal', status: true, advanceId: id });
   }
 
@@ -117,7 +113,7 @@ export class AvancesComponent implements OnInit {
         this.allRows = res['estado'] ? res['list'] : [];
       },
       err => {
-        this.allRows = [{  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis A', trimestre: 'Primer Trimestre', idAvance: 1, solicitud: 1, documento: '../../../assets/book/book.pdf'}];
+        this.allRows = [{  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis A', trimestre: 1, idAvance: 1, solicitud: 1, documento: '../../../assets/book/book.pdf'}];
 
         this.rerender();
       })

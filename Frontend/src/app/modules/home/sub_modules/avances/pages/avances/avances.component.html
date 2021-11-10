@@ -28,14 +28,14 @@
   <tbody>
     <tr *ngFor="let avance of allRows">
       <td>{{ avance.idAvance }}</td>
-      <td>{{ avance.trimestre }}</td>
+      <td>{{ avance.trimestre | trimestre}}</td>
       <td>{{ avance.funcionarioAplicativo }}</td>
       <td>{{ avance.solicitud }}</td>
       <td>{{ avance.fechaAvance| date: 'dd/MM/yyyy' }}</td>
       <td>
         <div class="row action_wrap">
 
-          <div class="action_btn det" (click)="detailsAdvance( avance.idAvance)">
+          <div class="action_btn det" (click)="detailsAdvance(avance.idAvance)">
             <i class="fas fa-list-alt"></i>
           </div>
 
@@ -52,4 +52,5 @@
     </tr>
   </tbody>
 </table>
+<app-det-modal></app-det-modal>
 <app-add-modal></app-add-modal>

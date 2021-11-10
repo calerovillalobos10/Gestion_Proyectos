@@ -1,0 +1,107 @@
+<div class="primary_box" *ngIf="openedModal">
+  <div class="primary_box_container" [ngClass]="{ desaparecer: formToggle }">
+    <button class="btn_close" (click)="closeModal()">
+      <i class="fas fa-window-close"></i>
+    </button>
+    <div>
+      <h1 class="title">Detalles de solicitud</h1>
+
+      <div class="row">
+        <div class="col">
+          <div class="pdf_previewer">
+            <pdf-viewer
+              [src]="pdfSrc"
+              [render-text]="true"
+              [fit-to-page]="false"
+              [original-size]="false"
+              [zoom-scale]="'page-fit'"
+              [autoresize]="true"
+              style="display: block"
+            >
+            </pdf-viewer>
+          </div>
+        </div>
+
+        <a
+          href="{{ pdfSrc }}"
+          download="Solicitud-{{ solicitudId }}"
+          class="download_button"
+        >
+          <i class="fas fa-download" title="Descargar documento."></i>
+        </a>
+
+        <div class="col">
+          <table>
+            <tr>
+              <td>
+                <p class="user_data">Aplicante</p>
+              </td>
+              <td>
+                <span>
+                  {{ funcionario_Aplicativo!.nombre }}
+                  {{ funcionario_Aplicativo!.apellido_1 }}
+                  {{ funcionario_Aplicativo!.apellido_2 }}
+                </span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <p class="user_data">Responsable</p>
+              </td>
+              <td>
+                <span>
+                  {{ funcionario_Responsable!.nombre }}
+                  {{ funcionario_Responsable!.apellido_1 }}
+                  {{ funcionario_Responsable!.apellido_2 }}
+                </span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <p class="user_data">Final</p>
+              </td>
+              <td>
+                <span>
+                  {{ funcionario_Final!.nombre }}
+                  {{ funcionario_Final!.apellido_1 }}
+                  {{ funcionario_Final!.apellido_2 }}
+                </span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <p class="user_data">Fecha de solicitud</p>
+              </td>
+              <td>
+                <span>{{ solicitud!.fechaSolicitud }}</span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <p class="user_data">Fecha de inicio</p>
+              </td>
+              <td>
+                <span>{{ solicitud!.fechaInicio }}</span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <p class="user_data">Fecha de fin</p>
+              </td>
+              <td>
+                <span>{{ solicitud!.fechaFin }}</span>
+              </td>
+            </tr>
+          </table>
+
+          <a class="advances_btn" (click)="relatedAdvances(solicitud!.idSolicitud)">Avances asociados</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

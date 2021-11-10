@@ -19,7 +19,7 @@ export class FuncionariosService {
   ) { }
 
   // Metodo de obtencion por id. 
-  getById(id: number){
+  getById(id: any){
     return this.http.post<any>(`${this._loginURL}/funcionarioById`, {id: id})
   }
 

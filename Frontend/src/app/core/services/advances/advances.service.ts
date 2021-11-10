@@ -20,7 +20,7 @@ export class AdvancesService {
   ) { }
 
   // Metodo de obtencion por id. 
-  getById(id: number){
+  getById(id: any){
     return this.http.post<any>(`${this._loginURL}/avanceById`, {id: id})
   }
 
@@ -42,5 +42,10 @@ export class AdvancesService {
   //Obtiene todas los avances     
   getAll(){
     return this.http.get<any>(`${this._loginURL}/avances`)
+  }
+
+  // Obtiene todos los avances de una determinada solicitud
+  getBySolicitude(solicitudId: number) {
+    return this.http.post<any>(`${this._loginURL}/avancesbysolicitud`, {solicitudId:solicitudId})
   }
 }
