@@ -1,6 +1,6 @@
 <div class="row table_tools">
   <div></div>
-  <i class="fas fa-plus-square add_crud" (click)="add_dept()"></i>
+  <span (click)="add_dept()" class="add_crud"><i class="fas fa-plus " ></i> Insertar</span>
 </div>
 
 <table
@@ -23,10 +23,10 @@
       <td>{{ depto.descripcion }}</td>
       <td>
         <div class="row action_wrap">
-          <div class="action_btn edi" (click)="editDept(depto.idDepartamento)">
+          <div class="action_btn edi" (click)="editDept(depto.idDepartamento)" title="Editar departamento">
             <i class="fas fa-edit"></i>
           </div>
-          <div class="action_btn del" (click)="deleteDept(depto.idDepartamento)">
+          <div class="action_btn del" (click)="deleteDept(depto.idDepartamento)" title="Eliminar departamento">
             <i class="fas fa-trash-alt"></i>
           </div>
         </div>

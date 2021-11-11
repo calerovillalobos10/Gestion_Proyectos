@@ -1,5 +1,7 @@
 @use "sass:math";
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,100;1,700&display=swap');
+
 @import '~@swimlane/ngx-datatable/index.css';
 @import '~@swimlane/ngx-datatable/themes/material.scss';
 @import '~@swimlane/ngx-datatable/assets/icons.css';
@@ -10,7 +12,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-  font-family: Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Roboto', Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 
   --clr-base-100: #202020;
   --clr-base-500: #000000;

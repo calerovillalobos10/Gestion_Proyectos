@@ -105,6 +105,17 @@ export class ListComponent implements OnInit {
 
   setTableOptions() {
     this.dtOptions = DT_OPTIONS;
+    this.dtOptions.columns = [
+      { title: 'Nombre', data: 'nombre', orderable: true },
+      { title: 'Primer Apellido', data: 'apellido_1', orderable: true },
+      { title: 'Segundo Apellido', data: 'apellido_2', orderable: true },
+      { title: 'Sexo', data: 'idSexo', orderable: true },
+      { title: 'Departamento', data: 'idDepartamento', orderable: true },
+      { title: 'Tipo de Funcionario', data: 'idTipoFuncionario', orderable: true },
+      { title: 'Nacimiento', data: 'nacimiento', orderable: true },
+      { title: 'Correo', data: 'correo', orderable: true },
+      { title: 'Acciones', orderable: false, searchable: false },
+    ]
   }
 
   rerender(): void {

@@ -64,6 +64,16 @@ export class SolicitudesComponent implements OnInit {
 
   setTableOptions() {
     this.dtOptions = DT_OPTIONS
+    this.dtOptions.columns = [
+      { title: 'Id', data: 'idSolicitud', orderable: true },
+      { title: 'Aplicativo', data: 'funcionarioResponsable', orderable: true },
+      { title: 'Responsable', data: 'funcionarioAplicativo', orderable: true },
+      { title: 'Final', data: 'funcionarioFinal', orderable: true },
+      { title: 'Fecha de solicitud', data: 'fechaSolicitud', orderable: true },
+      { title: 'Fecha de inicio', data: 'fechaInicio', orderable: true },
+      { title: 'Fecha de fin', data: 'fechaFin', orderable: true },
+      { title: 'Acciones', orderable: false, searchable: false },
+    ]
   }
 
   loadTable() {

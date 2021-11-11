@@ -64,7 +64,15 @@ export class AvancesComponent implements OnInit {
   }
 
   setTableOptions(){
-    this.dtOptions = DT_OPTIONS; 
+    this.dtOptions = DT_OPTIONS;
+    this.dtOptions.columns = [
+      { title: 'Id', data: 'idAvance', orderable: true },
+      { title: 'Trimestre', data: 'trimestre', orderable: true },
+      { title: 'Aplicativo', data: 'funcionarioAplicativo', orderable: true },
+      { title: '# Solicitud', data: 'fechaAvance', orderable: true },
+      { title: 'Fecha de avance', data: 'solicitud', orderable: true },
+      { title: 'Acciones', searchable: false, orderable: true },
+    ] 
   }
 
   loadTable() {

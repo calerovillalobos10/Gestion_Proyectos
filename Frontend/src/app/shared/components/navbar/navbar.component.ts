@@ -1,4 +1,4 @@
-import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
+
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -24,7 +24,6 @@ export class NavbarComponent implements OnInit {
   // Al emitir un cambio de pestaña, cambia el color
   emmit(selected:string){
     this.selected_tab = selected;
-
   }
 
 }

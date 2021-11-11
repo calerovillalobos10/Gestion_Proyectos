@@ -2,7 +2,11 @@ export const DT_OPTIONS = {
 
   destroy: true,
   processing: true,
-  dom: 'Bfrtilp',
+  dom: 'Blfrtip',
+  responsive: true,
+  scrollY: '50vh',
+  paging: false,
+  colReorder: false,
   buttons: [
     {
       extend: "copy",
@@ -33,10 +37,4 @@ export const DT_OPTIONS = {
       },
     }
   },
-
-  responsive: true,
-  scrollY: '50vh',
-  paging: false,
-  colReorder: false,
 }
-
