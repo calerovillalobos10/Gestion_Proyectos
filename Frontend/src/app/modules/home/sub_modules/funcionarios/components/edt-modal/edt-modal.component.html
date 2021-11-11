@@ -91,8 +91,6 @@
               <ng-container *ngTemplateOutlet="apellido2_error; context: {error: form.get('apellido2')?.errors}"></ng-container>
             </div>
 
-
-
             <div class="input_group">
               <input class="input" type="date" id="nacimiento" formControlName="nacimiento"/>
               <label class="label" for="nacimiento"> Fecha de nacimiento</label>
@@ -120,23 +118,6 @@
     <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
     <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
     <span class="login_error" *ngIf="error?.pattern && !error?.minlength">El formato del correo no es válido </span>
-  </p>
-</ng-template>
-
-<ng-template #pass_error let-error="error">
-  <p class="error-input" *ngIf="form.get('password')?.dirty || form.get('password')?.touched">
-    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
-    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
-    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
-  </p>
-</ng-template>
-
-<ng-template #repass_error let-error="error">
-  <p class="error-input" *ngIf="form.get('rePassword')?.dirty || form.get('rePassword')?.touched">
-    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
-    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
-    <span class="login_error" *ngIf="!error?.required && !error?.minlength && !error?.maxlength && form.value.password !== form.value.rePassword">Las constraseñas no coinciden</span>
-    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
   </p>
 </ng-template>
 
@@ -194,7 +175,7 @@
  
   <p class="error-input">
     <span class="login_error" *ngIf="error?.pattern">El formato de la imagen no es válido</span>
-    <span class="login_error" *ngIf="error?.sizeError">Solo se admiten imagenes de hasta 1.25mb</span>
+    <span class="login_error" *ngIf="error?.sizeError">Solo se admiten imagenes de hasta {{allowedSize}}mb</span>
   </p>
 </ng-template>
 

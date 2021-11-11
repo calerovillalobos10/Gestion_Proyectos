@@ -164,7 +164,7 @@
 
   <p class="error-input">
     <span class="login_error" *ngIf="error?.pattern">El formato debe ser PDF </span>
-    <span class="login_error" *ngIf="error?.sizeError">Solo se permiten archivos con un tamaño maximo de 1.25mb </span>
+    <span class="login_error" *ngIf="error?.sizeError">Solo se permiten archivos con un tamaño maximo de {{allowedSize}}mb </span>
   </p>
 
   

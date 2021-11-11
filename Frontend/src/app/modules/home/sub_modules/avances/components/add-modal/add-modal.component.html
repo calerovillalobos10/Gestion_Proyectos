@@ -109,7 +109,6 @@
   </p>
 </ng-template>
 
-
 <ng-template #fechaAvance_error let-error="error">
   <p class="error-input" *ngIf="form.get('fechaAvance')?.dirty || form.get('fechaAvance')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
@@ -140,7 +139,6 @@
     <span class="login_error" *ngIf="error?.sizeError">Solo se permiten archivos con un tamaño maximo de 1.25mb </span>
   </p>
   
-
 </ng-template>
 
 </ng-container>

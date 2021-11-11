@@ -1,5 +1,5 @@
-
 export interface Solicitud{
+
   idSolicitud?:number;
   funcionarioResponsable:number | string,
   funcionarioAplicativo:number| string,
@@ -8,4 +8,5 @@ export interface Solicitud{
   fechaInicio:string,
   fechaFin:string,
   documentoActa:any,
+
 } 

@@ -1,4 +1,5 @@
 export interface Funcionario{
+
   idFuncionario?:number,
   nombre:string,
   apellido_1:string,
@@ -9,5 +10,6 @@ export interface Funcionario{
   idSexo:number | string,
   idTipoFuncionario:number | string,
   contrasenia?:string,
-  urlFoto:any;
+  urlFoto:any
+
 }

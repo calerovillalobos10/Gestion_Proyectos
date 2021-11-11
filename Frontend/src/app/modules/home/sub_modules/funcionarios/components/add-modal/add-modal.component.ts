@@ -1,3 +1,4 @@
+import { MAX_PICTURE } from '@core/others/Enviroment';
 import { ModalSkeleton } from '@core/others/ModalSkeleton';
 import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
 import { Departamento } from '@core/models/Departamento';
@@ -16,6 +17,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
   public departamentos: Array<Departamento> = [];
   public preview: string | ArrayBuffer | null | undefined;
+  public allowedSize;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -24,6 +26,8 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     private deptService: DepartamentosService
   ) {
     super();
+
+    this.allowedSize = MAX_PICTURE;
 
     this.deptService.getAll().subscribe(
       res => {
@@ -101,7 +105,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       const size = (event.target.files[0].size / 1048576)
 
       // Si el archivo supera el limite
-      if (size > 1.25) {
+      if (size > MAX_PICTURE) {
         this.form.patchValue({ urlFoto: '' })
         this.form.get('urlFoto')?.setErrors({ 'sizeError': true })
       } else {

@@ -109,7 +109,6 @@ export class DetModalComponent implements OnInit {
         this.closeOnError();
       }
     )
-
   }
 
   async closeModal() {

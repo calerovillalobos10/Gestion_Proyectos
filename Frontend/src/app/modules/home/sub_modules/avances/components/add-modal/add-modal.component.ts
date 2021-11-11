@@ -1,4 +1,5 @@
-import { Avance } from './../../../../../../core/models/Avance';
+import { MAX_FILE } from './../../../../../../core/others/Enviroment';
+import { Avance } from '@core/models/Avance';
 import { SolicitudeService } from '@core/services/solicitude/solicitude.service';
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
 import { AdvancesService } from '@core/services/advances/advances.service';
@@ -18,6 +19,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
   public pdfSrc = ''
 
+  public allowedSize: number;
   public aplicativo: any;
   public solicitudes: any;
   private selectedSolicitude: any;
@@ -39,6 +41,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
     this.modalType = 'registro';
 
+    this.allowedSize = MAX_FILE;
     this.oldDocument = '';
     this.idAdvance = -1;
 
@@ -67,6 +70,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   }
 
   add_solicitude() {
+
     if (this.form.invalid) {
       return this.form.markAllAsTouched();
     }
@@ -76,9 +80,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     } else {
       this.updateAdvance();
     }
-
   }
-
 
   createAdvance() {
     this.service.create(this.obtainAdvance()).subscribe(
@@ -116,44 +118,38 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     )
   }
 
-
   // Metodo para cambiar el preview de la foto del funcionario.
   onFileChange(event: any) {
 
+    // Si hay un archivo en el evento
+    if (event.target.files && event.target.files[0]) {
+      const size = (event.target.files[0].size / 1048576)
 
+      // Si el archivo supera el limite
+      if (size > MAX_FILE) {
+        this.form.patchValue({ documento: '' })
+        this.pdfSrc = '';
+        this.form.get('urlDocumento')?.setErrors({ 'sizeError': true })
+      } else {
+        this.form.get('urlDocumento')?.setErrors(null)
+      }
 
-
-
-  // Si hay un archivo en el evento
-  if (event.target.files && event.target.files[0]) {
-    const size = (event.target.files[0].size / 1048576)
-   
-    // Si el archivo supera el limite
-    if (size > 1.25) {
+      // Si no existen errores
+      if (!this.form.get('urlDocumento')?.errors) {
+        this.loadPreview(event);
+        this.form.patchValue({ documento: event.target.files[0] })
+        this.form.patchValue({ urlDocumento: event.target.files[0].name })
+      }
+    } else {
       this.form.patchValue({ documento: '' })
-      this.pdfSrc = '';
-      this.form.get('urlDocumento')?.setErrors({ 'sizeError': true })
-    } else {
-      this.form.get('urlDocumento')?.setErrors(null)
+      if (this.modalType == 'edicion') {
+        this.form.patchValue({ urlDocumento: this.oldDocument })
+        this.pdfSrc = this.oldDocument;
+      } else {
+        this.form.patchValue({ urlDocumento: '' })
+        this.pdfSrc = '';
+      }
     }
-
-    // Si no existen errores
-    if (!this.form.get('urlDocumento')?.errors) {
-      this.loadPreview(event);
-      this.form.patchValue({ documento: event.target.files[0] })
-      this.form.patchValue({ urlDocumento: event.target.files[0].name })
-    }
-  } else {
-    this.form.patchValue({ documento: '' })
-    if (this.modalType == 'edicion') {
-      this.form.patchValue({ urlDocumento: this.oldDocument })
-      this.pdfSrc = this.oldDocument;
-    } else {
-      this.form.patchValue({ urlDocumento: '' })
-      this.pdfSrc = '';
-    }
-  }
-
   }
 
   loadPreview(event: any) {
@@ -164,19 +160,18 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     };
   }
 
-  resetDocument(){
+  resetDocument() {
     this.form.patchValue({ documento: '' })
 
     if (this.modalType == 'edicion') {
       this.form.patchValue({ urlDocumento: this.oldDocument })
       this.pdfSrc = this.oldDocument;
-    }else {
+    } else {
       this.form.patchValue({ urlDocumento: '' })
       this.pdfSrc = ' ';
     }
-    
-  }
 
+  }
 
   // Extrae los datos de un funcionario valido a un objeto funcionario
   obtainAdvance(): FormData {
@@ -287,9 +282,6 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     )
   }
 
-
-  //----------------------------------------------------------------------------------------------------------------------
-
   // Metodo para cargar modal para edicion 
   loadEditModal(id: number) {
     this.service.getById(id).subscribe(
@@ -320,7 +312,6 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   onErrorClose() {
     this.alertService.promiseAlert('Surgio un error al cargar la solicitud').then(() => {
       this.closeAndEraseModal();
-    
     })
   }
 
@@ -329,7 +320,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
     this.oldDocument = advance.documento;
     this.idAdvance = id;
-   
+
     this.form.patchValue({
       aplicativo: advance.funcionarioAplicativo,
       trimestre: advance.trimestre,
@@ -341,8 +332,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     this.pdfSrc = this.oldDocument;
   }
 
-
-  closeAndEraseModal(){
+  closeAndEraseModal() {
     this.pdfSrc = '';
     this.oldDocument = '';
     this.idAdvance = -1;

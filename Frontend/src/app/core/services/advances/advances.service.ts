@@ -1,13 +1,12 @@
-import { Avance } from './../../models/Avance';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Output, EventEmitter } from '@angular/core';
+
+import { API_URL } from '@core/others/Enviroment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdvancesService {
-
-  private _loginURL = "http://localhost:4000";
 
   // Emite la comunicacion entre componente modal y de lista para mostrar el modal
   @Output() modalNeeded: EventEmitter<any> = new EventEmitter();
@@ -21,31 +20,32 @@ export class AdvancesService {
 
   // Metodo de obtencion por id. 
   getById(id: any){
-    return this.http.post<any>(`${this._loginURL}/avanceById`, {id: id})
+    
+    return this.http.post<any>(`${API_URL}/avanceById`, {id: id})
   }
 
   // Metodo de creacion de avance.  
   create(adv: FormData) {
-    return this.http.post<any>(`${this._loginURL}/avances`, adv)
+    return this.http.post<any>(`${API_URL}/avances`, adv)
   }
 
   // Metodo de actualizacion de avance. 
   update(adv: FormData) {
-    return  this.http.put<any>(`${this._loginURL}/avances`, adv)
+    return  this.http.put<any>(`${API_URL}/avances`, adv)
   }
 
   // Elimina un avance por id     
   deleteById(id: number) {
-    return this.http.post<any>(`${this._loginURL}/deleteAvance`, {id: id})
+    return this.http.post<any>(`${API_URL}/deleteAvance`, {id: id})
   }
 
   //Obtiene todas los avances     
   getAll(){
-    return this.http.get<any>(`${this._loginURL}/avances`)
+    return this.http.get<any>(`${API_URL}/avances`)
   }
 
   // Obtiene todos los avances de una determinada solicitud
   getBySolicitude(solicitudId: number) {
-    return this.http.post<any>(`${this._loginURL}/avancesbysolicitud`, {solicitudId:solicitudId})
+    return this.http.post<any>(`${API_URL}/avancesbysolicitud`, {solicitudId:solicitudId})
   }
 }

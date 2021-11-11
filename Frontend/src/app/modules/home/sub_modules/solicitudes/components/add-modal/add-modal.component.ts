@@ -1,4 +1,4 @@
-import { AdvancesService } from './../../../../../../core/services/advances/advances.service';
+import { MAX_FILE } from '@core/others/Enviroment';
 import { Solicitud } from '@core/models/Solicitud';
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
 import { SolicitudeService } from '@core/services/solicitude/solicitude.service';
@@ -17,7 +17,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 export class AddModalComponent extends ModalSkeleton implements OnInit {
 
   public pdfSrc = ''
-
+  public allowedSize;
   public aplicativo: any;
   public final: any;
   public responsable: any;
@@ -34,11 +34,12 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     private serviceFunctionary: FuncionariosService,
   ) {
     super();
-    this.pdfSrc = '';
 
     this.modalType = 'registro';
+    this.pdfSrc = '';
     this.oldDocument = '';
     this.idSolicitude = -1;
+    this.allowedSize = MAX_FILE; // Tamaño permitido para los archivos
 
     this.loadFunctionaries()
     this.buildForm();
@@ -120,13 +121,12 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   // Metodo para cambiar el preview de la foto del funcionario.
   onFileChange(event: any) {
 
-
     // Si hay un archivo en el evento
     if (event.target.files && event.target.files[0]) {
       const size = (event.target.files[0].size / 1048576)
      
       // Si el archivo supera el limite
-      if (size > 1.25) {
+      if (size > MAX_FILE) {
         this.form.patchValue({ acta: '' })
         this.pdfSrc = '';
         this.form.get('urlActa')?.setErrors({ 'sizeError': true })
@@ -150,7 +150,6 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
         this.pdfSrc = '';
       }
     }
-
   }
 
   loadPreview(event: any) {

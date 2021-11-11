@@ -22,9 +22,9 @@
           <th>Aplicante</th>
           <th>Solicitud #</th>
           <th>Fecha</th>
-           <!--  <th>Detalles</th>-->
         </tr>
       </thead>
+
       <tbody>
         <tr *ngFor="let avance of allRows">
           <td>{{ avance.idAvance }}</td>
@@ -32,18 +32,9 @@
           <td>{{ avance.funcionarioAplicativo }}</td>
           <td>{{ avance.solicitud }}</td>
           <td>{{ avance.fechaAvance| date: 'dd/MM/yyyy' }}</td>
-          <!--    <td>
-            <div class="row action_wrap">
-
-              <div class="action_btn det" (click)="detailsAdvance(avance.idAvance)">
-                <i class="fas fa-list-alt"></i>
-              </div>
-
-            </div>
-          </td>    -->
-    
         </tr>
       </tbody>
+
     </table>
     </div>
   </div>

@@ -1,3 +1,4 @@
+import { API_URL } from '@core/others/Enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Output, EventEmitter } from '@angular/core';
 
@@ -5,8 +6,6 @@ import { Injectable, Output, EventEmitter } from '@angular/core';
   providedIn: 'root'
 })
 export class FuncionariosService {
-
-  private _loginURL = "http://localhost:4000";
 
   // Emite la comunicacion entre componente modal y de lista para mostrar el modal
   @Output() modalNeeded: EventEmitter<any> = new EventEmitter();
@@ -20,32 +19,32 @@ export class FuncionariosService {
 
   // Metodo de obtencion por id. 
   getById(id: any){
-    return this.http.post<any>(`${this._loginURL}/funcionarioById`, {id: id})
+    return this.http.post<any>(`${API_URL}/funcionarioById`, {id: id})
   }
 
   // Metodo de creacion de funcionario.  
   create(adv: FormData) {
-    return this.http.post<any>(`${this._loginURL}/funcionarios`, adv)
+    return this.http.post<any>(`${API_URL}/funcionarios`, adv)
   }
 
   // Metodo de actualizacion de funcionario. 
   update(adv: FormData) {
-    return  this.http.put<any>(`${this._loginURL}/funcionarios`, adv)
+    return  this.http.put<any>(`${API_URL}/funcionarios`, adv)
   }
 
   // Elimina un funcionario por id     
   deleteById(id: number) {
-    return this.http.post<any>(`${this._loginURL}/deleteFuncionarios`, {id: id})
+    return this.http.post<any>(`${API_URL}/deleteFuncionarios`, {id: id})
   }
 
   //Obtiene todas los funcionarios     
   getAll(){
-    return this.http.get<any>(`${this._loginURL}/funcionarios`)
+    return this.http.get<any>(`${API_URL}/funcionarios`)
   }
 
   // Devuelve si existe un correo o no.
   validateEmail(email:string) {
-    return this.http.post<any>(`${this._loginURL}/email`, {correo: email})
+    return this.http.post<any>(`${API_URL}/email`, {correo: email})
   }
 
   /*

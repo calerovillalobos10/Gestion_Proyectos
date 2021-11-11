@@ -1,3 +1,4 @@
+import { MAX_PICTURE } from '@core/others/Enviroment';
 import { ModalSkeleton } from '@core/others/ModalSkeleton';
 import { Departamento } from '@core/models/Departamento';
 import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
@@ -14,7 +15,7 @@ import { FuncionariosService } from '@core/services/funcionarios/funcionarios.se
   styleUrls: ['./edt-modal.component.scss']
 })
 export class EdtModalComponent extends ModalSkeleton implements OnInit {
-
+  public allowedSize: number;
   private userId: number;
   public preview: string | ArrayBuffer | null | undefined;
   private oldPicture: string;
@@ -29,7 +30,7 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
     private deptService: DepartamentosService
   ) {
     super();
-
+    this.allowedSize = MAX_PICTURE;
     this.preview = '';
     this.userId = 0
     this.oldMail = '';
@@ -156,7 +157,7 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
       const size = (event.target.files[0].size / 1048576)
 
       // Si el archivo supera el limite
-      if (size > 1.25) {
+      if (size > MAX_PICTURE) {
         this.form.patchValue({ foto: '' })
         this.preview = '';
         this.form.get('urlFoto')?.setErrors({ 'sizeError': true })
