@@ -49,7 +49,7 @@
 
 @media (max-width: 640px) {
   .dataTables_filter {
-    transform: translate(-10em, -10em);
+    transform: translate(-12em, -8em);
   }
 }
 
@@ -138,14 +138,7 @@ table.dataTable > thead .sorting_desc_disabled:after {
   width: auto !important;
 }
 
-@media screen and (max-width: 600px) {
 
- table td {
-     white-space:pre-line !important;
-     min-width: 100px !important;/*cambia el tamaño de las columnas de las tablas*/
-     max-width: 200px !important;
- }
-}
 
 @media screen and (max-width: 1050px) and (min-width:601px) {
  .dataTables_scrollHead {
