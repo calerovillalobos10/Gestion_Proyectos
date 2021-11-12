@@ -2,7 +2,7 @@
 export default class Functionary {
 
     // Constructor que revise los parámetros de los objetos
-    constructor(idFuncionario, sexo, department, tipoFuncionario, nombre, apellido_1, apellido_2, fechaNacimiento, correo, contrasenia, urlFoto, estado) {
+    constructor( idFuncionario, sexo, department, tipoFuncionario, nombre, apellido_1, apellido_2, fechaNacimiento, correo, contrasenia, urlFoto, estado, dobleAuth, secretUrl ) {
         this.idFuncionario = idFuncionario;
         this.sexo = sexo;
         this.department = department;
@@ -15,6 +15,8 @@ export default class Functionary {
         this.contrasenia = contrasenia;
         this.urlFoto = urlFoto;
         this.estado = estado;
+        this.dobleAuth = dobleAuth;
+        this.secretUrl = secretUrl;
     }
 
     get getIdFuncionario() {
@@ -111,5 +113,21 @@ export default class Functionary {
 
     set setEstado(estado) {
         this.estado = estado;
+    }
+
+    get getDobleAuth() {
+        return this.dobleAuth;
+    }
+
+    set setDobleAuth(dobleAuth) {
+        this.dobleAuth = dobleAuth;
+    }
+
+    get getSecretUrl() {
+        return this.secretUrl;
+    }
+
+    set setSecretUrl(secretUrl) {
+        this.secretUrl = secretUrl;
     }
 }

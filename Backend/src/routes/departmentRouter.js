@@ -38,7 +38,11 @@ router.post('/department', loginController.recuperarToken, loginController.verif
 
         res.json({
             "mensaje": (await verifyDepartment).mensaje,
-            "estado": true,
+            /* 
+                Se pone en true porque se actualiza el estado del departamento (como ya existe) en la base de datos y 
+                se interpreta como que si hubiera realizado la inserción
+            */
+            "estado": true, 
         })
     }
 })

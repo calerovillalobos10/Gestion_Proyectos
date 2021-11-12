@@ -57,14 +57,6 @@ export default class LoginController {
         }
     };
 
-    // Esta función genera el Secret
-    createSecret = () => {
-
-        const secret = speakeasy.generateSecret({
-            name: "GestionDevs"
-        })
-    }
-
     // Recupera el secret para la autentificación de google
     getSecret = async (correo) => {
 
@@ -94,7 +86,6 @@ export default class LoginController {
 
     // Función para que valide el pin
     verifySecret = (secret, token) => {
-        console.log("Llego el verify token");
 
         const verify = speakeasy.totp.verify({
 

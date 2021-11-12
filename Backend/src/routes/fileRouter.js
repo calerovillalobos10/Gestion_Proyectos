@@ -1,5 +1,5 @@
 // Importaciones necesarias
-import {Router} from 'express'
+/*import {Router} from 'express'
 import path from 'path'
 import LoginController from '../controllers/loginController'
 import ValidacionController from '../controllers/validationController'
@@ -42,25 +42,16 @@ router.post('/uploadImage', async (req, res) =>{
                 // Guarda el archivo
                 await file.mv(savePath)
 
-                res.send({
-                    mensaje: "Se añadió la imagen exitosamente",
-                    estado: true
-                })
+                return true
             }
         } catch (error) {
 
-            res.send({
-                mensaje: "No se pudo añadir la imagen",
-                estado: false
-            })
+            return false
         }
     } else {
 
-        res.send({
-            mensaje: "No se pudo añadir la imagen",
-            estado: false
-        })
+        return false
     }
 })
 
-export default router
+export default router*/

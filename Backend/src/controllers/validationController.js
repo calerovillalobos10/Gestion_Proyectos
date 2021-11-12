@@ -8,7 +8,6 @@ export default class validationController {
 
     // Esta función se encarga de validar que el correo sea del formato correcto y hace una comparación con el patern para evaluarlo
     verifyEmail = (email) => {
-        console.log(email);
 
         if( this.verifySpecialCharacters(email) ){
 
@@ -35,6 +34,9 @@ export default class validationController {
 
     // Esta función verifica que el argumento ingresado sea solo texto 
     verifyText = (text) => /[a-zA-Z]/.test(text)
+
+    // Esta función verifica la fecha
+    verifyDate = (date) => /^\d{2,4}\-\d{1,2}\-\d{1,2}$/.test(date)
 
     // Esta función verifica el tipo de extensión de una imagen
     verifyExtImage = (file) => ( file.mimetype.toLowerCase() === 'image/jpeg' || file.mimetype.toLowerCase() === 'image/jpg' || file.mimetype.toLowerCase() === 'image/png' ) ? true : false

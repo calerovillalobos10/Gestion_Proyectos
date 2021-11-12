@@ -58,7 +58,7 @@ export default class DeparmentController{
                 // Ejecución del sp
                 const result = await request.execute('sp_insertDepartment')
                 // validación sobre la inserción del objeto
-                return (result) ? true : false
+                return ( result.returnValue === 1 ) ? true : false
             } catch (err) {
 
                 console.log(err);
@@ -93,7 +93,7 @@ export default class DeparmentController{
                 // Ejecución del sp
                 const result = await request.execute('sp_deleteDepartment')
                 // validación sobre la inserción del objeto
-                return (result) ? true : false
+                return ( result.returnValue === 1 ) ? true : false
             } catch (err) {
 
                 console.log(err);
@@ -131,7 +131,6 @@ export default class DeparmentController{
                 // Ejecución del sp
                 const result = await request.execute('sp_modifyDepartment')
                 // validación sobre la inserción del objeto
-                console.log();
                 return (result.rowsAffected[0] > 0) ? true : false
             } catch (err) {
 
@@ -169,7 +168,7 @@ export default class DeparmentController{
                 // Creación del objeto departamento
                 const departamento = new Department(result.recordset[0].idDepartamento, result.recordset[0].descripcion, result.recordset[0].estado)
                 // validación sobre la inserción del objeto
-                return ( result ) ? departamento : false
+                return ( result.returnValue === 1 ) ? departamento : false
             } catch (err) {
 
                 console.log(err);

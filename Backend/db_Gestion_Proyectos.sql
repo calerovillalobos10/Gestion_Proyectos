@@ -32,7 +32,7 @@ CREATE TABLE tb_TipoFuncionarios(
 CREATE TABLE tb_Funcionarios(
   idFuncionario SMALLINT IDENTITY(1, 1) PRIMARY KEY,
   idSexo TINYINT NOT NULL,
-  iddepartamento SMALLINT NOT NULL,
+  idDepartamento SMALLINT NOT NULL,
   idTipoFuncionario TINYINT NOT NULL,
 
   nombre VARCHAR(15) NOT NULL,
@@ -286,3 +286,30 @@ BEGIN
 	WHERE idDepartamento = @idDepartamentoBE
 END
 GO
+
+CREATE PROCEDURE [dbo].[sp_insertFunctionary]
+(
+@idSexoBE tinyint,
+@idDepartamentoBE smallint,
+@idTipoFuncionarioBE tinyint,
+@nombreBE varchar(15),
+@apellido_1BE varchar(15),
+@apellido_2BE varchar(15),
+@fechaNacimientoBE date,
+@correoBE varchar(50),
+@contraseniaBE VarChar(16),
+@urlFotoBE varchar(180),
+@estadoBE bit,
+@dobleAuthBE bit,
+@secretUrlBE varchar(180)
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	INSERT INTO tb_Funcionarios(idSexo, iddepartamento, idTipoFuncionario, nombre, apellido_1, apellido_2, fechaNacimiento, correo, contrasenia, urlFoto, estado, dobleAuth, secretUrl)
+	values (@idSexoBE, @idDepartamentoBE, @idTipoFuncionarioBE, @nombreBE, @apellido_1BE, @apellido_2BE, @fechaNacimientoBE, @correoBE, PWDENCRYPT(@contraseniaBE), @urlFotoBE, @estadoBE, @dobleAuthBE, @secretUrlBE)
+END
