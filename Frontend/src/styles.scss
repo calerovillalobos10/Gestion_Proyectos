@@ -266,6 +266,10 @@ img {
   background-color: var(--clr-success);
 }
 
+.action_btn.adv{
+  background-color: var(--clr-neutral-500); 
+}
+
 .limited_colum{
   text-overflow: ellipsis;
   max-width: 18ch;

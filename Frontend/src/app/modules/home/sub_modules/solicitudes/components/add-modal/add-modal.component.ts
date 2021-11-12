@@ -124,7 +124,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     // Si hay un archivo en el evento
     if (event.target.files && event.target.files[0]) {
       const size = (event.target.files[0].size / 1048576)
-     
+
       // Si el archivo supera el limite
       if (size > MAX_FILE) {
         this.form.patchValue({ acta: '' })
@@ -160,18 +160,16 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     };
   }
 
-  
-  resetDocument(){
+  resetDocument() {
     this.form.patchValue({ acta: '' })
 
     if (this.modalType == 'edicion') {
       this.form.patchValue({ urlActa: this.oldDocument })
       this.pdfSrc = this.oldDocument;
-    }else {
+    } else {
       this.form.patchValue({ urlActa: '' })
       this.pdfSrc = ' ';
     }
-    
   }
 
   // Extrae los datos de una solicitud valido a un objeto FormData
@@ -185,7 +183,19 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     postData.append('fechaInicio', this.form.value.fechaInicio);
     postData.append('fechaFin', this.form.value.fechaFin);
     postData.append('fechaSolicitud', this.form.value.fechaSolicitud);
-    postData.append('acta', this.form.value.acta);
+
+    if (this.modalType == 'edicion') {
+      // Validacion, si cambia la foto sube el file, sino solo pasa url viejo.
+      if (this.oldDocument == this.form.value.urlActa) {
+        postData.append('documento', this.oldDocument);
+        console.log(this.oldDocument)
+      } else {
+        postData.append('documento', this.form.value.acta);
+       
+      }
+    }else{  
+      postData.append('documento', this.form.value.acta);
+    }
 
     return postData;
   }
@@ -349,7 +359,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     this.pdfSrc = this.oldDocument;
   }
 
-  closeAndEraseModal(){
+  closeAndEraseModal() {
     this.pdfSrc = '';
     this.oldDocument = '';
     this.idSolicitude = -1;

@@ -25,7 +25,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let person of allRows">
+    <tr *ngFor="let person of allRows" >
       <td>{{ person.nombre }}</td>
       <td>{{ person.apellido_1 }}</td>
       <td>{{ person.apellido_2 }}</td>
@@ -38,16 +38,16 @@
       <td>{{ person.correo }}</td>
 
       <td>
-        <div class="row action_wrap">
+        <div class="row action_wrap" id="{{person.idFuncionario}}">
 
-          <div class="action_btn det" (click)="detailsFunc(person.idFuncionario)">
+          <div class="action_btn det detalles">
             <i class="far fa-id-card"></i>
           </div>
 
-          <div class="action_btn edi" (click)="editFunc(person.idFuncionario)">
+          <div class="action_btn edi editar">
             <i class="fas fa-user-edit"></i>
           </div>
-          <div class="action_btn del" (click)="deleteFunc(person.idFuncionario)">
+          <div class="action_btn del eliminar">
             <i class="fas fa-trash-alt"></i>
           </div>
           

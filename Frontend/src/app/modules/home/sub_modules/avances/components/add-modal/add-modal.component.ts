@@ -184,6 +184,17 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     postData.append('fechaAvance', this.form.value.fechaAvance);
     postData.append('documento', this.form.value.documento);
 
+    if (this.modalType == 'edicion') {
+      // Validacion, si cambia la foto sube el file, sino solo pasa url viejo.
+      if (this.oldDocument == this.form.value.urlDocumento) {
+        postData.append('documento', this.oldDocument);
+      } else {
+        postData.append('documento', this.form.value.documento);
+      }
+    }else{  
+      postData.append('documento', this.form.value.documento);
+    }
+
     return postData;
   }
 

@@ -19,17 +19,21 @@ export class SolicitudesComponent implements OnInit {
   constructor(
     private service: SolicitudeService,
     private alertService: AlertService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.setTableOptions();
     this.loadTable()
+    this.add_Listeners()
   }
 
   deleteSolicitude(id: any) {
 
-    const solicitud: Solicitud | undefined = this.getSolicitude(id);
-    this.alertService.confirmAlert('¿Está seguro de eliminar?', `Registro: ${solicitud!.idSolicitud}`)
+    const solicitud: any = this.getSolicitude(id);
+
+    console.log(this.allRows)
+
+    this.alertService.confirmAlert('¿Está seguro de eliminar?', `Registro: ${solicitud.idSolicitud}`)
       .then(async (res) => {
         // Confirmacion del usuario
         if (res.isConfirmed) {
@@ -51,7 +55,11 @@ export class SolicitudesComponent implements OnInit {
   }
 
   detailsSolicitude(id: any) {
-    this.service.modalNeeded.emit({ subject: 'detModal', status: true, solicitudeId: id  });
+    this.service.modalNeeded.emit({ subject: 'detModal', status: true, solicitudeId: id });
+  }
+
+  relatedAdvances(id: any) {
+    this.service.modalNeeded.emit({ subject: 'relModal', status: true, solicitudId: id });
   }
 
   addSolicitude() {
@@ -80,6 +88,7 @@ export class SolicitudesComponent implements OnInit {
     this.service.getAll().subscribe(
       res => {
         this.allRows = res['estado'] ? res['list'] : [];
+        this.rerender();
       },
       err => {
         this.allRows = [{ fechaInicio: "2020-02-01", fechaFin: "2020-05-05", fechaSolicitud: "2020-01-01", funcionarioAplicativo: 'Luis A', funcionarioResponsable: 'Luis B', funcionarioFinal: 'Luis C', idSolicitud: 1, documentoActa: '../../../assets/book/book.pdf' }];
@@ -89,18 +98,41 @@ export class SolicitudesComponent implements OnInit {
   }
 
   rerender(): void {
-    $('#data').DataTable().destroy();
+    $('#table').DataTable().destroy();
     this.dtTrigger.next();
   }
 
   // Obtiene una solicitud de la lista.
   getSolicitude(id: number) {
-    let solicitude: Solicitud | undefined = undefined;
-    this.allRows.forEach((element) => {
-      if (element.idSolicitud === id) {
-        solicitude = element;
-      }
-    });
+    let solicitude: any = undefined;
+    solicitude = this.allRows.find(element => element.idSolicitud == id)
     return solicitude;
   }
+
+  // Agrega eventos de escucha a los botones de la tabla
+  add_Listeners() {
+    const table = $('#data').DataTable()
+
+    $('tbody').on("click", "div.editar", (evt) => {
+      const selectedId = evt.target.closest('.row').id;
+      this.editSolicitude(selectedId)
+    });
+
+    $('tbody').on("click", "div.eliminar", (evt) => {
+      const selectedId = evt.target.closest('.row').id;
+      this.deleteSolicitude(selectedId)
+    });
+
+    $('tbody').on("click", "div.detalles", (evt) => {
+      const selectedId = evt.target.closest('.row').id;
+      this.detailsSolicitude(selectedId)
+    });
+
+    $('tbody').on("click", "div.avances", (evt) => {
+      const selectedId = evt.target.closest('.row').id;
+      this.relatedAdvances(selectedId)
+    });
+  }
+
+
 }

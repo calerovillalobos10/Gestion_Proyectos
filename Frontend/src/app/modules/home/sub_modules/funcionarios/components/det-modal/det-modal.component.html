@@ -3,21 +3,12 @@
   <div class="primary_box_container" [ngClass]="{ desaparecer: formToggle }">
     <button class="btn_close" (click)='closeModal()'><i class="fas fa-window-close"></i></button>
     <div>
-      <h1 class="title">Detalles</h1>
 
       <div class=" user_data_container">
 
-        <div class="marcco_foto">
+        <div class="marco_foto">
           <img appErrImg src='{{funcionario!.urlFoto}}' class="user_image">
         </div>
-  
-          <p class="user_data">Correo: <span>{{funcionario!.correo}}</span></p>
-          <p class="user_data">Nombre: <span>{{funcionario!.nombre}} {{funcionario!.apellido_1}} {{funcionario!.apellido_2}}</span></p>
-          <p class="user_data">Nacimiento: <span>{{funcionario!.fechaNacimiento}}</span></p>
-        
-          <p class="user_data">Departamento: <span>{{funcionario!.idDepartamento}}</span></p>
-          <p class="user_data">Tipo de funcionario: <span>{{funcionario!.idTipoFuncionario}}</span> </p>
-          <p class="user_data">Sexo: <span>{{funcionario!.idSexo}}</span> </p>
   
       </div>
     </div>

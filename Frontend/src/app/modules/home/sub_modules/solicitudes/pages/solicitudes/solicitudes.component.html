@@ -7,7 +7,7 @@
 </div>
 
 <table
-  id="data"
+  id="table"
   class="display responsive nowrap"
   style="width: 100%"
   datatable
@@ -20,7 +20,7 @@
       <th>Aplicativo</th>
       <th>Responsable</th>
       <th>Final</th>
-      <th>Solicitado el</th>
+      <th>Fecha de solicitud</th>
       <th>Inicio</th>
       <th>Fin</th>
       <th>Acciones</th>
@@ -36,18 +36,23 @@
       <td>{{ solicitud.fechaInicio | date: 'dd/MM/yyyy'}}</td>
       <td>{{ solicitud.fechaFin | date: 'dd/MM/yyyy'}}</td>
       <td>
-        <div class="row action_wrap">
+        <div class="row action_wrap" id='{{ solicitud.idSolicitud }}'>
 
-          <div class="action_btn det" (click)="detailsSolicitude(solicitud.idSolicitud)">
+          <div class="action_btn adv avances" title="Avances asociados">
             <i class="fas fa-list-alt"></i>
           </div>
 
-          <div class="action_btn edi" (click)="editSolicitude(solicitud.idSolicitud)">
+          <div class="action_btn det detalles" title="Acta constitutiva">
+            <i class="far fa-file"></i>
+          </div>
+
+          <div class="action_btn edi editar" title="Modificar solicitud">
             <i class="fas fa-edit"></i>
           </div>
-          <div class="action_btn del" (click)="deleteSolicitude(solicitud.idSolicitud)">
+          <div class="action_btn del eliminar" title="Eliminar solicitud">
             <i class="fas fa-trash-alt"></i>
           </div>
+          
         </div>
       </td>
 

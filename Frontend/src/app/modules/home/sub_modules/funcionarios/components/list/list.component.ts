@@ -42,7 +42,10 @@ export class ListComponent implements OnInit {
         this.allRows = res['estado'] ? res['list'] : [];
       },
       err => {
-        this.allRows = [{ nombre: 'Luis', apellido_1: 'Leiton', apellido_2: 'Iglesias', urlFoto: '', correo: 'Luis@gmail', fechaNacimiento: '1995-09-09', idDepartamento: 1, idSexo: 1, idTipoFuncionario: 1, idFuncionario: 1 }];
+        this.allRows = [
+          { nombre: 'Luis', apellido_1: 'Leiton', apellido_2: 'Iglesias', urlFoto: '', correo: 'Luis@gmail', fechaNacimiento: '1995-09-09', idDepartamento: 1, idSexo: 1, idTipoFuncionario: 1, idFuncionario: 1 },
+          { nombre: 'Luis', apellido_1: 'Leiton', apellido_2: 'Iglesias', urlFoto: '', correo: 'Luis@gmail', fechaNacimiento: '1995-09-09', idDepartamento: 1, idSexo: 1, idTipoFuncionario: 1, idFuncionario: 2 }
+        ];
 
         this.rerender();
       })
@@ -60,6 +63,9 @@ export class ListComponent implements OnInit {
 
   async deleteFunc(id: any) {
     const func: any = this.getFunc(id);
+
+
+
     this.alertService.confirmAlert('¿Está seguro de eliminar?', `Registro: ${func.nombre} ${func.apellido_1} ${func.apellido_2}`)
       .then(async (res) => {
         // Confirmacion del usuario
@@ -89,14 +95,46 @@ export class ListComponent implements OnInit {
 
   // Llama al modal correspondiente de editar
   editFunc(id: any) {
+    let data;
+    const table = $('#data').DataTable()
+
+    if (table.row($(this)).data() === undefined) {
+      data = table.row($(this).parents("tr")).data();
+    } else {
+      data = table.row($(this)).data();
+    }
+
     this.service.modalNeeded.emit({ subject: 'editModal', status: true, userId: id });
   }
 
+  // Agrega eventos de escucha a los botones de la tabla
+  add_Listeners() {
+    const table = $('#data').DataTable()
+
+    $('tbody').on("click", "div.editar", (evt) => {
+      const selectedId = evt.target.closest('.row').id;
+      this.editFunc(selectedId)
+    });
+
+    $('tbody').on("click", "div.eliminar", (evt) => {
+      const selectedId = evt.target.closest('.row').id;
+     
+      this.deleteFunc(selectedId)
+    });
+
+    $('tbody').on("click", "div.detalles", (evt) => {
+      const selectedId = evt.target.closest('.row').id;
+      this.detailsFunc(selectedId)
+    });
+  }
+
+
+
   // Obtiene el funcionario de la lista.
-  getFunc(id: number) {
+  getFunc(id: any) {
     let func: Funcionario | undefined = undefined;
     this.allRows.forEach((element) => {
-      if (element.idFuncionario === id) {
+      if (element.idFuncionario == id) {
         func = element;
       }
     });
@@ -116,6 +154,9 @@ export class ListComponent implements OnInit {
       { title: 'Correo', data: 'correo', orderable: true },
       { title: 'Acciones', orderable: false, searchable: false },
     ]
+
+    this.add_Listeners();
+
   }
 
   rerender(): void {

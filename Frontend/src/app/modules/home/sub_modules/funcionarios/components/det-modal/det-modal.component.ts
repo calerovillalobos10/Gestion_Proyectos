@@ -45,7 +45,11 @@ export class DetModalComponent implements OnInit {
         }
       },
       err => {
-        this.closeOnError();
+        //this.closeOnError();
+        this.funcionario = {
+          nombre: 'Luis', apellido_1: 'Leiton', apellido_2: 'Iglesias', correo: 'Luis@gmail', fechaNacimiento: '1995-09-09', idDepartamento: 1, idSexo: 1, idTipoFuncionario: 1, idFuncionario: 1,
+          urlFoto: 'https://www.explica.me/__export/1635367942684/sites/debate/img/2021/10/27/lightyearx_2022_llega_la_nueva_pelxcula_de_pixar_sobre_el_origen_de_buzz_lightyear.png_172596871.png'
+        }
       }
     )
   }
@@ -66,5 +70,4 @@ export class DetModalComponent implements OnInit {
       }
     )
   }
-
 }

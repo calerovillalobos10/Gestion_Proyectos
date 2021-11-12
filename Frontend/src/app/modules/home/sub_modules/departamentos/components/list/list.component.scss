@@ -1,0 +1,5 @@
+/* Elimian el icono de + en el datatable*/
+
+  .dtr-control::before {
+    content: "" !important;
+  }

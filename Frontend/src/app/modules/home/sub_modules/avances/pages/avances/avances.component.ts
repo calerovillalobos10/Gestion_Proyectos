@@ -25,6 +25,7 @@ export class AvancesComponent implements OnInit {
   ngOnInit(): void {
     this.setTableOptions();
     this.loadTable();
+    this.add_Listeners();
   }
 
   deleteAdvance(id:any){
@@ -103,5 +104,26 @@ export class AvancesComponent implements OnInit {
     });
     return solicitude;
   }
+
+    // Agrega eventos de escucha a los botones de la tabla
+    add_Listeners() {
+      const table = $('#data').DataTable()
+  
+      $('tbody').on("click", "div.editar", (evt) => {
+        const selectedId = evt.target.closest('.row').id;
+        this.editAdvance(selectedId)
+      });
+  
+      $('tbody').on("click", "div.eliminar", (evt) => {
+        const selectedId = evt.target.closest('.row').id;
+        this.deleteAdvance(selectedId)
+      });
+  
+      $('tbody').on("click", "div.detalle", (evt) => {
+        const selectedId = evt.target.closest('.row').id;
+        this.detailsAdvance(selectedId)
+      });
+    }
+  
 
 }

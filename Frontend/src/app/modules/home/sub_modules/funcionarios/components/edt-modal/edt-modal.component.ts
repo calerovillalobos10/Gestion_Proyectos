@@ -75,7 +75,7 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
         }
       },
       err => {
-        //this.closeOnError();
+        //this.closeOnError();/////////////////////////////////////////////////////////////////////////////////////
         this.loadUserData({ apellido_1: 'assd', apellido_2: 'asd', nombre: 'asd', correo: 'asd', idDepartamento: 1, fechaNacimiento: "1001-01-01", idSexo: 1, idTipoFuncionario: 1, urlFoto: 'https://miracomosehace.com/wp-content/uploads/2020/05/hombre-gorra-camara-1.jpg' });
       }
     );
@@ -108,7 +108,7 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
 
   // Esta funcion perpara la edicion del funcionario
   edt_func() {
-
+    this.obtainFunc();//////////////////////////////////////////////////////////////////////////////////
     if (this.form.invalid) {
       return this.form.markAllAsTouched();
     }
@@ -205,7 +205,13 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
     postData.append('nombre', this.form.value.nombre);
     postData.append('apellido1', this.form.value.apellido1);
     postData.append('apellido2', this.form.value.apellido2);
-    postData.append('urlFoto', this.form.value.foto);
+  
+    // Validacion, si cambia la foto sube el file, sino solo pasa url viejo.
+    if(this.oldPicture == this.form.value.urlFoto){
+      postData.append('urlFoto', this.oldPicture);
+    }else{
+      postData.append('urlFoto', this.form.value.foto);
+    }
 
     return postData
   }
