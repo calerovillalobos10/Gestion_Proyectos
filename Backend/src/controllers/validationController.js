@@ -1,16 +1,11 @@
+// Importaciones necesarias
+import fs from 'fs'
+
 export default class validationController {
 
     // Constructor vacío
     constructor() {}
 
-    // Esta función valida que no entren caracteres especiales dentro de los parámetros ingresados, para evitar vulnerabilidades o sql injection
-    verifySpecialCharacters = (characters) => {
-
-        const patern = /[*%<>)(}{]/
-
-        return !patern.test(characters)
-    }
-    
     // Esta función se encarga de validar que el correo sea del formato correcto y hace una comparación con el patern para evaluarlo
     verifyEmail = (email) => {
         console.log(email);
@@ -26,6 +21,9 @@ export default class validationController {
         }
     }
 
+    // Esta función valida que no entren caracteres especiales dentro de los parámetros ingresados, para evitar vulnerabilidades o sql injection
+    verifySpecialCharacters = (characters) => !/[*%<>)(}{]/.test(characters)
+
     // Esta función verifica el tamaño máximo de los caracteres ingresados
     verifyMaxSize = (characters, size) => ( characters.length > size ) ? false : true
 
@@ -37,4 +35,22 @@ export default class validationController {
 
     // Esta función verifica que el argumento ingresado sea solo texto 
     verifyText = (text) => /[a-zA-Z]/.test(text)
+
+    // Esta función verifica el tipo de extensión de una imagen
+    verifyExtImage = (file) => ( file.mimetype.toLowerCase() === 'image/jpeg' || file.mimetype.toLowerCase() === 'image/jpg' || file.mimetype.toLowerCase() === 'image/png' ) ? true : false
+
+    // Esta función verifica si el nombre de la imagen está repetido en la carpeta de archivos
+    verifyNameImage = (file) => {
+
+        const filename = file.name
+
+        if ( fs.readdirSync("./images").includes(filename) ) {
+
+            const array = filename.split('.')
+
+            file.name = array[0]+(Math.random() * (999 - 1) + 1).toFixed()+'.'+array[1]
+        }
+
+        return true
+    }
 }

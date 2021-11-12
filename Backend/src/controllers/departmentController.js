@@ -7,7 +7,7 @@ export default class DeparmentController{
 
     validacionController;
 
-    // Constructor vacío
+    // Constructor donde se inicializan las instancias
     constructor() {
 
         this.validacionController = new ValidacionController()

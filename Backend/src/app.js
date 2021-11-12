@@ -4,6 +4,7 @@ import config from './config'
 import cors from 'cors'
 import loginRoute from './routes/loginRouter'
 import departmentRoute from './routes/departmentRouter'
+import fileRoute from './routes/fileRouter'
 
 // Instancia
 const app = express()
@@ -20,6 +21,7 @@ app.use(express.json())
 // Obtiene las rutas del loginRoute
 app.use(loginRoute)
 app.use(departmentRoute)
+app.use(fileRoute)
 
 export default app
 
