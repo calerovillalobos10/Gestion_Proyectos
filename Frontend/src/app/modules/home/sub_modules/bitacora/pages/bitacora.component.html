@@ -1,0 +1,33 @@
+<h1 class="crud_title">Solicitudes</h1>
+<div class="mb-5"></div>
+
+
+<table
+  id="table"
+  class="display responsive nowrap"
+  style="width: 100%"
+  datatable
+  [dtOptions]="dtOptions"
+  [dtTrigger]="dtTrigger"
+>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Transaccion</th>
+      <th>Funcionario</th>
+      <th>Avance</th>
+      <th>Solicitud</th>
+      <th>Fecha</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let bitacora of allRows">
+      <td>{{ bitacora.idBitacora }}</td>
+      <td>{{ bitacora.idTransaccion }}</td>
+      <td>{{ bitacora.idFuncionario }}</td>
+      <td>{{ bitacora.idAvance }}</td>
+      <td>{{ bitacora.idSolicitud }}</td>
+      <td>{{ bitacora.fechaBitacora | date: 'dd/MM/yyyy'}}</td>
+    </tr>
+  </tbody>
+</table>

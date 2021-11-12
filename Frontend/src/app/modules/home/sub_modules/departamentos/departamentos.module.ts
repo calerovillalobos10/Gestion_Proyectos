@@ -10,7 +10,6 @@ import { DepartamentosComponent } from './pages/departamentos/departamentos.comp
 import { AddModalComponent } from './components/add-modal/add-modal.component';
 import { ListComponent } from './components/list/list.component';
 import { EdtModalComponent } from './components/edt-modal/edt-modal.component';
-import { DatatableComponent } from '@swimlane/ngx-datatable';
 
 @NgModule({
   declarations: [

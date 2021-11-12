@@ -12,7 +12,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SolicitudesComponent implements OnInit {
 
-  dtOptions: any = {};
+  public dtOptions: any = {};
   public dtTrigger: Subject<any> = new Subject<any>();
   public allRows: Array<Solicitud> = [];
 

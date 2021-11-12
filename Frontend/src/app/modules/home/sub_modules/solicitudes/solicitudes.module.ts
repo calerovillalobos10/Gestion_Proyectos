@@ -1,4 +1,4 @@
-import { SharedModule } from './../../../../shared/shared.module';
+import { SharedModule } from '@shared/shared.module';
 
 import { RelatedAdvancesComponent } from './components/related-advances-modal/related-advances.component';
 

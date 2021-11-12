@@ -1,11 +1,10 @@
 export interface Bitacora{
 
   idBitacora: number,
-  idTransaccion: number,
-  idFuncionario: number,
+  idTransaccion: number | string,
+  idFuncionario: number | string,
   idAvance: number,
   idSolicitud: number,
-  descripcion: string,
   fechaBitacora: string
 
 }
