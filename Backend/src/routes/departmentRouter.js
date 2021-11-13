@@ -111,7 +111,7 @@ router.post('/deleteDepartment', loginController.recuperarToken, loginController
         })
     }
 })
-
+// TODO: Agregar validación de bug al borrar un departamento y modificar otro con el nombre del departamento borrado
 // Se encarga de comunicarse con el controller para modificar un departamento
 router.put('/department', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 

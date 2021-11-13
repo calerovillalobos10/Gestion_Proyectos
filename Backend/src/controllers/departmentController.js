@@ -168,7 +168,7 @@ export default class DeparmentController{
                 // Creación del objeto departamento
                 const departamento = new Department(result.recordset[0].idDepartamento, result.recordset[0].descripcion, result.recordset[0].estado)
                 // validación sobre la inserción del objeto
-                return ( result.returnValue === 1 ) ? departamento : false
+                return ( result.recordset.length > 0) ? departamento : false
             } catch (err) {
 
                 console.log(err);
@@ -202,7 +202,7 @@ export default class DeparmentController{
                 // Ejecución del sp
                 const result = await request.execute('sp_verifyDepartment')
                 // validación sobre la inserción del objeto
-                return ( result.returnValue === 1 ) ? {mensaje:'Se ingresó correctamente el departamento', estado: false} : {estado: true}
+                return ( result.rowsAffected[0] > 0 ) ? {mensaje:'Se ingresó correctamente el departamento', estado: false} : {estado: true}
             } catch (err) {
 
                 console.log(err);

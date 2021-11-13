@@ -228,26 +228,25 @@ BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
-	
+
     -- Insert statements for procedure here
 	SELECT idDepartamento, descripcion, estado
 	FROM tb_Departamentos
+	WHERE idDepartamento = @idDepartamentoBE
 END
 GO
 
-CREATE PROCEDURE sp_verifyDepartment 
+CREATE PROCEDURE sp_verifyDepartment
 	-- Add the parameters for the stored procedure here
 (
 @descripcionBE VARCHAR(30)
 )
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
-	SELECT descripcion FROM tb_Departamentos WHERE descripcion = @descripcionBE
+	UPDATE tb_Departamentos SET estado = 1 
+	WHERE descripcion = @descripcionBE
 END
 GO
 
@@ -301,3 +300,133 @@ BEGIN
 	INSERT INTO tb_Funcionarios(idSexo, iddepartamento, idTipoFuncionario, nombre, apellido_1, apellido_2, fechaNacimiento, correo, contrasenia, urlFoto, estado, dobleAuth, secretUrl)
 	values (@idSexoBE, @idDepartamentoBE, @idTipoFuncionarioBE, @nombreBE, @apellido_1BE, @apellido_2BE, @fechaNacimientoBE, @correoBE, PWDENCRYPT(@contraseniaBE), @urlFotoBE, @estadoBE, @dobleAuthBE, @secretUrlBE)
 END
+GO
+
+CREATE PROCEDURE sp_verifyEmailFunctionary
+	-- Add the parameters for the stored procedure here
+(
+@correoBE varchar(50)
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT correo
+	fROM tb_Funcionarios
+	WHERE correo = @correoBE
+END
+GO
+
+CREATE PROCEDURE sp_verifyFunctionary
+(
+@idSexoBE tinyint,
+@idDepartamentoBE smallint,
+@idTipoFuncionarioBE tinyint,
+@nombreBE varchar(15),
+@apellido_1BE varchar(15),
+@apellido_2BE varchar(15),
+@fechaNacimientoBE date,
+@correoBE varchar(50),
+@contraseniaBE VarChar(16),
+@urlFotoBE varchar(180)
+)
+AS
+BEGIN
+
+    -- Insert statements for procedure here
+	UPDATE tb_Funcionarios SET estado = 1
+	WHERE idSexo = @idSexoBE AND iddepartamento = @idDepartamentoBE AND idTipoFuncionario = @idTipoFuncionarioBE 
+	AND nombre = @nombreBE AND apellido_1 = @apellido_1BE AND apellido_2 = @apellido_2BE AND fechaNacimiento = @fechaNacimientoBE
+	AND correo = @correoBE AND PWDCOMPARE(@contraseniaBE, contrasenia) = 1 AND urlFoto = @urlFotoBE
+END
+GO
+
+CREATE PROCEDURE sp_listFunctionary
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT F.idFuncionario, S.descripcion, D.descripcion, TF.descripcion, F.nombre, F.apellido_1, F.apellido_2, F.fechaNacimiento, F.correo, F.urlFoto
+	FROM tb_Funcionarios AS F inner join tb_Sexos AS S ON F.idSexo = S.idSexo 
+	inner join tb_Departamentos AS D ON F.iddepartamento = D.idDepartamento
+	inner join tb_TipoFuncionarios AS TF ON F.idTipoFuncionario = TF.idTipoFuncionario
+	WHERE F.estado != 0
+END
+GO
+
+CREATE PROCEDURE sp_recoverFunctionaryById 
+(
+@idFuncionarioBE smallInt
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT idFuncionario, idSexo, iddepartamento, idTipoFuncionario, nombre, apellido_1, apellido_2, fechaNacimiento, correo, urlFoto
+	FROM tb_Funcionarios
+	WHERE idFuncionario = @idFuncionarioBE
+END
+GO
+
+CREATE PROCEDURE sp_deleteFunctionary
+(
+@idFuncionarioBE smallint
+)
+AS
+BEGIN
+
+    -- Insert statements for procedure here
+	UPDATE tb_Funcionarios SET estado = 0
+	WHERE idFuncionario = @idFuncionarioBE
+END
+GO
+
+CREATE PROCEDURE sp_modifyFunctionary
+(
+@idFuncionarioBE smallint,
+@idSexoBE tinyint,
+@idDepartamentoBE smallint,
+@idTipoFuncionarioBE tinyint,
+@nombreBE varchar(15),
+@apellido_1BE varchar(15),
+@apellido_2BE varchar(15),
+@fechaNacimientoBE date,
+@contraseniaBE VarChar(16),
+@urlFotoBE varchar(180)
+)
+AS
+BEGIN
+    -- Insert statements for procedure here
+	UPDATE tb_Funcionarios SET idSexo = @idSexoBE, iddepartamento = @idDepartamentoBE, idTipoFuncionario = @idTipoFuncionarioBE,
+	nombre = @nombreBE, apellido_1 = @apellido_1BE, apellido_2 = @apellido_2BE, fechaNacimiento = @fechaNacimientoBE,
+	contrasenia = PWDENCRYPT(@contraseniaBE), urlFoto = @urlFotoBE
+	WHERE idFuncionario = @idFuncionarioBE
+END
+
+
+CREATE PROCEDURE sp_recoverUrlFunctionaryById
+(
+@idFuncionarioBE smallInt
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT urlFoto
+	FROM tb_Funcionarios
+	WHERE idFuncionario = @idFuncionarioBE
+END
+GO
+

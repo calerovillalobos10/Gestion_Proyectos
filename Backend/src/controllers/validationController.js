@@ -44,7 +44,7 @@ export default class validationController {
     // Esta función verifica si el nombre de la imagen está repetido en la carpeta de archivos
     verifyNameImage = (file) => {
 
-        const filename = file.name
+        const filename = file.name.trim()
 
         if ( fs.readdirSync("./images").includes(filename) ) {
 

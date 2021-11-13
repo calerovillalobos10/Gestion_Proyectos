@@ -19,12 +19,15 @@ export default class FileController {
         const file = req.files.urlFoto
     
         this.validacionController.verifyNameImage(file)
-    
-        if( file !== null && this.validacionController.verifyMaxSize(file.name, 175) && this.validacionController.verifySpecialCharacters(file.name) ){
+        
+        if ( req.body.urlFoto != undefined ) {
+
+            next()
+        } else if ( file !== null && this.validacionController.verifyMaxSize(file.name, 175) && this.validacionController.verifySpecialCharacters(file.name) ){
     
             try {
                 
-                const savePath = path.join(__dirname, '../../','images', file.name)
+                const savePath = path.join(__dirname, '../../','images', file.name.trim())
                 // Validaciones requeridas para las imágenes
                 if( file.truncated || !this.validacionController.verifyExtImage(file) ) {
                     // Sino cumple con las validaciones 
