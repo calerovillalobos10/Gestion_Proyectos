@@ -64,9 +64,8 @@ export class ListComponent implements OnInit {
   async deleteFunc(id: any) {
     const func: any = this.getFunc(id);
 
-
-
-    this.alertService.confirmAlert('¿Está seguro de eliminar?', `Registro: ${func.nombre} ${func.apellido_1} ${func.apellido_2}`)
+    this.alertService.confirmAlert(
+      '¿Está seguro de eliminar?', `Registro: ${func.nombre} ${func.apellido_1} ${func.apellido_2}`)
       .then(async (res) => {
         // Confirmacion del usuario
         if (res.isConfirmed) {
@@ -128,8 +127,6 @@ export class ListComponent implements OnInit {
     });
   }
 
-
-
   // Obtiene el funcionario de la lista.
   getFunc(id: any) {
     let func: Funcionario | undefined = undefined;
@@ -156,7 +153,6 @@ export class ListComponent implements OnInit {
     ]
 
     this.add_Listeners();
-
   }
 
   rerender(): void {

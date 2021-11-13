@@ -24,7 +24,7 @@ export class FuncionariosService {
 
   // Metodo de creacion de funcionario.  
   create(adv: FormData) {
-    return this.http.post<any>(`${API_URL}/funcionarios`, adv)
+    return this.http.post<any>(`${API_URL}/functionary`, adv)
   }
 
   // Metodo de actualizacion de funcionario. 
