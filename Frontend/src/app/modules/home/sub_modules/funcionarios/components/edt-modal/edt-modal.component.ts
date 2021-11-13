@@ -8,6 +8,7 @@ import { Funcionario } from '@core/models/Funcionario';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
+import { disable } from '@rxweb/reactive-form-validators';
 
 @Component({
   selector: 'app-edt-modal',
@@ -75,8 +76,11 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
         }
       },
       err => {
+
         //this.closeOnError();/////////////////////////////////////////////////////////////////////////////////////
-        this.loadUserData({ apellido_1: 'assd', apellido_2: 'asd', nombre: 'asd', correo: 'asd', idDepartamento: 1, fechaNacimiento: "1001-01-01", idSexo: 1, idTipoFuncionario: 1, urlFoto: 'https://miracomosehace.com/wp-content/uploads/2020/05/hombre-gorra-camara-1.jpg' });
+        
+        let funct:Funcionario | undefined = fixedRows.find(element => element.idFuncionario == this.userId)
+        if(funct) this.loadUserData(funct);
       }
     );
   }
@@ -228,9 +232,10 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
   // Construye el formulario con los campos requeridos.
   buildForm() {
     this.form = this.formBuilder.group({
-      correo: ["", [
+      correo: [{value:'', disabled:true}, [
         Validators.required,
         Validators.pattern("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"),
+        Validators.minLength(6),
         Validators.maxLength(50)]],
       departamento: ["", [
         Validators.required,
@@ -271,3 +276,14 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
     })
   }
 }
+
+const fixedRows:Array<Funcionario> = [
+  { nombre: 'Luis', apellido_1: 'Leiton', apellido_2: 'Iglesias', urlFoto: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Terry_Crews_by_Gage_Skidmore_5.jpg/250px-Terry_Crews_by_Gage_Skidmore_5.jpg', correo: 'Luis@gmail', 
+    fechaNacimiento: '1995-09-09', idDepartamento: 4, idSexo: 1, idTipoFuncionario: 1, idFuncionario: 1 },
+  
+  { nombre: 'Fernando', apellido_1: 'Alvarez', apellido_2: 'Salas', urlFoto: 'https://miracomosehace.com/wp-content/uploads/2020/05/hombre-gorra-camara-1.jpg', correo: 'Fernando@gmail.com',
+  fechaNacimiento: '1999-09-09', idDepartamento: 2, idSexo: 1, idTipoFuncionario: 2, idFuncionario: 2 },
+
+  { nombre: 'Ana', apellido_1: 'Soto', apellido_2: 'Salas', urlFoto: 'https://www.dzoom.org.es/wp-content/uploads/2010/09/retrato-fondo-profundidad-campo-734x489.jpg', correo: 'ana@gmail', 
+  fechaNacimiento: '1989-09-09', idDepartamento: 2, idSexo: 2, idTipoFuncionario: 3, idFuncionario: 3 }
+]

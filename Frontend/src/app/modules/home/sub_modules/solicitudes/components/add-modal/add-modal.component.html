@@ -55,7 +55,7 @@
             <div class="input_group">
               <select class="select" name="aplicativo" id="aplicativo" formControlName="aplicativo"> 
                 <option selected disabled hidden>Seleccione</option>
-                <option *ngFor="let func of aplicativo" value="{{func.idFuncionario}}">{{func.nombre}}</option>
+                <option *ngFor="let func of aplicativo" value="{{func.idFuncionario}}">{{func.nombre}} {{func.apellido_1}} {{func.apellido_2}}</option>
               </select>
 
               <label class="label" for="aplicativo"> Funcionario Aplicativo</label>
@@ -63,20 +63,20 @@
             </div>
 
             <div class="input_group">
+              
               <select class="select" name="responsable" id="responsable" formControlName="responsable"> 
                 <option selected disabled hidden>Seleccione</option>
-                <option *ngFor="let func of responsable" value="{{func.idFuncionario}}">{{func.nombre}}</option>
+                <option *ngFor="let func of responsable" value="{{func.idFuncionario}}">{{func.nombre}} {{func.apellido_1}} {{func.apellido_2}}</option>
               </select>
 
               <label class="label" for="responsable"> Funcionario Responsable</label>
               <ng-container *ngTemplateOutlet="responsable_error; context: {error: form.get('responsable')?.errors}"></ng-container>
             </div>
 
-  
             <div class="input_group">
               <select class="select" name="final" id="final"  formControlName="final">
                 <option selected disabled hidden>Seleccione</option>
-                <option *ngFor="let func of final" value="{{func.idFuncionario}}">{{func.nombre}}</option>
+                <option *ngFor="let func of final" value="{{func.idFuncionario}}">{{func.nombre}} {{func.apellido_1}} {{func.apellido_2}}</option>
               </select>
          
               <label class="label" for="final"> Funcionario Final</label>

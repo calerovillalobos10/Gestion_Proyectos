@@ -44,7 +44,7 @@ export class BitacoraComponent implements OnInit {
         this.rerender();
       },
       err => {
-        this.allRows = [{ idBitacora: 1, idAvance:1, fechaBitacora: '2021-01-01', idFuncionario: 'Luis Leiton', idTransaccion: "Insert en tabla de solicitudes", idSolicitud: 1}];
+        this.allRows = fixedData;
         this.rerender();
       }
     )
@@ -56,3 +56,10 @@ export class BitacoraComponent implements OnInit {
   }
 
 }
+
+const fixedData = [
+  { idBitacora: 1, idAvance:'N/A', fechaBitacora: '2021-01-01', idFuncionario: 'Luis Leiton Iglesias', idTransaccion: "Insert en tabla de solicitudes", idSolicitud: 1},
+  { idBitacora: 2, idAvance:'1', fechaBitacora: '2021-01-01', idFuncionario: 'Ana Soto Salas', idTransaccion: "Insert en tabla de avances", idSolicitud: 1},
+  { idBitacora: 3, idAvance:'N/A', fechaBitacora: '2021-01-01', idFuncionario: 'Luis Leiton Iglesias', idTransaccion: "Update en tabla de solicitudes", idSolicitud: 2},
+ 
+]

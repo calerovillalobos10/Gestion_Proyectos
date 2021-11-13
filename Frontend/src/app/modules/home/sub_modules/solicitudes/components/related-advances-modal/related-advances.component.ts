@@ -45,7 +45,6 @@ export class RelatedAdvancesComponent extends ModalSkeleton implements OnInit, O
         this.openedModal = data.status
         this.formToggle = !data.status
         this.solicitudId = data.solicitudId
-        this.loadTable()
       }
     })
   }
@@ -58,7 +57,7 @@ export class RelatedAdvancesComponent extends ModalSkeleton implements OnInit, O
       },
       err => {
         this.allRows = [];
-        this.allRows = [{  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis A', trimestre: 1, idAvance: 1, solicitud: 1, documento: '../../../assets/book/book.pdf'}];
+        this.allRows = fixedRows.filter(element => element.solicitud == this.solicitudId);
         this.rerender();
       })
   }
@@ -85,3 +84,9 @@ export class RelatedAdvancesComponent extends ModalSkeleton implements OnInit, O
   }
 
 }
+
+const fixedRows = [
+  {  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis Leiton Iglesias', trimestre: 1, idAvance: 1, solicitud: 1, documento: '../../../assets/book/book.pdf'},
+  {  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis Leiton Iglesias', trimestre: 2, idAvance: 2, solicitud: 1, documento: '../../../assets/book/book.pdf'},
+  {  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis Leiton Iglesias', trimestre: 3, idAvance: 3, solicitud: 3, documento: '../../../assets/book/book.pdf'}
+];

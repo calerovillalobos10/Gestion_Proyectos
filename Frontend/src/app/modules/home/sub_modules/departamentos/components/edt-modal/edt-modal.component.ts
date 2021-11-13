@@ -51,6 +51,8 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
 
         this.service.getAll().subscribe(
           (res) => {
+            
+            
             this.allRows = !res['estado'] ? [] : res['list'];
           },
           (err) => {
@@ -67,7 +69,12 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
     this.service.getById(this.departamentId)
     .subscribe(
       (res) => {
-     
+
+
+        console.log(res);
+        console.log(this.departamentId);
+        
+        
         if(res['department']){
           this.form.patchValue({ descripcion: res['department']?.descripcion })
         }
