@@ -17,7 +17,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public dtTrigger: Subject<any> = new Subject<any>();
   public dtOptions: any = {};
-
   public allRows: any = [];
 
   constructor(

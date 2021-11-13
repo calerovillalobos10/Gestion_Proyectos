@@ -180,7 +180,6 @@
   </p>
 </ng-template>
 
-
 <ng-template #apellido2_error let-error="error">
   <p class="error-input" *ngIf="form.get('apellido2')?.dirty || form.get('apellido2')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
@@ -188,7 +187,6 @@
     <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
   </p>
 </ng-template>
-
 
 <ng-template #sexo_error let-error="error">
   <p class="error-input" *ngIf="form.get('sexo')?.dirty || form.get('sexo')?.touched">

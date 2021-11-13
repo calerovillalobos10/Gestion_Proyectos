@@ -61,7 +61,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     }
 
     // Si el email existe mostramos una alerta.
-    this.service.validateEmail(this.form.value.correo).subscribe(
+    /*this.service.validateEmail(this.form.value.correo).subscribe(
       res => {
 
         // Si es true el email esta en el sistema.
@@ -74,7 +74,8 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       err => {
         return this.alertService.simpleAlert('Surgio un error al validar el email')
       }
-    )
+    )*/
+    this.proceedCreate();
   }
 
   // Luego de validar procede a insertar en la base.

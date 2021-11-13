@@ -108,14 +108,14 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
 
   // Esta funcion perpara la edicion del funcionario
   edt_func() {
-    this.obtainFunc();//////////////////////////////////////////////////////////////////////////////////
+    
     if (this.form.invalid) {
       return this.form.markAllAsTouched();
     }
 
     // Si el email existe mostramos una alerta.
     if (this.oldMail !== this.form.value.correo) {
-
+/*
       this.service.validateEmail(this.form.value.correo).subscribe(
         res => {
           // Si es true el email esta en el sistema.
@@ -127,7 +127,8 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
         },
         err => {
           return this.alertService.simpleAlert('No se pudo validar el email')
-        })
+        })*/
+        this.proceedUpdate();
     }
   }
 
@@ -212,7 +213,6 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
     }else{
       postData.append('urlFoto', this.form.value.foto);
     }
-
     return postData
   }
 

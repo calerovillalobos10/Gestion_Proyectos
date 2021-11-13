@@ -18,7 +18,6 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     private service: DepartamentosService,
     private alertService: AlertService
   ) {
-
     super();
 
     this.form = this.formBuilder.group({
@@ -36,7 +35,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       if (data.subject === 'addModal') {
         this.openedModal = data.status
         this.formToggle = !data.status
-      
+
         this.service.getAll().subscribe(
           (res) => {
             this.allRows = !res['estado'] ? [] : res['list'];
@@ -54,7 +53,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     if (this.form.invalid) {
       return this.form.markAllAsTouched();
     }
-    
+
     if (this.checkExistance(this.form.value.descripcion)) {
       return this.alertService.simpleAlert('Ya existe este departamento')
     }
@@ -62,12 +61,12 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     // Espera la respuesta del backend.
     this.service.create({ descripcion: this.form.value.descripcion }).subscribe(
       (res) => {
-        if(res['estado']){
+        if (res['estado']) {
           this.closeModal();
           this.alertService.promiseAlert('Se agregó correctamente el departamento').then(() => {
             this.service.updateNeeded.emit(true)
           })
-        }else{
+        } else {
           this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
         }
       },
