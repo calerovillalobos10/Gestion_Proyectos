@@ -1,3 +1,4 @@
+import { MAX_PICTURE } from '@core/others/Enviroment';
 import { ModalSkeleton } from '@core/others/ModalSkeleton';
 import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
 import { Departamento } from '@core/models/Departamento';
@@ -14,8 +15,9 @@ import { FuncionariosService } from '@core/services/funcionarios/funcionarios.se
 
 export class AddModalComponent extends ModalSkeleton implements OnInit {
 
-  public departamentos: Array<Departamento>;
+  public departamentos: Array<Departamento> = [];
   public preview: string | ArrayBuffer | null | undefined;
+  public allowedSize;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -25,8 +27,16 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   ) {
     super();
 
-    
-    this.departamentos = [{ descripcion: 'TI', idDepartamento: 1 }, { descripcion: 'RRHH', idDepartamento: 1 },]//------Al tener el back ----
+    this.allowedSize = MAX_PICTURE;
+
+    this.deptService.getAll().subscribe(
+      res => {
+        this.departamentos = !res['estado'] ? [] : res['list'];
+      },
+      err => {
+        this.departamentos = [];
+      }
+    )
 
     this.preview = '';
     this.buildForm();
@@ -42,6 +52,8 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     })
   }
 
+  // Realiza validaciones previas de creacion.
+  // Si es valido procede con el metodo de crear.
   add_func() {
 
     if (this.form.invalid) {
@@ -49,33 +61,67 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     }
 
     // Si el email existe mostramos una alerta.
-    if (this.service.validateEmail(this.form.value.correo)) {  //-----------------------------------------------------Al tener el back -----------
-      return this.alertService.simpleAlert('El email ya se encuentra registrado')
-    }
+    this.service.validateEmail(this.form.value.correo).subscribe(
+      res => {
 
+        // Si es true el email esta en el sistema.
+        if (res['estado']) {
+          return this.alertService.simpleAlert('El email ya se encuentra registrado')
+        } else {
+          this.proceedCreate();
+        }
+      },
+      err => {
+        return this.alertService.simpleAlert('Surgio un error al validar el email')
+      }
+    )
+  }
+
+  // Luego de validar procede a insertar en la base.
+  proceedCreate() {
     // Espera la respuesta del backend.
-    if (this.service.create(this.obtainFunc())) { //-----------------------------------------------------Al tener el back -----------
-      this.closeModal();
-      this.alertService.promiseAlert('Se agregó correctamente el funcionario').then(() => {
-        this.service.updateNeeded.emit(true)
-      })
-    } else {
-      // Si el backend envia una respuesta incorrecta.
-      this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
-    }
+    this.service.create(this.obtainFunc()).subscribe(
+      res => {
+        if (res['estado']) {
+          this.closeModal();
+          this.alertService.promiseAlert('Se agregó correctamente el funcionario').then(() => {
+            this.service.updateNeeded.emit(true)
+          })
+        } else {
+          this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
+        }
+      },
+      err => {
+        this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
+      }
+    )
   }
 
   // Metodo para cambiar el preview de la foto del funcionario.
   onFileChange(event: any) {
+
+    // Si hay un archivo en el evento
     if (event.target.files && event.target.files[0]) {
-      this.loadPreview(event);
-      this.form.patchValue({ foto: event.target.files[0] })
+      const size = (event.target.files[0].size / 1048576)
+
+      // Si el archivo supera el limite
+      if (size > MAX_PICTURE) {
+        this.form.patchValue({ urlFoto: '' })
+        this.form.get('urlFoto')?.setErrors({ 'sizeError': true })
+      } else {
+        this.form.get('urlFoto')?.setErrors(null)
+      }
+
+      // Si no existen errores
+      if (!this.form.get('urlFoto')?.errors) {
+        this.loadPreview(event);
+        this.form.patchValue({ foto: event.target.files[0] })
+      }
     } else {
       this.form.patchValue({ foto: '' })
       this.preview = '';
     }
   }
-
 
   loadPreview(event: any) {
     const reader = new FileReader();
@@ -96,8 +142,8 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     postData.append('idTipoFuncionario', this.form.value.tipo);
     postData.append('fechaNacimiento', this.form.value.nacimiento);
     postData.append('nombre', this.form.value.nombre);
-    postData.append('apellido1', this.form.value.apellido1);
-    postData.append('apellido2', this.form.value.apellido2);
+    postData.append('apellido_1', this.form.value.apellido1);
+    postData.append('apellido_2', this.form.value.apellido2);
     postData.append('urlFoto', this.form.value.foto);
 
     return postData;

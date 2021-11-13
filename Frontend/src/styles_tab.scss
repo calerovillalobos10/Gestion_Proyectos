@@ -1,0 +1,151 @@
+.btn_table {
+  display: inline-block;
+  cursor: pointer;
+  margin-left: 1em;
+  font-size: 1.2em;
+  box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.356);
+  padding: 0.5em;
+  width: 2em;
+  border-radius: 0.5em;
+  transition: background-color 250ms, color 250ms;
+  text-align: center;
+}
+
+.excel:hover {
+  background-color: #1d6f42;
+  color: rgb(231, 231, 231);
+}
+
+.excel {
+  color: #1d6f42;
+  background-color: rgb(231, 231, 231);
+}
+
+.pdf:hover {
+  background-color: #6f1d1d;
+  color: rgb(231, 231, 231);
+}
+
+.pdf {
+  color: #6f1d1d;
+  background-color: rgb(231, 231, 231);
+}
+
+.copy:hover {
+  background-color: #2c0fd1;
+  color: rgb(231, 231, 231);
+}
+
+.copy {
+  color: #320fd1;
+  background-color: rgb(231, 231, 231);
+}
+
+.dataTables_filter {
+  position: absolute;
+  right: 0;
+  transform: translateY(1em);
+}
+
+@media (max-width: 640px) {
+  .dataTables_filter {
+    transform: translate(-12em, -8em);
+  }
+}
+
+
+.dt-buttons {
+  margin-bottom: 2em;
+}
+
+.dtr-control {
+  padding-left: 3em !important;
+}
+
+.dtr-control::before {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+
+  font-family: "Font Awesome 5 Free"!important;
+  font-weight: 900;
+  content: "\f055";
+
+  position: absolute;
+  transform: translateX(-2.5em);
+
+  width: 2em;
+  height: 2em;
+  color: #1d6f42;
+}
+
+.dt-hasChild > .dtr-control::before {
+  content: "\f056";
+  color: #6f1d1d;
+}
+
+.venus_ico,
+.mars_ico {
+  font-size: 1.2em;
+  width: 100%;
+  text-align: center;
+}
+
+.mars_ico {
+  color: #6f1d1d;
+}
+
+.venus_ico {
+  color: #2c0fd1;
+}
+
+
+
+table.dataTable > thead .sorting:before,
+table.dataTable > thead .sorting_asc:before,
+table.dataTable > thead .sorting_desc:before,
+table.dataTable > thead .sorting_asc_disabled:before,
+table.dataTable > thead .sorting_desc_disabled:before {
+  content: "" !important;
+}
+
+table.dataTable > thead .sorting:after,
+table.dataTable > thead .sorting_asc:after,
+table.dataTable > thead .sorting_desc:after,
+table.dataTable > thead .sorting_asc_disabled:after,
+table.dataTable > thead .sorting_desc_disabled:after {
+  content: "" !important;
+}
+
+
+#datatables_buttons_info{
+  animation: disapear_copy 2s forwards;
+}
+
+@keyframes disapear_copy {
+  50% {  transform: scale(1); }
+ 
+  100% {  transform: scale(0); }
+}
+
+.dataTables_scrollHead {
+  width: auto !important;
+}
+
+.dataTables_scrollHeadInner {
+  width: auto !important;
+}
+
+
+
+@media screen and (max-width: 1050px) and (min-width:601px) {
+ .dataTables_scrollHead {
+    width: auto !important;
+ }
+
+ .dataTables_scrollHeadInner {
+    width: auto !important;
+ }
+}

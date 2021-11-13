@@ -22,7 +22,7 @@
 }
 
 .tools_item{
-  width: 10em;
+  width: 8em;
   cursor: pointer;
   font-weight: bold;
   user-select: none;
@@ -33,16 +33,16 @@
 }
 
 .tools_item:hover{
-  transform: scale(1.2);
+  transform: scale(1.1);
 }
 
 .tools_item::before{
 content: '';
   display: inline-block;
   position: absolute;
-  left: 10%;
+  left: 8%;
   bottom: 5%;
-  width: 80%;
+  width: 90%;
   height: .1em;
   background-color:  var(--clr-accent-500);
   transform: scaleX(0);
@@ -63,9 +63,10 @@ content: '';
 #solicitudes .solicitudes,
 #avances .avances,
 #departamentos .departamentos,
-#funcionarios .funcionarios
+#funcionarios .funcionarios,
+#bitacora .bitacora
 {
-  transform: scale(1.2);
+  transform: scale(1.1);
   color: var(--clr-accent-500);
 }
 
@@ -73,7 +74,8 @@ content: '';
 #solicitudes .solicitudes::before,
 #avances .avances::before,
 #departamentos .departamentos::before,
-#funcionarios .funcionarios::before
+#funcionarios .funcionarios::before,
+#bitacora .bitacora::before
 {
   transform: scaleX(1);
 }
@@ -82,7 +84,6 @@ content: '';
   display: none;
 }
 
-
 @media (max-width: 1020px){
   .side-bar{
     position: absolute;
@@ -90,7 +91,7 @@ content: '';
     left: 0%;
     max-width: 200px;
     max-height: 100%;
-    z-index: 1000;
+    z-index: 100;
     border-radius:  0 0 .5em 0 ;
   }
 
@@ -112,7 +113,6 @@ content: '';
     height:100%;
   }
 
-  
   .tools{
     overflow: hidden;
     max-height: 350px;
@@ -150,9 +150,7 @@ content: '';
     display: inline-block;
   }
 
-
 }
-
   
 .hidden_toggle{
   display: none;

@@ -1,0 +1,144 @@
+
+<div class="primary_box" *ngIf="openedModal" >
+ 
+  <div class="primary_box_container" [ngClass]="{ desaparecer: formToggle }">
+    <button class="btn_close" (click)='closeAndEraseModal()'><i class="fas fa-window-close"></i></button>
+    <div>
+      <h1 class="title">{{modalType == 'registro' ? 'Registro' : 'Edición'}} de avance</h1>
+
+      <form [formGroup]="form" (submit)="add_solicitude()" >
+  
+        <div class="row">
+
+          <div class="col mr-1">
+            <div class="row">
+              <div class="col mr-1">
+ 
+                <div class="input_group">
+                 
+                  <div class="pdf_previewer" >
+               
+                          <pdf-viewer
+                        [src] = 'pdfSrc'
+                        [render-text] = 'true'
+                        [fit-to-page]="false"
+                        [original-size]="false"
+                        [zoom-scale]="'page-fit'"
+                        [autoresize]="true"
+                        style="display: block;"
+                         >
+                        </pdf-viewer>
+                  </div>
+
+                </div>
+
+                <div class="input_group">
+                  <input class="input" type="file" placeholder=" " id="urlDocumento" name="urlDocumento" (change)="onFileChange($event)" 
+                  accept="application/pdf" enctype="multipart/form-data"/>
+                  <label class="custom-file-upload" for="urlDocumento" >
+                    <i class="fas fa-upload"></i> Seleccionar
+                  </label>
+
+                  <label class="label"> Documento</label>
+                  <i class="fas fa-undo undo_button" (click)='resetDocument()'></i>
+                  <ng-container *ngTemplateOutlet="urlDocumento_error; context: {error: form.get('urlDocumento')?.errors}"></ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!---------Columna 1 ---------->
+          <div class="col mr-1 mt-4">
+
+            <div class="input_group">
+              <select class="select" name="trimestre" id="trimestre" formControlName="trimestre"> 
+                <option selected disabled hidden>Seleccione</option>
+                <option selected  value="1">Primer trimestre ( Enero - Febrero - Marzo )</option>
+                <option selected  value="2">Segundo trimestre ( Abril - Mayo - Junio )</option>
+                <option selected  value="3">Tercer trimestre ( Julio - Agosto - Setiembre )</option>
+                <option selected  value="4">Cuarto trimestre ( Octubre - Noviembre - Diciembre )</option>
+              </select>
+ 
+              <label class="label" for="trimestre">Trimestre</label>
+              <ng-container *ngTemplateOutlet="trimestre_error; context: {error: form.get('trimestre')?.errors}"></ng-container>
+            </div>
+
+            <div class="input_group">
+              <select class="select" name="aplicativo" id="aplicativo" formControlName="aplicativo"> 
+                <option selected disabled hidden>Seleccione</option>
+                <option *ngFor="let func of aplicativo" value="{{func.idFuncionario}}">{{func.nombre}}</option>
+              </select>
+ 
+              <label class="label" for="aplicativo"> Funcionario Aplicativo</label>
+              <ng-container *ngTemplateOutlet="aplicativo_error; context: {error: form.get('aplicativo')?.errors}"></ng-container>
+            </div>
+
+            <div class="input_group">
+              <select class="select" name="solicitud" id="solicitud" formControlName="solicitud" (change)="validateSolicitude($event)"> 
+                <option selected disabled hidden>Seleccione</option>
+                <option *ngFor="let soli of solicitudes" value="{{soli.idSolicitud}}"> {{soli.idSolicitud}} encargado {{soli.funcionarioResponsable}} periodo ({{soli.fechaInicio | date: 'dd/MM/yyyy'}}) - ({{soli.fechaFin  | date: 'dd/MM/yyyy'}})</option>
+              </select>
+ 
+              <label class="label" for="solicitud"> Solicitud </label>
+              <ng-container *ngTemplateOutlet="solicitud_error; context: {error: form.get('solicitud')?.errors}"></ng-container>
+            </div>
+
+            <div class="input_group">
+              <input class="input" type="date" id="fechaAvance" formControlName="fechaAvance" (change)="validateDate()" title="{{form.get('solicitud')?.valid ? '' : 'Se habilita al seleccionar una solicitud válida'}}"/>
+              <label class="label" for="fechaSolicitud"> Fecha de avance</label>
+              <ng-container *ngTemplateOutlet="fechaAvance_error; context: {error: form.get('fechaAvance')?.errors}"></ng-container>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="btn">{{modalType == 'registro' ? 'Registrar' : 'Editar'}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-container >
+
+  <!-- Templates de error -->
+
+<ng-template #aplicativo_error let-error="error">
+  <p class="error-input" *ngIf="form.get('aplicativo')?.dirty || form.get('aplicativo')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #fechaAvance_error let-error="error">
+  <p class="error-input" *ngIf="form.get('fechaAvance')?.dirty || form.get('fechaAvance')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.incorrectDateInit">La fecha no puede ser previa al inicio del proyecto </span>
+    <span class="login_error" *ngIf="error?.incorrectDateEnd">La fecha no puede ser posterior al fin del proyecto </span>
+  </p>
+</ng-template>
+
+<ng-template #solicitud_error let-error="error">
+  <p class="error-input" *ngIf="form.get('solicitud')?.dirty || form.get('solicitud')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #trimestre_error let-error="error">
+  <p class="error-input" *ngIf="form.get('trimestre')?.dirty || form.get('trimestre')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+</ng-template>
+
+<ng-template #urlDocumento_error let-error="error">
+
+  <p class="error-input" *ngIf="form.get('urlDocumento')?.dirty || form.get('urlDocumento')?.touched">
+    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+  <p class="error-input">
+    <span class="login_error" *ngIf="error?.pattern">El formato debe ser PDF </span>
+    <span class="login_error" *ngIf="error?.sizeError">Solo se permiten archivos con un tamaño maximo de 1.25mb </span>
+  </p>
+  
+</ng-template>
+
+</ng-container>

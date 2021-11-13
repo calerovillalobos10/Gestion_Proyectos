@@ -31,6 +31,11 @@ const routes: Routes = [
     path: 'funcionarios',
     loadChildren: () => import("@modules/home/sub_modules/funcionarios/funcionarios.module")
       .then(m => m.FuncionariosModule),
+  },
+  {
+    path: 'bitacora',
+    loadChildren: () => import("@modules/home/sub_modules/bitacora/bitacora.module")
+      .then(m => m.BitacoraModule),
   }
 ];
 
@@ -38,4 +43,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
+
 export class HomeRoutingModule { }

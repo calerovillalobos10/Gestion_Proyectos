@@ -1,0 +1,11 @@
+/* Elimian el icono de + en el datatable*/
+@media (min-width: 1576px) {
+  .dtr-control::before {
+    content: "" !important;
+  }
+}
+
+
+
+
+
