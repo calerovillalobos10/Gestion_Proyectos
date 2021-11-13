@@ -1,6 +1,7 @@
 .primary_box_container {
-  width: 500px;
-  min-width: 300px;
+  min-width: 250px;
+  max-width: 400px;
+  width: 35vw;
 }
 
 .user_data_container{
@@ -15,8 +16,9 @@ p{
 }
 
 .user_image{
-  min-width: 100px;
-  max-width: 150px;
+  min-width: 200px;
+  max-width: 350px;
+  width: 30vw;
   border-radius: 1em;
   box-shadow: 0 0 0 3px rgba(90, 90, 90, 0.438);
   margin-bottom: 1em;

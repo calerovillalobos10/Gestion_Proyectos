@@ -25,6 +25,7 @@
 
               <label class="label"> Foto</label>
               <ng-container *ngTemplateOutlet="foto_error; context: {error: form.get('urlFoto')?.errors}"></ng-container>
+              
             </div>
           </div>
         </div>
@@ -206,6 +207,7 @@
   <p class="error-input" *ngIf="form.get('urlFoto')?.dirty || form.get('urlFoto')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
     <span class="login_error" *ngIf="error?.pattern">El formato de la imagen no es válido</span>
+    <span class="login_error" *ngIf="error?.sizeError">Solo se admiten imagenes de hasta {{allowedSize}}mb</span>
   </p>
 </ng-template>
 

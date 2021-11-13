@@ -83,11 +83,6 @@ export class RecoveryService {
     return pass;
   }
   
-  
-  
-  
-  
-  
   /* Simula consulta a la API.*/
     simulate(correo: string){
       let status = false;

@@ -1,7 +1,6 @@
 .header {
   width: 100vw;
   color: var(--clr-neutral-200);
-
 }
 
 .header .container {
@@ -34,7 +33,6 @@
 
 .title {
   text-transform: uppercase;
-
   font-size: 1.2em;
   padding: 0.6rem;
   font-weight: bold;
@@ -76,7 +74,6 @@
   height: 40px;
   -webkit-user-drag: none;
 }
-
 
 @media (max-width: 1500px){
 .username{

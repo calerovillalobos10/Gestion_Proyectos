@@ -1,4 +1,65 @@
 <h1 class="crud_title">Solicitudes</h1>
 <div class="mb-5"></div>
 
+<div class="row table_tools">
+  <div></div>
+  <span (click)="addSolicitude()" class="add_crud"><i class="fas fa-plus " ></i> Insertar</span>
+</div>
+
+<table
+  id="table"
+  class="display responsive nowrap"
+  style="width: 100%"
+  datatable
+  [dtOptions]="dtOptions"
+  [dtTrigger]="dtTrigger"
+>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Aplicativo</th>
+      <th>Responsable</th>
+      <th>Final</th>
+      <th>Fecha de solicitud</th>
+      <th>Inicio</th>
+      <th>Fin</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let solicitud of allRows">
+      <td>{{ solicitud.idSolicitud }}</td>
+      <td>{{ solicitud.funcionarioAplicativo }}</td>
+      <td>{{ solicitud.funcionarioResponsable }}</td>
+      <td>{{ solicitud.funcionarioFinal }}</td>
+      <td>{{ solicitud.fechaSolicitud | date: 'dd/MM/yyyy'}}</td>
+      <td>{{ solicitud.fechaInicio | date: 'dd/MM/yyyy'}}</td>
+      <td>{{ solicitud.fechaFin | date: 'dd/MM/yyyy'}}</td>
+      <td>
+        <div class="row action_wrap" id='{{ solicitud.idSolicitud }}'>
+
+          <div class="action_btn adv avances" title="Avances asociados">
+            <i class="fas fa-list-alt"></i>
+          </div>
+
+          <div class="action_btn det detalles" title="Acta constitutiva">
+            <i class="far fa-file"></i>
+          </div>
+
+          <div class="action_btn edi editar" title="Modificar solicitud">
+            <i class="fas fa-edit"></i>
+          </div>
+          <div class="action_btn del eliminar" title="Eliminar solicitud">
+            <i class="fas fa-trash-alt"></i>
+          </div>
+          
+        </div>
+      </td>
+
+    </tr>
+  </tbody>
+</table>
+
 <app-add-modal></app-add-modal>
+<app-det-modal></app-det-modal>
+<app-related-advances></app-related-advances>

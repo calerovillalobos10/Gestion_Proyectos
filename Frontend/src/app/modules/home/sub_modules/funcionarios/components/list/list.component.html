@@ -1,56 +1,58 @@
 <div class="row table_tools">
-  <form [formGroup]="filterForm" (submit)="filter_table()">
-    <div class="input_group">
-      <input
-        type="text"
-        class="filter_text"
-        placeholder="Buscar nombre..."
-        id="filter"
-        name="filter"
-        formControlName="filter"
-      />
-      <button type="submit" class="button_submit">
-        <i class="fas fa-search filter_crud"></i>
-      </button>
-      <i class="fas fa-sync-alt filter_crud" (click)="updateTable()" title="Actualiza el listado"></i>
-    </div>
-  </form>
-  <i class="fas fa-user-plus add_crud" (click)="add_func()"></i>
+  <div></div>
+  <span (click)="add_func()" class="add_crud"><i class="fas fa-plus " ></i> Insertar</span>
 </div>
 
-<ngx-datatable
-  style="min-width: 350px;"
-  class="material"
-  [rows]="filteredRows"
-  [columns]="columns"
-  [columnMode]="ColumnMode.force"
-  [headerHeight]="50"
-  [footerHeight]="50"
-  [limit]="8"
-  [scrollbarH]="false"
-  [rowHeight]="55"
-  [messages]="{emptyMessage: 'No hay registros que mostrar',  totalMessage: 'totales'}"
+<table
+  id="example"
+  class="display responsive nowrap"
+  style="width: 100%"
+  datatable
+  [dtOptions]="dtOptions"
+  [dtTrigger]="dtTrigger"
 >
-</ngx-datatable>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Primer Apellido</th>
+      <th>Segundo Apellido</th>
+      <th>Sexo</th>
+      <th>Departamento</th>
+      <th>Tipo de funcionario</th>
+      <th>Nacimiento</th>
+      <th>Correo</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let person of allRows" >
+      <td>{{ person.nombre }}</td>
+      <td>{{ person.apellido_1 }}</td>
+      <td>{{ person.apellido_2 }}</td>
+    
+      <td *ngIf="person.idSexo == 1"><i class="fas fa-mars mars_ico"></i></td>
+      <td *ngIf="person.idSexo == 2"><i class="fas fa-venus venus_ico"></i></td>
+      <td>{{ person.idDepartamento }}</td>
+      <td>{{ person.idTipoFuncionario | functionary }}</td>
+      <td>{{ person.fechaNacimiento | date: 'dd/MM/yyyy' }}</td>
+      <td>{{ person.correo }}</td>
 
-<ng-template #hdrTpl let-column="column">{{ column.title }} </ng-template>
+      <td>
+        <div class="row action_wrap" id="{{person.idFuncionario}}">
 
-<ng-template #lineTmpl let-row="row" let-value="value">
-  <p class="limited_colum">
-    {{ value }}
-  </p>
-</ng-template>
+          <div class="action_btn det detalles">
+            <i class="far fa-id-card"></i>
+          </div>
 
-<ng-template #actionTmpl let-row="row" let-value="value">
-  <div class="row wrap actions">
-    <div class="action_btn det" (click)="detailsFunc(row.id)">
-      <i class="fas fa-eye"></i>
-    </div>
-    <div class="action_btn edi" (click)="editFunc(row.id)">
-      <i class="fas fa-user-edit"></i>
-    </div>
-    <div class="action_btn del" (click)="deleteFunc(row.id)">
-      <i class="fas fa-trash-alt"></i>
-    </div>
-  </div>
-</ng-template>
+          <div class="action_btn edi editar">
+            <i class="fas fa-user-edit"></i>
+          </div>
+          <div class="action_btn del eliminar">
+            <i class="fas fa-trash-alt"></i>
+          </div>
+          
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

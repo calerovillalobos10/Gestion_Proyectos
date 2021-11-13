@@ -267,3 +267,44 @@ input[type="date"] {
   font-size: .8em;
   user-select: none;
 }
+
+.action_wrap{
+  width: 100%;
+  justify-content: center;
+}
+
+.action_wrap .edi{
+  margin-right: .5em;
+  margin-left: .5em;
+}
+
+
+
+.action_wrap .del{
+  margin-left: .5em;
+}
+
+
+.action_wrap .adv{
+  margin-right: .5em;
+}
+
+.action_wrap .det{
+  margin-right: .5em;
+  margin-left: .5em;
+}
+
+.undo_button{
+  display: inline-block;
+  border-radius: .2em;
+  box-shadow: 0 0 4px -2px;
+  cursor: pointer;
+  position: absolute;
+  transform: translate(-2em, .5em);
+  padding: .3em;
+  transition: transform 250ms;
+}
+
+.undo_button:hover{
+  transform: translate(-2em, .5em) scale(1.075);
+}

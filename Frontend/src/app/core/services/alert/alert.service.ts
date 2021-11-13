@@ -7,7 +7,7 @@ import  Swal from 'sweetalert2';
   providedIn: 'root'
 })
 export class AlertService {
-
+ 
   constructor( private authService: AuthService){}
 
   /*
@@ -72,4 +72,15 @@ export class AlertService {
       allowOutsideClick: false
     })
   }
+
+  promiseAlertError(message: string) {
+    return  Swal.fire({
+      toast:true,
+      title: message,
+      icon: 'warning',
+      timer: 1500,
+      showConfirmButton: false
+    })
+  }
+
 }

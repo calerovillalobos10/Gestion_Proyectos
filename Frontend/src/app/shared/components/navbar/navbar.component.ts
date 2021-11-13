@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -9,6 +10,10 @@ export class NavbarComponent implements OnInit {
 
   // Permite colorear la pestaña seleccionada.
   public selected_tab!:string;
+
+  constructor(
+    
+  ){}
 
   ngOnInit(): void {
     // Colorea en un primer uso la pestaña.

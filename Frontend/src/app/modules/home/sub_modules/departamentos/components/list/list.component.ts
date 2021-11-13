@@ -1,9 +1,9 @@
-import { Departamento } from '@core/models/Departamento';
+import { DT_OPTIONS } from '@core/others/DatatableOptions';
+import { Subject } from 'rxjs';
 import { DepartamentosService } from '@core/services/departamentos/departamentos.service';
 import { AlertService } from '@core/services/alert/alert.service';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { ColumnMode } from '@swimlane/ngx-datatable';
-import { Component, OnInit, HostListener, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-list',
@@ -11,94 +11,44 @@ import { Component, OnInit, HostListener, ViewChild, TemplateRef } from '@angula
   styleUrls: ['./list.component.scss']
 })
 
-export class ListComponent implements OnInit {
-  @ViewChild('lineTmpl', { static: true }) lineTmpl: TemplateRef<any> | undefined;
-  @ViewChild('actionTmpl', { static: true }) actionTmpl: TemplateRef<any> | undefined;
-  @ViewChild('hdrTpl', { static: true }) hdrTpl: TemplateRef<any> | undefined;
+export class ListComponent implements OnInit, OnDestroy {
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement!: DataTableDirective;
 
-  public filterForm!: FormGroup;
-  private lastFilter: string;
+  public dtTrigger: Subject<any> = new Subject<any>();
+  public dtOptions: any = {};
 
-  public columns: any = [];
-  private allRows: any = [];
-  public filteredRows: any = [];
-
-  ColumnMode = ColumnMode;
-
-  ngOnInit(): void {
-
-    this.loadTable();
-    this.filteredRows = this.allRows;
-
-    this.service.updateNeeded.subscribe((data) => {
-      if (data) {
-        this.loadTable();
-      }
-    })
-
-    this.columns = [
-     
-      { name: 'descripcion', title: 'Nombre', headerTemplate: this.hdrTpl, cellTemplate: this.lineTmpl, width: 250 },
-      { name: 'acciones', title: 'Acciones', headerTemplate: this.hdrTpl, cellTemplate: this.actionTmpl, width: 10 }];
-  }
+  public allRows: any = [];
 
   constructor(
-    private formBuilder: FormBuilder,
     private alertService: AlertService,
-    private service: DepartamentosService
-  ) {
-    this.lastFilter = '';
-    this.filterForm = this.formBuilder.group({
-      filter: ["", [Validators.required]]
-    })
-  }
+    private service: DepartamentosService,
+  ) { }
 
-  loadTable() {
-    this.service.getAll().subscribe(
-      (res) => {
-        this.allRows = !res['estado'] ? [] : res['list'];
-        this.applyFilter();
-      },
-      (err) => {
-        this.allRows = [];
-        this.applyFilter();
+  ngOnInit(): void {
+    this.service.updateNeeded.subscribe((data) => {
+      if (data) {
+        this.updateTable();
       }
-    )
-    
+    })
+
+    this.setTableOptions();
+    this.updateTable();
   }
 
-  // Actualiza el ultimo filtro utilizado
-  filterTable() {
-    this.lastFilter = this.filterForm.value.filter;
-    this.applyFilter();
-  }
-
-  // Aplica el filtro
-  applyFilter() {
-    if (this.lastFilter !== '') {
-      this.filteredRows = [];
-      this.allRows.forEach((element: { descripcion: string; }) => {
-        if (element.descripcion.toLocaleLowerCase().startsWith(this.filterForm.value.filter.toLocaleLowerCase())) {
-          this.filteredRows.push(element)
-        }
-      });
-    } else {
-      this.filteredRows = this.allRows;
-    }
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
   }
 
   // Actualiza la tabla
   updateTable() {
-    this.lastFilter = '';
-    this.filterForm.patchValue({ 'filter': '' })
+
     this.service.getAll().subscribe(
       (res) => {
-        this.allRows = !res['estado'] ? [] : res['list'];
-        this.applyFilter();
-      },
-      (err) => {
-        this.allRows = [];
-        this.applyFilter();
+        if (res['estado']) {
+          this.allRows = res['list'];
+          this.rerender();
+        }
       }
     )
   }
@@ -121,19 +71,16 @@ export class ListComponent implements OnInit {
 
           // Confirmacion del servidor.
           this.service.deleteById(id).subscribe(
-            (res)=>{
-              
-             
-
-              if(res['estado']){
+            (res) => {
+              if (res['estado']) {
                 this.alertService.simpleAlert('Se eliminó el registro');
-                this.loadTable();
-              }else{
+                this.updateTable();
+              } else {
                 this.alertService.simpleAlert('Surgió un error al eliminar');
               }
             },
-            (err)=>{
-              this.alertService.simpleAlert('Surgió un error al eliminar'); 
+            (err) => {
+              this.alertService.simpleAlert('Surgió un error al eliminar');
             })
         }
       })
@@ -148,4 +95,24 @@ export class ListComponent implements OnInit {
     });
     return dept;
   }
+
+  setTableOptions() {
+    this.dtOptions = DT_OPTIONS
+    this.dtOptions.columns = [
+      { title: 'Departamento', data: 'descripcion', orderable: true },
+      { title: 'Acciones', orderable: false, searchable: false },
+    ]
+  }
+
+  rerender(): void {
+    /*
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.destroy();
+        this.dtTrigger.next();
+    });
+    */
+    $('#data').DataTable().destroy();  
+    this.dtTrigger.next();
+  }
+
 }

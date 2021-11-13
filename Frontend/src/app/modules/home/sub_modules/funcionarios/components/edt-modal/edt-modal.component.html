@@ -19,17 +19,12 @@
             <div class="input_group">
               <input class="input" type="file" placeholder=" " id="urlFoto"  (change)="onFileChange($event)" 
               accept="image/png,image/jpeg" enctype="multipart/form-data"/>
-              <label class="custom-file-upload" for="urlFoto" >
+              <label class="custom-file-upload" for="urlFoto">
                 <i class="fas fa-upload"></i> Seleccionar
               </label>
-
-              <ng-container *ngIf=" form.get('urlFoto')?.errors">
-                <p class="error-input">
-                  <span class="login_error">El formato de la imagen no es válido</span>
-                </p>
-              </ng-container>
               <label class="label"> Foto</label>
-              
+              <i class="fas fa-undo undo_button" (click)='resetPicture()'></i>
+              <ng-container *ngTemplateOutlet="foto_error; context: {error: form.get('urlFoto')?.errors}"></ng-container>
             </div>
           </div>
         </div>
@@ -96,8 +91,6 @@
               <ng-container *ngTemplateOutlet="apellido2_error; context: {error: form.get('apellido2')?.errors}"></ng-container>
             </div>
 
-
-
             <div class="input_group">
               <input class="input" type="date" id="nacimiento" formControlName="nacimiento"/>
               <label class="label" for="nacimiento"> Fecha de nacimiento</label>
@@ -125,23 +118,6 @@
     <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
     <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
     <span class="login_error" *ngIf="error?.pattern && !error?.minlength">El formato del correo no es válido </span>
-  </p>
-</ng-template>
-
-<ng-template #pass_error let-error="error">
-  <p class="error-input" *ngIf="form.get('password')?.dirty || form.get('password')?.touched">
-    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
-    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
-    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
-  </p>
-</ng-template>
-
-<ng-template #repass_error let-error="error">
-  <p class="error-input" *ngIf="form.get('rePassword')?.dirty || form.get('rePassword')?.touched">
-    <span class="login_error" *ngIf="error?.minlength ">Se requiere un minimo de {{error.minlength.requiredLength}} caracteres.</span>
-    <span class="login_error" *ngIf="error?.maxlength && !error?.pattern">Solo se permiten {{error.maxlength.requiredLength}} caracteres.</span>
-    <span class="login_error" *ngIf="!error?.required && !error?.minlength && !error?.maxlength && form.value.password !== form.value.rePassword">Las constraseñas no coinciden</span>
-    <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
   </p>
 </ng-template>
 
@@ -196,9 +172,10 @@
 </ng-template>
 
 <ng-template #foto_error let-error="error">
-  
-  <p class="error-input" *ngIf="form.get('urlFoto')?.dirty || form.get('urlFoto')?.touched">
+ 
+  <p class="error-input">
     <span class="login_error" *ngIf="error?.pattern">El formato de la imagen no es válido</span>
+    <span class="login_error" *ngIf="error?.sizeError">Solo se admiten imagenes de hasta {{allowedSize}}mb</span>
   </p>
 </ng-template>
 

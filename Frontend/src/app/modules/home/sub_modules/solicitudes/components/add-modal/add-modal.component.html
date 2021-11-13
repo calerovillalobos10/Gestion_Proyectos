@@ -2,9 +2,9 @@
 <div class="primary_box" *ngIf="openedModal" >
  
   <div class="primary_box_container" [ngClass]="{ desaparecer: formToggle }">
-    <button class="btn_close" (click)='closeModal()'><i class="fas fa-window-close"></i></button>
+    <button class="btn_close" (click)='closeAndEraseModal()'><i class="fas fa-window-close"></i></button>
     <div>
-      <h1 class="title">Registro de solicitud</h1>
+      <h1 class="title"> {{modalType == 'registro' ? 'Registro' : 'Edición'}}  de solicitud</h1>
 
       <form [formGroup]="form" (submit)="add_solicitude()" >
   
@@ -33,13 +33,14 @@
                 </div>
 
                 <div class="input_group">
-                  <input class="input" type="file" placeholder=" " id="acta" name="acta" (change)="onFileChange($event)" 
-                  accept="application/pdf" enctype="multipart/form-data" formControlName="acta"/>
-                  <label class="custom-file-upload" for="acta" >
+                  <input class="input" type="file" placeholder=" " id="urlActa" name="urlActa" (change)="onFileChange($event)" 
+                  accept="application/pdf" enctype="multipart/form-data" />
+                  <label class="custom-file-upload" for="urlActa" >
                     <i class="fas fa-upload"></i> Seleccionar
                   </label>
 
                   <label class="label"> Acta constitutiva</label>
+                  <i class="fas fa-undo undo_button" (click)='resetDocument()'></i>
                   <ng-container *ngTemplateOutlet="urlActa_error; context: {error: form.get('urlActa')?.errors}"></ng-container>
                 </div>
                 
@@ -49,11 +50,12 @@
           </div>
 
           <!---------Columna 1 ---------->
-          <div class="col mr-1">
+          <div class="col mr-1 mt-1">
          
             <div class="input_group">
               <select class="select" name="aplicativo" id="aplicativo" formControlName="aplicativo"> 
                 <option selected disabled hidden>Seleccione</option>
+                <option *ngFor="let func of aplicativo" value="{{func.idFuncionario}}">{{func.nombre}}</option>
               </select>
 
               <label class="label" for="aplicativo"> Funcionario Aplicativo</label>
@@ -63,6 +65,7 @@
             <div class="input_group">
               <select class="select" name="responsable" id="responsable" formControlName="responsable"> 
                 <option selected disabled hidden>Seleccione</option>
+                <option *ngFor="let func of responsable" value="{{func.idFuncionario}}">{{func.nombre}}</option>
               </select>
 
               <label class="label" for="responsable"> Funcionario Responsable</label>
@@ -73,6 +76,7 @@
             <div class="input_group">
               <select class="select" name="final" id="final"  formControlName="final">
                 <option selected disabled hidden>Seleccione</option>
+                <option *ngFor="let func of final" value="{{func.idFuncionario}}">{{func.nombre}}</option>
               </select>
          
               <label class="label" for="final"> Funcionario Final</label>
@@ -81,19 +85,19 @@
 
            
             <div class="input_group">
-              <input class="input" type="date" id="fechaSolicitud" formControlName="fechaSolicitud"/>
+              <input class="input" type="date" id="fechaSolicitud" formControlName="fechaSolicitud" (change)='validateSolcitudeDate()' />
               <label class="label" for="fechaSolicitud"> Fecha de solicitud</label>
               <ng-container *ngTemplateOutlet="fechaSolicitud_error; context: {error: form.get('fechaSolicitud')?.errors}"></ng-container>
             </div>
 
             <div class="input_group">
-              <input class="input" type="date" id="fechaInicio" formControlName="fechaInicio"/>
+              <input class="input" type="date" id="fechaInicio" formControlName="fechaInicio" (change)='validateInitDate()'  title="{{form.get('fechaSolicitud')?.valid ? '' : 'Se habilita al ingresar una fecha de solicitud válida'}}"/>
               <label class="label" for="fechaInicio"> Fecha de inicio</label>
               <ng-container *ngTemplateOutlet="fechaInicio_error; context: {error: form.get('fechaInicio')?.errors}"></ng-container>
             </div>
 
             <div class="input_group">
-              <input class="input" type="date" id="fechaFin" formControlName="fechaFin"/>
+              <input class="input" type="date" id="fechaFin" formControlName="fechaFin"  (change)='validateEndDate()' title="{{form.get('fechaInicio')?.valid ? '' : 'Se habilita al ingresar una fecha de inicio válida'}}"/>
               <label class="label" for="fechaFin"> Fecha de fin</label>
               <ng-container *ngTemplateOutlet="fechaFin_error; context: {error: form.get('fechaFin')?.errors}"></ng-container>
             </div>
@@ -101,7 +105,7 @@
         </div>
 
         <div class="row">
-          <button class="btn">Registrar</button>
+          <button class="btn">{{modalType == 'registro' ? 'Registrar' : 'Editar'}}</button>
         </div>
       </form>
     </div>
@@ -133,32 +137,37 @@
 <ng-template #fechaInicio_error let-error="error">
   <p class="error-input" *ngIf="form.get('fechaInicio')?.dirty || form.get('fechaInicio')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.incorrectDate">La fecha de inicio tiene que ser superior a la de solicitud </span>
   </p>
 </ng-template>
 
 <ng-template #fechaFin_error let-error="error">
   <p class="error-input" *ngIf="form.get('fechaFin')?.dirty || form.get('fechaFin')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.incorrectDate">La fecha de fin tiene que ser superior a la de inicio </span>
   </p>
+
 </ng-template>
 
 <ng-template #fechaSolicitud_error let-error="error">
   <p class="error-input" *ngIf="form.get('fechaSolicitud')?.dirty || form.get('fechaSolicitud')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+    <span class="login_error" *ngIf="error?.incorrectDate">La fecha mínima aceptada es 01/01/2021 </span>
   </p>
 </ng-template>
 
 <ng-template #urlActa_error let-error="error">
 
   <p class="error-input" *ngIf="form.get('urlActa')?.dirty || form.get('urlActa')?.touched">
-    
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
   </p>
+
   <p class="error-input">
     <span class="login_error" *ngIf="error?.pattern">El formato debe ser PDF </span>
+    <span class="login_error" *ngIf="error?.sizeError">Solo se permiten archivos con un tamaño maximo de {{allowedSize}}mb </span>
   </p>
-  
 
+  
 </ng-template>
 
 </ng-container>

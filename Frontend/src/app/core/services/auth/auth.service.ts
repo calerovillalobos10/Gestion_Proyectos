@@ -1,3 +1,4 @@
+import { API_URL } from '@core/others/Enviroment';
 import { Router } from '@angular/router';
 import { Usuario } from './../../models/Usuario';
 import { EventEmitter, Injectable, Output } from '@angular/core';
@@ -9,8 +10,6 @@ import jwt_decode from 'jwt-decode';
   providedIn: 'root'
 })
 export class AuthService {
-
-  private _loginURL = "http://localhost:4000";
 
   @Output() userData:Usuario | undefined;
   @Output() logining: EventEmitter<boolean> = new EventEmitter();
@@ -29,12 +28,22 @@ export class AuthService {
     if(stored){
 
       if(await this.validateToken()){
+
+        
         const tokenPayload = this.openToken(stored)['dataBD'];
         this.loadDataToken(tokenPayload);
       
       // Si es valido me permite acceder.
-          this.router.navigate(['/departamentos'])
-          //this.router.navigate(['/inicio'])
+        const route = (document.referrer).split('/');
+        let destination = route[route.length-1];
+             
+    
+        if(destination.toLowerCase() == 'login' || destination == ''){
+          destination = 'inicio';
+        }
+   
+
+          this.router.navigate([`/${destination}`])
      
       }else{
         // Si es invalido se elimina.
@@ -49,7 +58,7 @@ export class AuthService {
   async validateToken(){
     let status = false;
     try {
-      const res = await this.http.post<any>(`${this._loginURL}/autenticar`, {correo: 1, pin:1})
+      const res = await this.http.post<any>(`${API_URL}/autenticar`, {correo: 1, pin:1})
       .pipe(timeout(5000)).toPromise();
       status = true;
     } catch (e) {
@@ -72,7 +81,7 @@ export class AuthService {
       this.logoutUser();
     }
     try {
-      const res = await this.http.post<any>(`${this._loginURL}/login`, user)
+      const res = await this.http.post<any>(`${API_URL}/login`, user)
       .pipe(timeout(5000)).toPromise();
 
       if(res['mensaje']){
@@ -90,7 +99,12 @@ export class AuthService {
 
   // Carga los datos en memoria apartir del token seleccionado
   loadDataToken(tokenPayload:any){
-    this.userData = {correo: tokenPayload['correo'], nombre: tokenPayload['nombre'], dobleAuth: tokenPayload['dobleAuth'], urlFoto: tokenPayload['urlFoto'] }
+    this.userData = {
+      correo: tokenPayload['correo'], 
+      nombre: tokenPayload['nombre'], 
+      dobleAuth: tokenPayload['dobleAuth'], 
+      urlFoto: tokenPayload['urlFoto'] 
+    }
   }
 
   logoutUser(){
@@ -108,7 +122,7 @@ export class AuthService {
     let status = false;
 
     try {
-      const res = await this.http.post<any>(`${this._loginURL}/autenticar`, {correo: this.userData?.correo, pin:pin})
+      const res = await this.http.post<any>(`${API_URL}/autenticar`, {correo: this.userData?.correo, pin:pin})
       .pipe(timeout(5000)).toPromise();
       status = res['estado'];
 
@@ -126,5 +140,4 @@ export class AuthService {
         return null;
     }
   }
- 
 }
