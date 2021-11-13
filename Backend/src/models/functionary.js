@@ -2,7 +2,7 @@
 export default class Functionary {
 
     // Constructor que revise los parámetros de los objetos
-    constructor( idFuncionario, sexo, department, tipoFuncionario, nombre, apellido_1, apellido_2, fechaNacimiento, correo, contrasenia, urlFoto, estado, dobleAuth, secretUrl ) {
+    constructor( idFuncionario=null, sexo, department, tipoFuncionario, nombre, apellido_1, apellido_2, fechaNacimiento, correo, contrasenia, urlFoto, estado=null, dobleAuth=null, secretUrl=null ) {
         this.idFuncionario = idFuncionario;
         this.sexo = sexo;
         this.department = department;

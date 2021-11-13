@@ -352,7 +352,8 @@ BEGIN
 	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
-	SELECT F.idFuncionario, S.descripcion, D.descripcion, TF.descripcion, F.nombre, F.apellido_1, F.apellido_2, F.fechaNacimiento, F.correo, F.urlFoto
+	SELECT F.idFuncionario, S.descripcion AS idSexo, D.descripcion AS idDepartamento, TF.descripcion AS idTipoFuncionario, F.nombre, F.apellido_1, 
+	F.apellido_2, format(F.fechaNacimiento, 'yyyy-MM-dd') AS fechaNacimiento, F.correo, F.urlFoto
 	FROM tb_Funcionarios AS F inner join tb_Sexos AS S ON F.idSexo = S.idSexo 
 	inner join tb_Departamentos AS D ON F.iddepartamento = D.idDepartamento
 	inner join tb_TipoFuncionarios AS TF ON F.idTipoFuncionario = TF.idTipoFuncionario
@@ -371,7 +372,7 @@ BEGIN
 	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
-	SELECT idFuncionario, idSexo, iddepartamento, idTipoFuncionario, nombre, apellido_1, apellido_2, fechaNacimiento, correo, urlFoto
+	SELECT idFuncionario, idSexo, iddepartamento, idTipoFuncionario, nombre, apellido_1, apellido_2, format(fechaNacimiento, 'yyyy-MM-dd') AS fechaNacimiento, correo, urlFoto
 	FROM tb_Funcionarios
 	WHERE idFuncionario = @idFuncionarioBE
 END
@@ -400,7 +401,6 @@ CREATE PROCEDURE sp_modifyFunctionary
 @apellido_1BE varchar(15),
 @apellido_2BE varchar(15),
 @fechaNacimientoBE date,
-@contraseniaBE VarChar(16),
 @urlFotoBE varchar(180)
 )
 AS
@@ -408,25 +408,8 @@ BEGIN
     -- Insert statements for procedure here
 	UPDATE tb_Funcionarios SET idSexo = @idSexoBE, iddepartamento = @idDepartamentoBE, idTipoFuncionario = @idTipoFuncionarioBE,
 	nombre = @nombreBE, apellido_1 = @apellido_1BE, apellido_2 = @apellido_2BE, fechaNacimiento = @fechaNacimientoBE,
-	contrasenia = PWDENCRYPT(@contraseniaBE), urlFoto = @urlFotoBE
-	WHERE idFuncionario = @idFuncionarioBE
-END
-
-
-CREATE PROCEDURE sp_recoverUrlFunctionaryById
-(
-@idFuncionarioBE smallInt
-)
-AS
-BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
-
-    -- Insert statements for procedure here
-	SELECT urlFoto
-	FROM tb_Funcionarios
-	WHERE idFuncionario = @idFuncionarioBE
+	urlFoto = @urlFotoBE
 END
 GO
+
 

@@ -182,7 +182,7 @@ export default class FunctionaryController{
                     .input("correoBE", sql.VarChar(50), correo)
                     .execute('sp_verifyEmailFunctionary')
                 // validación sobre la inserción del objeto
-                return ( result.recordset > 0 ) ? false : true
+                return ( result.recordset.length > 0 ) ? false : true
             } catch (err) {
 
                 console.log(err);
@@ -263,7 +263,9 @@ export default class FunctionaryController{
                     .input("idFuncionarioBE", sql.SmallInt, id)
                     .execute('sp_recoverFunctionaryById')
                 // Creación del objeto funcionario
-                const funcionario = new Functionary(result.recordset[0].idFuncionario, result.recordset[0].idSexo, result.recordset[0].idTipoFuncionario, result.recordset[0].nombre, result.recordset[0].apellido_1, result.recordset[0].apellido_2, result.recordset[0].fechaNacimiento, result.recordset[0].correo, 1, result.recordset[0].urlFoto, 1, 1, 1)
+                const funcionario = new Functionary(result.recordset[0].idFuncionario, result.recordset[0].idSexo, result.recordset[0].idDepartamento,result.recordset[0].idTipoFuncionario, 
+                    result.recordset[0].nombre, result.recordset[0].apellido_1, result.recordset[0].apellido_2, result.recordset[0].fechaNacimiento, 
+                    result.recordset[0].correo, 1, result.recordset[0].urlFoto)
                 // validación sobre la inserción del objeto
                 return ( result.recordset.length > 0) ? funcionario : false
             } catch (err) {
@@ -319,7 +321,7 @@ export default class FunctionaryController{
         let pool = null
         // Se llama al método que se encarga de verificar los atributos del objeto functionary
         const verifyAtributes = this.verifyAttributesFunctionary(dataLogin)
-
+        
         if ( verifyAtributes ) {
 
             try {
@@ -335,7 +337,6 @@ export default class FunctionaryController{
                     .input("apellido_1BE", sql.VarChar(15), dataLogin.getApellido_1)
                     .input("apellido_2BE", sql.VarChar(15), dataLogin.getApellido_2)
                     .input("fechaNacimientoBE", sql.Date, dataLogin.getFechaNacimiento)
-                    .input("contraseniaBE", sql.VarChar(16), dataLogin.getContrasenia)
                     .input("urlFotoBE", sql.VarChar(180), dataLogin.getUrlFoto)
                     .execute('sp_modifyFunctionary')
                 // validación sobre la inserción del objeto
@@ -352,30 +353,6 @@ export default class FunctionaryController{
 
             console.log('Falló el proceso de validación de datos');
             return false
-        }
-    }
-
-    // Esta función se encarga de recuperar el nombre de la foto que se encuentra dentro del funcionario, para enviarla al FE y mostrarla
-    recoverUrlFunctionaryById = async () =>{
-
-        let pool = null
-
-        try {
-            // Conección a la base
-            pool = await getConnection()
-            // Parámetros de entrada y ejecución del sp
-            const result = await pool.request()
-                .input("idFuncionarioBE", sql.SmallInt, id)
-                .execute('sp_recoverUrlFunctionaryById')
-             // validación sobre la inserción del objeto
-            return ( result.recordset.length > 0) ? result.recordset[0].urlFoto : false
-        } catch (err) {
-
-            console.log(err);
-            return false
-        } finally {
-            // Cerrar la conexión
-            pool.close()
         }
     }
 

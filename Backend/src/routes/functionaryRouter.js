@@ -15,8 +15,6 @@ const functionaryController = new FunctionaryController()
 
 // validaciones del fileUpload 
 router.use(fileUpload({
-    useTempFiles: true,
-    tempFileDir: path.join(__dirname, '../../', 'temp',),
     createParentPath: true,
     limits: {
         filesize: 1024
@@ -33,12 +31,12 @@ router.post('/functionary', loginController.recuperarToken, loginController.veri
     const verifyFunctionary = functionaryController.verifyFunctionary(functionary)
     const verifyEmailFunctionary = functionaryController.verifyEmailFunctionary(req.body.correo)
 
-    if ( (await verifyFunctionary) && (await verifyEmailFunctionary) ) {
+    if ( (await verifyFunctionary) && (await !verifyEmailFunctionary) ) {
 
         res.json({
             "estado": true
         })
-    } else if ( await verifyEmailFunctionary ) {
+    } else if ( await !verifyEmailFunctionary ) {
 
         res.json({
             "mensaje": "No se pudo insertar el funcionario",
@@ -66,10 +64,10 @@ router.post('/functionary', loginController.recuperarToken, loginController.veri
 // Se encarga de comunicarse con el controller para modificar un funcionario
 router.put('/functionary', loginController.recuperarToken, loginController.verifyToken, fileController.upload, async (req, res) => {
 
-    const functionary = null
+    let functionary = null
 
     if( req.body.urlFoto != undefined ){
-
+        
         functionary = new Functionary(req.body.idFuncionario, req.body.idSexo, req.body.idDepartamento, req.body.idTipoFuncionario, req.body.nombre, req.body.apellido_1, req.body.apellido_2, req.body.fechaNacimiento, req.body.correo, req.body.contrasenia, req.body.urlFoto, 1, 1, '')
     } else {
 
@@ -138,7 +136,7 @@ router.get('/functionary', loginController.recuperarToken, loginController.verif
 router.post('/functionaryById', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     // Se llama a la función recupera el funcionario por el id
-    const functionary = await functionaryController.recoverFunctionaryId(req.body.idFuncionario)
+    const functionary = await functionaryController.recoverFunctionaryById(req.body.idFuncionario)
 
     if (functionary) {
 
