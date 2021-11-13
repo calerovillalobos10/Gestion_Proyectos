@@ -263,10 +263,19 @@ export default class FunctionaryController{
                     .input("idFuncionarioBE", sql.SmallInt, id)
                     .execute('sp_recoverFunctionaryById')
                 // Creación del objeto funcionario
-                const funcionario = new Functionary(result.recordset[0].idFuncionario, result.recordset[0].idSexo, result.recordset[0].idDepartamento,result.recordset[0].idTipoFuncionario, 
-                    result.recordset[0].nombre, result.recordset[0].apellido_1, result.recordset[0].apellido_2, result.recordset[0].fechaNacimiento, 
-                    result.recordset[0].correo, 1, result.recordset[0].urlFoto)
+                const funcionario = new Functionary(
+                    result.recordset[0].idFuncionario, 
+                    result.recordset[0].idSexo, 
+                    result.recordset[0].iddepartamento,
+                    result.recordset[0].idTipoFuncionario, 
+                    result.recordset[0].nombre, 
+                    result.recordset[0].apellido_1, 
+                    result.recordset[0].apellido_2, 
+                    result.recordset[0].fechaNacimiento, 
+                    result.recordset[0].correo, 1, 
+                    result.recordset[0].urlFoto,1,1,1)
                 // validación sobre la inserción del objeto
+               
                 return ( result.recordset.length > 0) ? funcionario : false
             } catch (err) {
 
@@ -287,7 +296,7 @@ export default class FunctionaryController{
     deleteFunctionary = async (id) => {
         
         let pool = null
-
+        console.log(id);
         // Este if se encarga de llamar a las validaciones
         if ( id != null && this.validacionController.verifyNumber(id) && this.validacionController.verifySpecialCharacters(id) && this.validacionController.verifyMinSize(id) ) {
 
@@ -317,7 +326,7 @@ export default class FunctionaryController{
 
     // Esta función se encarga de modificar el funcionario en la base de datos
     modifyFunctionary = async (dataLogin) => {
-        
+        console.log(dataLogin);
         let pool = null
         // Se llama al método que se encarga de verificar los atributos del objeto functionary
         const verifyAtributes = this.verifyAttributesFunctionary(dataLogin)

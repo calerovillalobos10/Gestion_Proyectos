@@ -4,7 +4,7 @@
 </div>
 
 <table
-  id="example"
+  id="data"
   class="display responsive nowrap"
   style="width: 100%"
   datatable
@@ -30,10 +30,10 @@
       <td>{{ person.apellido_1 }}</td>
       <td>{{ person.apellido_2 }}</td>
     
-      <td *ngIf="person.idSexo == 1"><i class="fas fa-mars mars_ico"></i></td>
-      <td *ngIf="person.idSexo == 2"><i class="fas fa-venus venus_ico"></i></td>
+      <td *ngIf="person.idSexo == 'Hombre'"><i class="fas fa-mars mars_ico"></i></td>
+      <td *ngIf="person.idSexo == 'Mujer'"><i class="fas fa-venus venus_ico"></i></td>
       <td>{{ person.idDepartamento }}</td>
-      <td>{{ person.idTipoFuncionario | functionary }}</td>
+      <td>{{ person.idTipoFuncionario}}</td>
       <td>{{ person.fechaNacimiento | date: 'dd/MM/yyyy' }}</td>
       <td>{{ person.correo }}</td>
 

@@ -40,10 +40,10 @@ export class ListComponent implements OnInit {
     this.service.getAll().subscribe(
       res => {
         this.allRows = res['estado'] ? res['list'] : [];
+        this.rerender();
       },
       err => {
-        this.allRows = fixedRows;
-
+      
         this.rerender();
       })
   }

@@ -134,10 +134,10 @@ router.get('/functionary', loginController.recuperarToken, loginController.verif
 
 // Se encarga de comunicarse con el controller para recuperar un objeto funcionario
 router.post('/functionaryById', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
-
+   
     // Se llama a la función recupera el funcionario por el id
     const functionary = await functionaryController.recoverFunctionaryById(req.body.idFuncionario)
-
+    console.log(functionary);
     if (functionary) {
 
         // Se envía el secret al frontend

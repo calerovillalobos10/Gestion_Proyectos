@@ -69,7 +69,9 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
       res => {
 
         if (res['estado']) {
-          const userData: Funcionario = res['funcionario']
+          console.log(res);
+          
+          const userData: Funcionario = res['functionary']
           this.loadUserData(userData);
         } else {
           this.closeOnError();
@@ -77,19 +79,16 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
       },
       err => {
 
-        //this.closeOnError();/////////////////////////////////////////////////////////////////////////////////////
-        
-        let funct:Funcionario | undefined = fixedRows.find(element => element.idFuncionario == this.userId)
-        if(funct) this.loadUserData(funct);
+        this.closeOnError();
       }
     );
   }
 
   // Carga los datos del usuario al form
   loadUserData(userData: Funcionario) {
-    // Guardamos la foto anterior por si no se modifica.
+    // Guardamos el nombre de la foto anterior por si no se modifica.
     this.oldPicture = userData.urlFoto;
-
+    
     // Guardamos el correo anterior para detectar si se modifica.
     this.oldMail = userData.correo;
 
@@ -106,9 +105,20 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
     })
 
     setTimeout(() => {
-      this.preview = this.oldPicture;
+      this.loadUrlFoto(this.oldPicture);
     })
   }
+
+  loadUrlFoto(urlFoto:string){
+    this.service.obtainUrlImage(urlFoto).subscribe(res => {
+    
+     let reader = new FileReader();
+
+     reader.readAsDataURL(res); 
+     reader.onloadend = () => { this.preview = reader.result }
+    })
+  }
+
 
   // Esta funcion perpara la edicion del funcionario
   edt_func() {
@@ -202,14 +212,15 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
     const postData = new FormData();
 
     postData.append('idFuncionario', this.userId.toString());
-    postData.append('correo', this.form.value.correo);
+    postData.append('correo',this.oldMail);
     postData.append('idSexo', this.form.value.sexo);
     postData.append('idDepartamento', this.form.value.departamento);
     postData.append('idTipoFuncionario', this.form.value.tipo);
     postData.append('fechaNacimiento', this.form.value.nacimiento);
     postData.append('nombre', this.form.value.nombre);
-    postData.append('apellido1', this.form.value.apellido1);
-    postData.append('apellido2', this.form.value.apellido2);
+    postData.append('apellido_1', this.form.value.apellido1);
+    postData.append('apellido_2', this.form.value.apellido2);
+    postData.append('contrasenia', '12345678');
   
     // Validacion, si cambia la foto sube el file, sino solo pasa url viejo.
     if(this.oldPicture == this.form.value.urlFoto){
@@ -250,7 +261,7 @@ export class EdtModalComponent extends ModalSkeleton implements OnInit {
       foto: ["", []],
       urlFoto: ["", [
         Validators.required,
-        Validators.pattern('^(.)*.(jpe?g|png)$')
+        Validators.pattern('^(.)*.(jpe?g|png|PNG|JPE?G)$')
       ]],
       nombre: ["", [
         Validators.required,

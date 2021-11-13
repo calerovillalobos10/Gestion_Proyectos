@@ -1,6 +1,7 @@
 import { API_URL } from '@core/others/Enviroment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, Output, EventEmitter } from '@angular/core';
+
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class FuncionariosService {
 
   // Metodo de obtencion por id. 
   getById(id: any){
-    return this.http.post<any>(`${API_URL}/funcionarioById`, {id: id})
+    return this.http.post<any>(`${API_URL}/functionaryById`, {idFuncionario: parseInt(id,10)})
   }
 
   // Metodo de creacion de funcionario.  
@@ -29,23 +30,39 @@ export class FuncionariosService {
 
   // Metodo de actualizacion de funcionario. 
   update(adv: FormData) {
-    return  this.http.put<any>(`${API_URL}/funcionarios`, adv)
+    return  this.http.put<any>(`${API_URL}/functionary`, adv)
   }
 
   // Elimina un funcionario por id     
-  deleteById(id: number) {
-    return this.http.post<any>(`${API_URL}/deleteFuncionarios`, {id: id})
+  deleteById(id: any) {
+    return this.http.post<any>(`${API_URL}/deleteFunctionary`, {idFuncionario: parseInt(id,10)})
   }
 
   //Obtiene todas los funcionarios     
   getAll(){
-    return this.http.get<any>(`${API_URL}/funcionarios`)
+    return this.http.get<any>(`${API_URL}/functionary`)
   }
 
   // Devuelve si existe un correo o no.
   validateEmail(email:string) {
     return this.http.post<any>(`${API_URL}/email`, {correo: email})
   }
+/*
+  obtainUrlImage(urlFoto:string){
+    return (this.http.post<any>(`${API_URL}/functionaryUrl`, {urlFoto: urlFoto}))
+  }*/
+
+  obtainUrlImage(nombre:any) {
+    return this.http.post<any>(API_URL + '/functionaryUrl', {
+        "urlFoto": nombre
+    }, {
+        responseType: 'blob' as 'json',
+        headers: new HttpHeaders().append('Content-Type','application/json')
+    });
+}
+
+
+
 
   /*
     Filtra segun el tipo

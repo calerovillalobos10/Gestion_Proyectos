@@ -7,9 +7,9 @@ import path from 'path'
 const router = Router()
 const loginController = new LoginController()
 
-router.get('/functionaryUrl/:urlFoto', loginController.recuperarToken, loginController.verifyToken, async (req, res)=> {
+router.post('/functionaryUrl', loginController.recuperarToken, loginController.verifyToken, async (req, res)=> {
 
-    const filepath = path.join(__dirname, '../../', 'images/' + req.params.urlFoto);
+    const filepath = path.join(__dirname, '../../', 'images/' + req.body.urlFoto);
     console.log(filepath);
     res.sendFile(filepath);
 })

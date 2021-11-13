@@ -15,6 +15,7 @@ export class DetModalComponent implements OnInit {
   public openedModal: boolean;
   public userId: number;
   public funcionario: Funcionario | undefined
+  public urlFoto: any;
 
   constructor(
     private service: FuncionariosService,
@@ -39,17 +40,19 @@ export class DetModalComponent implements OnInit {
   async loadUser() {
     this.service.getById(this.userId).subscribe(
       res => {
+       
         if (res['estado']) {
-          this.funcionario = res['funcionario']
+          console.log(res['functionary']);
+
+          this.funcionario = res['functionary']
+          this.loadUrlFoto(res['functionary'].urlFoto);
+
         } else {
           this.closeOnError();
         }
       },
       err => {
-        //this.closeOnError();///////////////////////////////////////////////////////////////////
-
-        this.funcionario = fixedRows.find(element => element.idFuncionario == this.userId)
-
+        this.closeOnError();
       }
     )
   }
@@ -61,6 +64,24 @@ export class DetModalComponent implements OnInit {
       this.funcionario = undefined;
     }, 500)
   }
+
+  loadUrlFoto(urlFoto:string){
+    this.service.obtainUrlImage(urlFoto).subscribe(res => {
+    
+     let reader = new FileReader();
+
+     reader.readAsDataURL(res); 
+     reader.onloadend = () => { this.urlFoto = reader.result }
+    })
+  }
+
+   /*
+   
+   document.querySelector("#image").src = imageUrl;
+
+// MAKE OUTPUT IMG (IN HTML)
+<img id="image"/>*/
+
 
   // Este metodo cierra el modal mostrando una alerta de error.
   closeOnError() {

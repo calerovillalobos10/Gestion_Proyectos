@@ -371,6 +371,14 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     this.idSolicitude = -1;
     this.closeModal();
   }
+/*
+  async closeModal() {
+    this.formToggle = true;
+    setTimeout(() =>  this.openedModal = false , 1500)
+    if(this.form){
+      this.form.reset()
+    }
+  }*/
 
 }
 

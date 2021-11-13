@@ -2,11 +2,11 @@
 export default class Functionary {
 
     // Constructor que revise los parámetros de los objetos
-    constructor( idFuncionario=null, sexo, department, tipoFuncionario, nombre, apellido_1, apellido_2, fechaNacimiento, correo, contrasenia, urlFoto, estado=null, dobleAuth=null, secretUrl=null ) {
+    constructor( idFuncionario=null, idSexo, idDepartamento, idTipoFuncionario, nombre, apellido_1, apellido_2, fechaNacimiento, correo, contrasenia, urlFoto, estado=null, dobleAuth=null, secretUrl=null ) {
         this.idFuncionario = idFuncionario;
-        this.sexo = sexo;
-        this.department = department;
-        this.tipoFuncionario = tipoFuncionario;
+        this.idSexo = idSexo;
+        this.idDepartamento = idDepartamento;
+        this.idTipoFuncionario = idTipoFuncionario;
         this.nombre = nombre;
         this.apellido_1 = apellido_1;
         this.apellido_2 = apellido_2;
@@ -28,27 +28,27 @@ export default class Functionary {
     }
 
     get getSexo() {
-        return this.sexo;
+        return this.idSexo;
     }
 
-    set setSexo(sexo) {
-        this.sexo = sexo;
+    set setSexo(idSexo) {
+        this.idSexo = idSexo;
     }
 
     get getDepartment() {
-        return this.department;
+        return this.idDepartamento;
     }
 
-    set setDepartment(department) {
-        this.department = department;
+    set setDepartment(idDepartamento) {
+        this.idDepartamento = idDepartamento;
     }
 
     get getTipoFuncionario() {
-        return this.tipoFuncionario;
+        return this.idTipoFuncionario;
     }
 
-    set setTipoFuncionario(tipoFuncionario) {
-        this.tipoFuncionario = tipoFuncionario;
+    set setTipoFuncionario(idTipoFuncionario) {
+        this.idTipoFuncionario = idTipoFuncionario;
     }
 
     get getNombre() {

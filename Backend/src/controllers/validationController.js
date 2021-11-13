@@ -50,7 +50,7 @@ export default class validationController {
 
             const array = filename.split('.')
 
-            file.name = array[0]+(Math.random() * (999 - 1) + 1).toFixed()+'.'+array[1]
+            file.name = array[0]+(Math.random() * (999 - 1) + 1).toFixed()+'.'+array[array.length-1]
         }
 
         return true

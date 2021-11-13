@@ -191,7 +191,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_listDepartment
+CREATE OR ALTER PROCEDURE sp_listDepartment
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -205,7 +205,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_insertDepartment
+CREATE OR ALTER PROCEDURE sp_insertDepartment
 	-- Add the parameters for the stored procedure here
 (
 @descripcionBE VARCHAR(30)
@@ -218,7 +218,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_recoverDepartmentId 
+CREATE OR ALTER PROCEDURE sp_recoverDepartmentId 
 	-- Add the parameters for the stored procedure here
 (
 @idDepartamentoBE int
@@ -236,7 +236,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_verifyDepartment
+CREATE OR ALTER PROCEDURE sp_verifyDepartment
 	-- Add the parameters for the stored procedure here
 (
 @descripcionBE VARCHAR(30)
@@ -250,7 +250,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_deleteDepartment
+CREATE OR ALTER PROCEDURE sp_deleteDepartment
 (
 @idDepartmentBE int
 )
@@ -263,7 +263,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_modifyDepartment
+CREATE OR ALTER PROCEDURE sp_modifyDepartment
 (
 @idDepartamentoBE int,
 @descripcionBE varchar(30)
@@ -277,7 +277,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_insertFunctionary
+CREATE OR ALTER PROCEDURE sp_insertFunctionary
 (
 @idSexoBE tinyint,
 @idDepartamentoBE smallint,
@@ -302,7 +302,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_verifyEmailFunctionary
+CREATE OR ALTER PROCEDURE sp_verifyEmailFunctionary
 	-- Add the parameters for the stored procedure here
 (
 @correoBE varchar(50)
@@ -320,7 +320,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_verifyFunctionary
+CREATE OR ALTER PROCEDURE sp_verifyFunctionary
 (
 @idSexoBE tinyint,
 @idDepartamentoBE smallint,
@@ -344,7 +344,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_listFunctionary
+CREATE OR ALTER PROCEDURE sp_listFunctionary
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -361,7 +361,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_recoverFunctionaryById 
+CREATE OR ALTER PROCEDURE sp_recoverFunctionaryById 
 (
 @idFuncionarioBE smallInt
 )
@@ -378,7 +378,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_deleteFunctionary
+CREATE OR ALTER PROCEDURE sp_deleteFunctionary
 (
 @idFuncionarioBE smallint
 )
@@ -391,7 +391,9 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_modifyFunctionary
+
+
+CREATE OR ALTER   PROCEDURE [dbo].[sp_modifyFunctionary]
 (
 @idFuncionarioBE smallint,
 @idSexoBE tinyint,
@@ -409,7 +411,5 @@ BEGIN
 	UPDATE tb_Funcionarios SET idSexo = @idSexoBE, iddepartamento = @idDepartamentoBE, idTipoFuncionario = @idTipoFuncionarioBE,
 	nombre = @nombreBE, apellido_1 = @apellido_1BE, apellido_2 = @apellido_2BE, fechaNacimiento = @fechaNacimientoBE,
 	urlFoto = @urlFotoBE
+	WHERE @idFuncionarioBE = idFuncionario
 END
-GO
-
-
