@@ -54,6 +54,6 @@ export class FuncionariosService {
     3. Final
   */
     filterFunctionary(all:any, type: number){
-      return all.filter((element:any) => element.tipoFuncionario === type)
+      return all.filter((element:any) => element.idTipoFuncionario == type )
     }
 }

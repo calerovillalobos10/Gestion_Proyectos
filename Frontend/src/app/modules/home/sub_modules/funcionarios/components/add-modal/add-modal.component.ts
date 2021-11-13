@@ -156,7 +156,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       correo: ["", [
         Validators.required,
         Validators.pattern("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"),
-        Validators.minLength(8),
+        Validators.minLength(6),
         Validators.maxLength(50)]],
       password: ["", [
         Validators.required,

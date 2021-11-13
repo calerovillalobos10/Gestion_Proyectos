@@ -1,3 +1,4 @@
+import { Funcionario } from '@core/models/Funcionario';
 import { MAX_FILE } from '@core/others/Enviroment';
 import { Solicitud } from '@core/models/Solicitud';
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
@@ -298,9 +299,14 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
         }
       },
       (err) => {
-        this.aplicativo = [{ idFuncionario: '1', nombre: 'Luis' }];// [];
-        this.responsable = [{ idFuncionario: '2', nombre: 'Fernando' }];// [];
-        this.final = [{ idFuncionario: '3', nombre: 'Leiton' }];// [];
+        
+        
+        console.log(this.serviceFunctionary.filterFunctionary(fixedRows, 1));
+        
+
+        this.aplicativo = this.serviceFunctionary.filterFunctionary(fixedRows, 1);// [];
+        this.responsable = this.serviceFunctionary.filterFunctionary(fixedRows, 2);// [];
+        this.final = this.serviceFunctionary.filterFunctionary(fixedRows, 3);;// [];
       }
     )
   }
@@ -367,3 +373,15 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   }
 
 }
+
+
+const fixedRows:Array<Funcionario> = [
+  { nombre: 'Luis', apellido_1: 'Leiton', apellido_2: 'Iglesias', urlFoto: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Terry_Crews_by_Gage_Skidmore_5.jpg/250px-Terry_Crews_by_Gage_Skidmore_5.jpg', correo: 'Luis@gmail', 
+    fechaNacimiento: '1995-09-09', idDepartamento: 4, idSexo: 1, idTipoFuncionario: 1, idFuncionario: 1 },
+  
+  { nombre: 'Fernando', apellido_1: 'Alvarez', apellido_2: 'Salas', urlFoto: 'https://miracomosehace.com/wp-content/uploads/2020/05/hombre-gorra-camara-1.jpg', correo: 'Fernando@gmail.com',
+  fechaNacimiento: '1999-09-09', idDepartamento: 2, idSexo: 1, idTipoFuncionario: 2, idFuncionario: 2 },
+
+  { nombre: 'Ana', apellido_1: 'Soto', apellido_2: 'Salas', urlFoto: 'https://www.dzoom.org.es/wp-content/uploads/2010/09/retrato-fondo-profundidad-campo-734x489.jpg', correo: 'ana@gmail', 
+  fechaNacimiento: '1989-09-09', idDepartamento: 2, idSexo: 2, idTipoFuncionario: 3, idFuncionario: 3 }
+]

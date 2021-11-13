@@ -83,7 +83,7 @@ export class AvancesComponent implements OnInit {
         this.allRows = res['estado'] ? res['list'] : [];
       },
       err => {
-        this.allRows = [{  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis A', trimestre: 1, idAvance: 1, solicitud: 1, documento: '../../../assets/book/book.pdf'}];
+        this.allRows = fixedRows;
 
         this.rerender();
       })
@@ -127,3 +127,9 @@ export class AvancesComponent implements OnInit {
   
 
 }
+
+const fixedRows = [
+  {  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis Leiton Iglesias', trimestre: 1, idAvance: 1, solicitud: 1, documento: '../../../assets/book/book.pdf'},
+  {  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis Leiton Iglesias', trimestre: 2, idAvance: 2, solicitud: 1, documento: '../../../assets/book/book.pdf'},
+  {  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis Leiton Iglesias', trimestre: 3, idAvance: 3, solicitud: 3, documento: '../../../assets/book/book.pdf'}
+];

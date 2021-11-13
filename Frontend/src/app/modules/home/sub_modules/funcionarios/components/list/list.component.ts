@@ -42,10 +42,7 @@ export class ListComponent implements OnInit {
         this.allRows = res['estado'] ? res['list'] : [];
       },
       err => {
-        this.allRows = [
-          { nombre: 'Luis', apellido_1: 'Leiton', apellido_2: 'Iglesias', urlFoto: '', correo: 'Luis@gmail', fechaNacimiento: '1995-09-09', idDepartamento: 1, idSexo: 1, idTipoFuncionario: 1, idFuncionario: 1 },
-          { nombre: 'Luis', apellido_1: 'Leiton', apellido_2: 'Iglesias', urlFoto: '', correo: 'Luis@gmail', fechaNacimiento: '1995-09-09', idDepartamento: 1, idSexo: 1, idTipoFuncionario: 1, idFuncionario: 2 }
-        ];
+        this.allRows = fixedRows;
 
         this.rerender();
       })
@@ -160,3 +157,14 @@ export class ListComponent implements OnInit {
     this.dtTrigger.next();
   }
 }
+
+const fixedRows = [
+  { nombre: 'Luis', apellido_1: 'Leiton', apellido_2: 'Iglesias', urlFoto: '', correo: 'Luis@gmail', 
+    fechaNacimiento: '1995-09-09', idDepartamento: 1, idSexo: 1, idTipoFuncionario: 1, idFuncionario: 1 },
+  
+  { nombre: 'Fernando', apellido_1: 'Alvarez', apellido_2: 'Salas', urlFoto: '', correo: 'Fernando@gmail', 
+  fechaNacimiento: '1999-09-09', idDepartamento: 1, idSexo: 1, idTipoFuncionario: 2, idFuncionario: 2 },
+
+  { nombre: 'Ana', apellido_1: 'Soto', apellido_2: 'Salas', urlFoto: '', correo: 'Ana@gmail', 
+  fechaNacimiento: '1989-09-09', idDepartamento: 2, idSexo: 2, idTipoFuncionario: 3, idFuncionario: 3 }
+]
