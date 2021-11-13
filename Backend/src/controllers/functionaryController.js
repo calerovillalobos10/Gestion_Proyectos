@@ -33,7 +33,7 @@ export default class FunctionaryController{
                 const secret = this.createSecret()
                 // Conección a la base
                 pool = await getConnection()
-                // Parámetros de entrada y salida del sp
+                // Parámetros de entrada y salida del sp y ejecución del mismo
                 const result = await pool.request()
                     .input("idSexoBE", sql.TinyInt, dataLogin.getSexo)
                     .input("idDepartamentoBE", sql.SmallInt, dataLogin.getDepartment)
@@ -49,14 +49,17 @@ export default class FunctionaryController{
                     .input("dobleAuthBE", sql.Bit, dataLogin.getDobleAuth)
                     .input("secretUrlBE", sql.VarChar(180), secret.ascii)
                     .execute('sp_insertFunctionary')
-                // Ejecución del sp
-                  //pool.request()
-                // Verificación de la inserción en la base de datos
-                if( result.returnValue === 1 ) {
-                    // Obtiene el url de la base64 del qr y la envía a una función del node mailer que se encarga de enviar el qr al funcionario
-                    this.findQRCode(secret).then( data => this.mailerController.mailer(process.env.CORREOENVIO, data) )
 
-                    return true
+                    console.log(result);
+                // Verificación de la inserción en la base de datos
+                if( result.rowsAffected[0] > 0 ) {
+                    
+                    // Obtiene el url de la base64 del qr y la envía a una función del node mailer que se encarga de enviar el qr al funcionario
+                    let sendEmail = this.findQRCode(secret).then( data => this.mailerController.mailer(dataLogin.getCorreo, data) )
+
+                    if( (await sendEmail) ) {
+                        return true
+                    }
                 } else {
 
                     return false
@@ -67,7 +70,7 @@ export default class FunctionaryController{
                 return false
             } finally {
                 // Cerrar la conexión
-                pool.close()
+                //pool.close()
             }
         } else {
 

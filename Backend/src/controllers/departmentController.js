@@ -58,7 +58,7 @@ export default class DeparmentController{
                 // Ejecución del sp
                 const result = await request.execute('sp_insertDepartment')
                 // validación sobre la inserción del objeto
-                return ( result.returnValue === 1 ) ? true : false
+                return ( result.rowsAffected[0] > 0 ) ? true : false
             } catch (err) {
 
                 console.log(err);
@@ -93,7 +93,7 @@ export default class DeparmentController{
                 // Ejecución del sp
                 const result = await request.execute('sp_deleteDepartment')
                 // validación sobre la inserción del objeto
-                return ( result.returnValue === 1 ) ? true : false
+                return ( result.rowsAffected[0] > 0 ) ? true : false
             } catch (err) {
 
                 console.log(err);

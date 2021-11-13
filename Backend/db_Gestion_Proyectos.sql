@@ -212,9 +212,6 @@ CREATE PROCEDURE sp_insertDepartment
 )
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
 	INSERT INTO tb_Departamentos (descripcion) values (@descripcionBE)
@@ -231,7 +228,7 @@ BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
-
+	
     -- Insert statements for procedure here
 	SELECT idDepartamento, descripcion, estado
 	FROM tb_Departamentos
@@ -260,9 +257,6 @@ CREATE PROCEDURE sp_deleteDepartment
 )
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
 	UPDATE tb_Departamentos SET estado = 0
@@ -277,9 +271,6 @@ CREATE PROCEDURE sp_modifyDepartment
 )
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	
 
     -- Insert statements for procedure here
 	UPDATE tb_Departamentos SET descripcion = @descripcionBE
@@ -287,7 +278,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [dbo].[sp_insertFunctionary]
+CREATE PROCEDURE sp_insertFunctionary
 (
 @idSexoBE tinyint,
 @idDepartamentoBE smallint,
@@ -305,9 +296,6 @@ CREATE PROCEDURE [dbo].[sp_insertFunctionary]
 )
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
 	INSERT INTO tb_Funcionarios(idSexo, iddepartamento, idTipoFuncionario, nombre, apellido_1, apellido_2, fechaNacimiento, correo, contrasenia, urlFoto, estado, dobleAuth, secretUrl)
