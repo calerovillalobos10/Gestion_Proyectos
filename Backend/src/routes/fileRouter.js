@@ -1,57 +1,33 @@
 // Importaciones necesarias
-/*import {Router} from 'express'
-import path from 'path'
+import {Router} from 'express'
 import LoginController from '../controllers/loginController'
-import ValidacionController from '../controllers/validationController'
-import fileUpload from 'express-fileupload'
+import FunctionaryController from '../controllers/functionaryController'
+
 
 // Instancia
 const router = Router()
 const loginController = new LoginController()
-const validacionController = new ValidacionController()
+const functionaryController = new FunctionaryController()
 
-// validaciones del fileUpload 
-router.use(fileUpload({
-    useTempFiles: true,
-    tempFileDir: path.join(__dirname, '../../','temp',),
-    createParentPath: true,
-    limits: {
-        filesize: 1024
-    },
-}))
+router.post('/functionaryUrl', loginController.recuperarToken, loginController.verifyToken, async ()=> {
 
-// Rutas de file
+    // Se llama a la función recupera el url de la imagen dentro de funcionario por el id
+    const functionaryUrl = await functionaryController.recoverUrlFunctionaryById(req.body.idFuncionario)
 
-// Se encarga de comunicarse con el controller para insertar un file de tipo imagen en la carpeta de imagenes   -loginController.recuperarToken, loginController.verifyToken,
-router.post('/uploadImage', async (req, res) =>{
+    if (functionaryUrl) {
 
-    const file = req.files.urlFoto
-
-    validacionController.verifyNameImage(file)
-
-    if( file !== null && validacionController.verifyMaxSize(file.name, 175) && validacionController.verifySpecialCharacters(file.name) ){
-
-        try {
-
-            const savePath = path.join(__dirname, '../../','images', file.name)
-            // Validaciones requeridas para las imágenes
-            if( file.truncated || !validacionController.verifyExtImage(file) ) {
-                // Sino cumple con las validaciones 
-                throw new Error('La imagen no cumple con las validaciones requeridas')
-            } else {
-                // Guarda el archivo
-                await file.mv(savePath)
-
-                return true
-            }
-        } catch (error) {
-
-            return false
-        }
+        // Se envía el secret al frontend
+        res.json({
+            "functionary": functionaryUrl,
+            "estado": true
+        })
     } else {
-
-        return false
+        // Si sucede algún error se le notifica al frontend
+        res.json({
+            "mensaje": "No se pudo recuperar el funcionario",
+            "estado": false,
+        })
     }
 })
 
-export default router*/
+export default router

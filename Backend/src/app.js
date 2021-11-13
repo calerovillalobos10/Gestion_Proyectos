@@ -22,6 +22,7 @@ app.use(express.json())
 // Obtiene las rutas del loginRoute
 app.use(loginRoute)
 app.use(departmentRoute)
+app.use(fileRoute)
 app.use(functionaryRoute)
 
 export default app

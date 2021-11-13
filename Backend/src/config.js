@@ -9,6 +9,3 @@ export default {
 }
 
 config();
-
-// Para ver las variables de entorno que hay
-console.log(process.env.USER);
