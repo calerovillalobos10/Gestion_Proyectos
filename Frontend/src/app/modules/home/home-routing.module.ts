@@ -5,10 +5,10 @@ const routes: Routes = [
 
   {
     path: '',
-    redirectTo: '/inicio', pathMatch: 'full'
+    redirectTo: '/estadisticas', pathMatch: 'full'
   },
   {
-    path: 'inicio',
+    path: 'estadisticas',
     loadChildren: () => import("@modules/home/sub_modules/inicio/inicio.module")
       .then(m => m.InicioModule),
   },

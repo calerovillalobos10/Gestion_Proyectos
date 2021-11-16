@@ -86,14 +86,14 @@ td:first-child{
   box-shadow: 0 0 16px -5px;
   padding: .5em;
   border-radius: .5em;
-  transform: translate(-50px, 350px);
+  transform: translate(-50px, 85vh);
   background-color: white;
   transition: transform 250ms;
 }
 
 .download_button:hover{
-  transform: translate(-50px, 350px) scale(1.1);
+  transform: translate(-50px, 85vh) scale(1.1);
 }
 .download_button:active{
-  transform: translate(-50px, 350px) scale(1);
+  transform: translate(-50px, 85vh) scale(1);
 }

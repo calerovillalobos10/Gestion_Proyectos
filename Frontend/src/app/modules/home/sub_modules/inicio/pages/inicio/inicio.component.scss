@@ -1,0 +1,46 @@
+.graphic1{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.graphic2{
+  margin-left: auto;
+}
+
+
+
+
+.graph_container .heading{
+  max-width: 20ch;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+ 
+}
+
+.graph_container .image{
+  box-shadow:  0 0 15px -5px;
+}
+
+.graph_container .tools{
+
+}
+
+
+
+
+.wrap{
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+
+}
+
+.min-w-400{
+  min-width: 400px;
+}
+
+.scollable{
+  overflow-y: auto;
+  height: 70vh;
+  box-shadow:  0 0 15px -5px;
+}

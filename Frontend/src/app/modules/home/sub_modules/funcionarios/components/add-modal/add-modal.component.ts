@@ -18,7 +18,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   public departamentos: Array<Departamento> = [];
   public preview: string | ArrayBuffer | null | undefined;
   public allowedSize;
-
+  public sendingData: boolean = false;
   constructor(
     private formBuilder: FormBuilder,
     private service: FuncionariosService,
@@ -81,18 +81,24 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   // Luego de validar procede a insertar en la base.
   proceedCreate() {
     // Espera la respuesta del backend.
+
+    this.sendingData = true;
     this.service.create(this.obtainFunc()).subscribe(
       res => {
         if (res['estado']) {
-          this.closeModal();
+         
           this.alertService.promiseAlert('Se agregó correctamente el funcionario').then(() => {
+            this.sendingData = false;
+            this.closeModal();
             this.service.updateNeeded.emit(true)
           })
         } else {
+          this.sendingData = false;
           this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
         }
       },
       err => {
+        this.sendingData = false;
         this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
       }
     )
@@ -105,25 +111,30 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     if (event.target.files && event.target.files[0]) {
       const size = (event.target.files[0].size / 1048576)
 
-      // Si el archivo supera el limite
-      if (size > MAX_PICTURE) {
-        this.form.patchValue({ urlFoto: '' })
-        this.form.get('urlFoto')?.setErrors({ 'sizeError': true })
-      } else {
-        this.form.get('urlFoto')?.setErrors(null)
-      }
-
-      // Si no existen errores
+      // Verifica que no tenga errores de verificadores
       if (!this.form.get('urlFoto')?.errors) {
-        this.loadPreview(event);
-        this.form.patchValue({ foto: event.target.files[0] })
+
+        // Si el archivo supera el limite
+        if (size > MAX_PICTURE) {
+          this.form.patchValue({ urlFoto: '' })
+          this.form.get('urlFoto')?.setErrors({ 'sizeError': true })
+        } else {
+          this.form.get('urlFoto')?.setErrors(null)
+        }
+
+        // Si no existen errores
+        if (!this.form.get('urlFoto')?.errors) {
+          this.loadPreview(event);
+          this.form.patchValue({ foto: event.target.files[0] })
+        }
+      } else {
+        this.form.patchValue({ foto: '' })
+        this.preview = '';
       }
-    } else {
-      this.form.patchValue({ foto: '' })
-      this.preview = '';
     }
   }
 
+  // Carga el preview de la todo del usuario
   loadPreview(event: any) {
     const reader = new FileReader();
     reader.readAsDataURL(event.target.files[0]);

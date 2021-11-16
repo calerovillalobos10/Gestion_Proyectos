@@ -67,21 +67,11 @@ export class DetModalComponent implements OnInit {
 
   loadUrlFoto(urlFoto:string){
     this.service.obtainUrlImage(urlFoto).subscribe(res => {
-    
      let reader = new FileReader();
-
      reader.readAsDataURL(res); 
      reader.onloadend = () => { this.urlFoto = reader.result }
     })
   }
-
-   /*
-   
-   document.querySelector("#image").src = imageUrl;
-
-// MAKE OUTPUT IMG (IN HTML)
-<img id="image"/>*/
-
 
   // Este metodo cierra el modal mostrando una alerta de error.
   closeOnError() {
@@ -92,7 +82,6 @@ export class DetModalComponent implements OnInit {
     )
   }
 }
-
 
 const fixedRows:Array<Funcionario> = [
   { nombre: 'Luis', apellido_1: 'Leiton', apellido_2: 'Iglesias', urlFoto: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Terry_Crews_by_Gage_Skidmore_5.jpg/250px-Terry_Crews_by_Gage_Skidmore_5.jpg', correo: 'Luis@gmail', 

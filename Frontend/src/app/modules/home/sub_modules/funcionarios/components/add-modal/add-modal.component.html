@@ -1,6 +1,10 @@
 
 <div class="primary_box" *ngIf="openedModal" >
  
+  <div class="loading_screen" *ngIf="sendingData">  
+    <img class="gif" src="../../../../../assets/images/loading_icon.gif" alt="Loading gif"/>
+  </div>
+
   <div class="primary_box_container" [ngClass]="{ desaparecer: formToggle }">
     <button class="btn_close" (click)='closeModal()'><i class="fas fa-window-close"></i></button>
     <div>
@@ -204,6 +208,9 @@
 
   <p class="error-input" *ngIf="form.get('urlFoto')?.dirty || form.get('urlFoto')?.touched">
     <span class="login_error" *ngIf="error?.required">El campo es requerido </span>
+  </p>
+
+  <p class="error-input">
     <span class="login_error" *ngIf="error?.pattern">El formato de la imagen no es válido</span>
     <span class="login_error" *ngIf="error?.sizeError">Solo se admiten imagenes de hasta {{allowedSize}}mb</span>
   </p>

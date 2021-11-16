@@ -69,6 +69,7 @@ CREATE TABLE tb_Solicitudes(
   fechaFin DATE NOT NULL,
   documentoActa VARBINARY(MAX) NOT NULL,
   estado BIT default 1 NOT NULL,
+  terminado BIT default 0 NOT NULL,
   
   CONSTRAINT fk_FuncionarioAplicativo_Solicitud 
   FOREIGN KEY (idFuncionario_Aplicativo) 
@@ -114,7 +115,7 @@ CREATE TABLE tb_Bitacoras(
   idBitacora INT IDENTITY(1, 1) PRIMARY KEY,
   idTransaccion TINYINT NOT NULL,
   idFuncionario_Aplicativo SMALLINT NOT NULL,
-  idAvance TINYINT NOT NULL,
+  idAvance TINYINT,
   idSolicitud SMALLINT NOT NULL,
   descripcion VARCHAR(150) NOT NULL,
   fechaBitacora SMALLDATETIME NOT NULL

@@ -8,7 +8,6 @@ import { Funcionario } from '@core/models/Funcionario';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
-import { disable } from '@rxweb/reactive-form-validators';
 
 @Component({
   selector: 'app-edt-modal',

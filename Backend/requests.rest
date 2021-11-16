@@ -10,7 +10,7 @@ Content-Type: application/json
 ###
 GET  http://localhost:4000/listDepartment
 Content-Type: application/json
-Authorization: Barrer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhQkQiOnsibm9tYnJlIjoiTHVpcyIsImNvcnJlbyI6Ikx1aXNAZ21haWwuY29tIiwiZG9ibGVBdXRoIjp0cnVlLCJlc3RhZG8iOnRydWV9LCJpYXQiOjE2MzYxNjc5NzQsImV4cCI6MTYzNjIwMzk3NH0.yWelE8eQVoY56N9zs5BYFJDSaHvUWdZXx1xipsn6nQM
+Authorization: Barrer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0MjQyIiwibmFtZSI6Ikplc3NpY2EgVGVtcG9yYWwiLCJuaWNrbmFtZSI6Ikplc3MifQ.ztIhsiqvnDBkBgKQXN09NI-tiQ4ePv5SbSgSL-f_aDo
 
 
 

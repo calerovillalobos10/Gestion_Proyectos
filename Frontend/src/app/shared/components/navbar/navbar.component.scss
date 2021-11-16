@@ -59,7 +59,7 @@ content: '';
   transform: scaleX(1);
 }
 
-#inicio .inicio,
+#estadisticas .estadisticas,
 #solicitudes .solicitudes,
 #avances .avances,
 #departamentos .departamentos,
@@ -70,7 +70,7 @@ content: '';
   color: var(--clr-accent-500);
 }
 
-#inicio .inicio::before,
+#estadisticas .estadisticas::before,
 #solicitudes .solicitudes::before,
 #avances .avances::before,
 #departamentos .departamentos::before,

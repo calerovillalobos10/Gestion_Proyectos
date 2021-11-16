@@ -58,6 +58,7 @@ export class ListComponent implements OnInit {
     this.service.modalNeeded.emit({ subject: 'detModal', status: true, userId: id });
   }
 
+  // Solicita la contfirmacion del usuario.
   async deleteFunc(id: any) {
     const func: any = this.getFunc(id);
 
@@ -135,6 +136,7 @@ export class ListComponent implements OnInit {
     return func;
   }
 
+  // Metodo de asignacion de opciones de la tabla.
   setTableOptions() {
     this.dtOptions = DT_OPTIONS;
     this.dtOptions.columns = [
@@ -152,6 +154,7 @@ export class ListComponent implements OnInit {
     this.add_Listeners();
   }
 
+  // Metodo de renderizacion de la tabla.
   rerender(): void {
     $('#data').DataTable().destroy();
     this.dtTrigger.next();
