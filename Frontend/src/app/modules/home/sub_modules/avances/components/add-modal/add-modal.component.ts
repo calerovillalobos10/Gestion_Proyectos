@@ -1,4 +1,4 @@
-import { MAX_FILE } from './../../../../../../core/others/Enviroment';
+import { MAX_FILE } from '@core/others/Enviroment';
 import { Avance } from '@core/models/Avance';
 import { SolicitudeService } from '@core/services/solicitude/solicitude.service';
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
@@ -282,7 +282,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
       (res) => {
         if (res['estado']) {
-          this.aplicativo = this.serviceFunctionary.filterFunctionary(res['list'], 1);
+          this.aplicativo = this.serviceFunctionary.filterFunctionary(res['list'], 'Aplicativo');
         } else {
           this.aplicativo = [];
         }

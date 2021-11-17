@@ -7,7 +7,14 @@
     <li class="tools_item estadisticas"  [routerLink]="['/','estadisticas']" (click) = 'emmit("estadisticas")'>
       Estadísticas
     </li>
-    <li class="tools_item solicitudes" [routerLink]="['/','solicitudes']"  (click) = 'emmit("solicitudes")'>
+
+    <li class="tools_item mantenimientos" >
+      Mantenimientos
+    </li>
+
+    <div class="dropdown_wrapper">
+     
+      <li class="tools_item solicitudes" [routerLink]="['/','solicitudes']"  (click) = 'emmit("solicitudes")'>
         Solicitudes
     </li>
     <li class="tools_item avances"  [routerLink]="['/','avances']"  (click) = 'emmit("avances")'>
@@ -19,6 +26,8 @@
     <li class="tools_item funcionarios"  [routerLink]="['/','funcionarios']"  (click) = 'emmit("funcionarios")'>
       Funcionarios
     </li>  
+    </div>
+
     <li class="tools_item bitacora"  [routerLink]="['/','bitacora']"  (click) = 'emmit("bitacora")'>
       Bitácora
     </li> 

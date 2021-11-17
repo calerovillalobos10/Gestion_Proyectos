@@ -65,12 +65,9 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   }
 
   add_solicitude() {
-    console.log(this.form.value.urlActa)
-    console.log(this.form.value.acta)
     if (this.form.invalid) {
       return this.form.markAllAsTouched();
     }
-
 
     if (this.modalType == 'registro') {
       this.createSolicitude();
@@ -289,9 +286,9 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
       (res) => {
         if (res['estado']) {
-          this.aplicativo = this.serviceFunctionary.filterFunctionary(res['lista'], 1);
-          this.responsable = this.serviceFunctionary.filterFunctionary(res['lista'], 2);
-          this.final = this.serviceFunctionary.filterFunctionary(res['lista'], 3);
+          this.aplicativo = this.serviceFunctionary.filterFunctionary(res['list'], 'Aplicativo');
+          this.responsable = this.serviceFunctionary.filterFunctionary(res['list'], 'Responsable');
+          this.final = this.serviceFunctionary.filterFunctionary(res['list'], 'Final');
         } else {
           this.aplicativo = [];
           this.responsable = [];
@@ -299,20 +296,16 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
         }
       },
       (err) => {
-        
-        
-        console.log(this.serviceFunctionary.filterFunctionary(fixedRows, 1));
-        
-
-        this.aplicativo = this.serviceFunctionary.filterFunctionary(fixedRows, 1);// [];
-        this.responsable = this.serviceFunctionary.filterFunctionary(fixedRows, 2);// [];
-        this.final = this.serviceFunctionary.filterFunctionary(fixedRows, 3);;// [];
+        this.aplicativo = [];
+        this.responsable = [];
+        this.final = [];
       }
     )
   }
 
   // Metodo para cargar modal para edicion 
   loadEditModal(id: number) {
+
     this.service.getById(id).subscribe(
       (res) => {
 
@@ -371,14 +364,6 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     this.idSolicitude = -1;
     this.closeModal();
   }
-/*
-  async closeModal() {
-    this.formToggle = true;
-    setTimeout(() =>  this.openedModal = false , 1500)
-    if(this.form){
-      this.form.reset()
-    }
-  }*/
 
 }
 

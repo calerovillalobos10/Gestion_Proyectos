@@ -66,7 +66,7 @@
             <div class="input_group">
               <select class="select" name="aplicativo" id="aplicativo" formControlName="aplicativo"> 
                 <option selected disabled hidden>Seleccione</option>
-                <option *ngFor="let func of aplicativo" value="{{func.idFuncionario}}">{{func.nombre}}</option>
+                <option *ngFor="let func of aplicativo" value="{{func.idFuncionario}}">{{func.nombre}} {{func.apellido_1}} {{func.apellido_2}}</option>
               </select>
  
               <label class="label" for="aplicativo"> Funcionario Aplicativo</label>

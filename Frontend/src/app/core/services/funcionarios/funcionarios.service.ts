@@ -2,7 +2,6 @@ import { API_URL } from '@core/others/Enviroment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, Output, EventEmitter } from '@angular/core';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -47,10 +46,7 @@ export class FuncionariosService {
   validateEmail(email:string) {
     return this.http.post<any>(`${API_URL}/email`, {correo: email})
   }
-/*
-  obtainUrlImage(urlFoto:string){
-    return (this.http.post<any>(`${API_URL}/functionaryUrl`, {urlFoto: urlFoto}))
-  }*/
+
 
   obtainUrlImage(nombre:any) {
     return this.http.post<any>(API_URL + '/functionaryUrl', {
@@ -61,16 +57,13 @@ export class FuncionariosService {
     });
 }
 
-
-
-
   /*
     Filtra segun el tipo
     1. Aplicativo
     2. Responsable
     3. Final
   */
-    filterFunctionary(all:any, type: number){
+    filterFunctionary(all:any, type: string){
       return all.filter((element:any) => element.idTipoFuncionario == type )
     }
 }

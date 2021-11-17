@@ -65,7 +65,11 @@ content: '';
 #avances .avances,
 #departamentos .departamentos,
 #funcionarios .funcionarios,
-#bitacora .bitacora
+#bitacora .bitacora,
+#solicitudes .mantenimientos,
+#avances .mantenimientos,
+#departamentos .mantenimientos,
+#funcionarios .mantenimientos
 {
   transform: scale(1.1);
   color: var(--clr-accent-500);
@@ -117,7 +121,7 @@ content: '';
 
   .tools{
     overflow: hidden;
-    max-height: 350px;
+    max-height: 370px;
     transition-delay: .5s;
     transition: max-height 0.25s ease-in;
    
@@ -156,4 +160,52 @@ content: '';
   
 .hidden_toggle{
   display: none;
+}
+
+.dropdown_wrapper{
+  height: 0em;
+  min-height: 0;
+  width: 11em;
+  position: absolute;
+  left: 30%;
+  top: 3.8em;
+  overflow: hidden;
+  background-color: var(--clr-base-100);
+  transition: min-height 250ms;
+  padding-left: 1em;
+  z-index: 100;
+  border-radius: .5em;
+}
+
+
+
+
+.mantenimientos:hover + .dropdown_wrapper{
+  min-height: 220px;
+}
+
+.dropdown_wrapper:hover{
+  min-height: 220px;
+}
+
+@media (max-width: 1020px){
+  .dropdown_wrapper{
+    height:100px;
+    min-height: 210px;
+    left: 0;
+    top: 0;
+    position: relative;
+  }
+  .mantenimientos{
+    display: none;
+  }
+
+  .mantenimientos:hover + .dropdown_wrapper{
+    min-height: 210px;
+  }
+  
+  .dropdown_wrapper:hover{
+    min-height: 210px;
+  }
+  
 }

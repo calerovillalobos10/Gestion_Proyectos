@@ -37,37 +37,55 @@ def get_router(data):
 def adv_by_trim(data):
   set_image_headers(data)
   resp = advances_by_trim()   
-  data.wfile.write(resp)
+  if resp: 
+    data.wfile.write(resp)
+  else:
+    not_found(data)
 
 # Responde con los avances en general
 def adv_by_year(data, year):
   set_image_headers(data)
   resp = advances_by_year(year)   
-  data.wfile.write(resp)
+  if resp: 
+    data.wfile.write(resp)
+  else:
+    not_found(data)
 
 # Responde con las solicitudes finalizadas en general
 def sol_status(data):
   set_image_headers(data)
   resp = solicitude_status()  
-  data.wfile.write(resp)
+  if resp: 
+    data.wfile.write(resp)
+  else:
+    not_found(data)
 
 # Responde con las solicitudes finalizadas por año
 def sol_stat_by_year(data,year):
   set_image_headers(data)
   resp = solicitude_status_by_year(year)  
-  data.wfile.write(resp)
+  if resp: 
+    data.wfile.write(resp)
+  else:
+    not_found(data)
 
 # Responde con las solicitudes que cambiaron en general
 def sol_status_chan(data):
   set_image_headers(data)
   resp = solicitude_changed()  
-  data.wfile.write(resp)
+  if resp: 
+    data.wfile.write(resp)
+  else:
+    not_found(data)
 
 # Responde con las solicitudes que cambiaron por año
 def sol_status_chan_by_year(data,year):
   set_image_headers(data)
   resp = solicitude_changed_by_year(year)  
-  data.wfile.write(resp)
+  if resp: 
+    data.wfile.write(resp)
+  else:
+    not_found(data)
 
 # Coloca los headers generales
 def set_image_headers(data): 
