@@ -3,6 +3,7 @@
 <div class="side-bar">
  
   <ul class="tools" id='{{selected_tab}}'>
+
     <li class="tools_item estadisticas"  [routerLink]="['/','estadisticas']" (click) = 'emmit("estadisticas")'>
       Estadísticas
     </li>
@@ -21,6 +22,9 @@
     <li class="tools_item bitacora"  [routerLink]="['/','bitacora']"  (click) = 'emmit("bitacora")'>
       Bitácora
     </li> 
+    <li class="tools_item cubo"  [routerLink]="['/','cubo']" (click) = 'emmit("cubo")'>
+      Cubo OLAP
+    </li>
   </ul>
   <div class="row ">
     <label class="toolbox" for="hidden_toggle">

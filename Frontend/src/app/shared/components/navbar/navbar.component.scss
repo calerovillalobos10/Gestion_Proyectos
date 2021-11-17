@@ -59,6 +59,7 @@ content: '';
   transform: scaleX(1);
 }
 
+#cubo .cubo,
 #estadisticas .estadisticas,
 #solicitudes .solicitudes,
 #avances .avances,
@@ -70,6 +71,7 @@ content: '';
   color: var(--clr-accent-500);
 }
 
+#cubo .cubo::before,
 #estadisticas .estadisticas::before,
 #solicitudes .solicitudes::before,
 #avances .avances::before,

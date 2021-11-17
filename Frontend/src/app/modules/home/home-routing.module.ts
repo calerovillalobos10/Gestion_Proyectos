@@ -13,6 +13,11 @@ const routes: Routes = [
       .then(m => m.InicioModule),
   },
   {
+    path: 'cubo',
+    loadChildren: () => import("@modules/home/sub_modules/cubo/cubo.module")
+      .then(m => m.CuboModule),
+  },
+  {
     path: 'solicitudes',
     loadChildren: () => import("@modules/home/sub_modules/solicitudes/solicitudes.module")
       .then(m => m.SolicitudesModule),

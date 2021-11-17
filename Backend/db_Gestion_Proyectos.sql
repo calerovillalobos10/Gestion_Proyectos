@@ -160,7 +160,7 @@ GO
 CREATE OR ALTER PROCEDURE sp_login
 (
 @correoBE VARCHAR(50),
-@contraseniaBE VARBINARY(MAX)
+@contraseniaBE VARCHAR(MAX)
 )
 AS
 BEGIN

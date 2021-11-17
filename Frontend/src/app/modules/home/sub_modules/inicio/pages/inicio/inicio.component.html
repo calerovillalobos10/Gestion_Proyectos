@@ -2,41 +2,60 @@
 
 <div class="container">
 
-  <div class="row wrap scollable mt-5">
+  <div class="wrapper">
+    <div class="row wrap scollable mt-5" id="graph_table">
 
-    
-    <div class="col s12 m-1 min-w-400">
-      <div class="graph_container">
 
-        <h2 class="heading">Avances por trimestre</h2>
-        <div class="image">
-          <img appNoData class="graphic1" src="{{ solicitudeStatusGraph }}" alt="" />
+      <div class="col s12 m-1 min-w-400">
+        <div class="graph_container">
+
+          <h2 class="heading">Avances por trimestre</h2>
+          <div class="image">
+            <img appNoData class="graphic1" src="{{ solicitudeStatusGraph }}" alt="" />
+          </div>
+          <label>Año de la grafica</label>
+          <select name="year" value="Todos" (change)="updateTrimGraphYear($event)">
+            <option *ngFor="let number of ['Todos', 2021, 2020, 2019, 2018, 2017]" value="{{ number }}">
+              {{ number }}
+            </option>
+          </select>
+
         </div>
-        <label >Año de la grafica</label>
-        <select name="year" id="year" value="Todos" (change)="updateTrimGraphYear($event)">
-          <option *ngFor="let number of ['Todos', 2021, 2020, 2019, 2018, 2017]" value="{{ number }}" >
-            {{ number }}
-          </option>
-        </select>
-
+        <hr>
       </div>
- 
-    </div>
 
-    <div class="col s2 min-w-400">
+      <div class="col s2 min-w-400">
 
-      <div class="graph_container">
-      <h2 class="heading">Estado de solicitudes</h2>
-      <div class="image">
-        <img appNoData class="graphic2" src="{{ advancesTrimGraph }}" alt="" />
+        <div class="graph_container">
+          <h2 class="heading">Estado de solicitudes</h2>
+          <div class="image">
+            <img appNoData class="graphic2" src="{{ advancesTrimGraph }}" alt="" />
+          </div>
+          <label>Año de la grafica</label>
+          <select name="year" value="Todos" (change)="updateSolicitudeGraphYearFinished($event)">
+            <option *ngFor="let number of ['Todos', 2021, 2020, 2019, 2018, 2017]" value="{{ number }}">
+              {{ number }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col s2 min-w-400 mb-2">
+
+        <div class="graph_container">
+          <h2 class="heading">Solicitudes que cambiaron</h2>
+          <div class="image">
+            <img appNoData class="graphic2" src="{{ solicitudeChangesGraph }}" alt="" />
+          </div>
+          <label>Año de la grafica</label>
+          <select name="year" value="Todos" (change)="updateSolicitudeGraphYearChanged($event)">
+            <option *ngFor="let number of ['Todos', 2021, 2020, 2019, 2018, 2017]" value="{{ number }}">
+              {{ number }}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
+    <a class="download_button fas fa-download" (click)='capture()' style="cursor: pointer;" title="Descargar gráficas"> </a>
   </div>
-  </div>
-
-
-    
-        
-     
-   
 </div>

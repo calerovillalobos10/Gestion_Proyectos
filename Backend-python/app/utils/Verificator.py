@@ -1,7 +1,8 @@
 from utils.JWT_Decrypt import token_validator
 
 # Paths verificados para enrutamiento.
-validated_paths = ['/solicitude_status','/advances_by_trim','/advances_by_year']
+validated_paths = ['/solicitude_status','/advances_by_trim','/advances_by_year',
+'/solicitude_status_by_year','/solicitude_changed_by_year', '/solicitude_changed']
 
 # Verificacion de existencia y validez del token.
 def validateToken(data):
