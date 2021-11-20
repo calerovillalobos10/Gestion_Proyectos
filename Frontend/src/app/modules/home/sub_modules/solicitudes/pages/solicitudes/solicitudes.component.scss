@@ -1,6 +1,25 @@
 /* Elimian el icono de + en el datatable*/
-@media (min-width: 1365px) {
+@media (min-width: 1593px) {
   .dtr-control::before {
     content: "" !important;
   }
 }
+
+.end{
+  background-color: rgb(58, 58, 204);
+}
+
+.ended{
+  display: inline-block;
+  text-align: center;
+  margin-left: .5em;
+  width: 135px;
+  background-color: rgb(58, 58, 204);
+  color: white;
+  padding: .7em;
+  border-radius: .2em;
+  user-select: none;
+  box-shadow: 3px 3px 6px #4b4b4b8f;
+  cursor: pointer;
+}
+

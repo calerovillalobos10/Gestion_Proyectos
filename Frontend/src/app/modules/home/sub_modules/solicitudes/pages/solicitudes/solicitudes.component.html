@@ -35,26 +35,45 @@
       <td>{{ solicitud.fechaSolicitud | date: 'dd/MM/yyyy'}}</td>
       <td>{{ solicitud.fechaInicio | date: 'dd/MM/yyyy'}}</td>
       <td>{{ solicitud.fechaFin | date: 'dd/MM/yyyy'}}</td>
-      <td>
-        <div class="row action_wrap" id='{{ solicitud.idSolicitud }}'>
-
+      <td >
+        <div class="row action_wrap" id='{{ solicitud.idSolicitud }}'  *ngIf="solicitud.terminado">
           <div class="action_btn adv avances" title="Avances asociados">
             <i class="fas fa-list-alt"></i>
           </div>
-
+  
           <div class="action_btn det detalles" title="Acta constitutiva">
             <i class="far fa-file"></i>
           </div>
 
-          <div class="action_btn edi editar" title="Modificar solicitud">
-            <i class="fas fa-edit"></i>
-          </div>
-          <div class="action_btn del eliminar" title="Eliminar solicitud">
-            <i class="fas fa-trash-alt"></i>
-          </div>
-          
+          <span class="ended"  title="Esta solicitud ha finalizado"><i class="far fa-check-square"></i> Finalizada </span> 
         </div>
-      </td>
+       
+
+      <div class="row action_wrap" id='{{ solicitud.idSolicitud }}'  *ngIf="!solicitud.terminado">
+
+        <div class="action_btn adv avances" title="Avances asociados">
+          <i class="fas fa-list-alt"></i>
+        </div>
+
+        <div class="action_btn det detalles" title="Acta constitutiva">
+          <i class="far fa-file"></i>
+        </div>
+
+        <div class="action_btn edi editar" title="Modificar solicitud">
+          <i class="fas fa-edit"></i>
+        </div>
+
+        <div class="action_btn end finalizar" title="Finalizar solicitud">
+          <i class="far fa-check-square"></i>
+        </div>
+
+        <div class="action_btn del eliminar" title="Eliminar solicitud">
+          <i class="fas fa-trash-alt"></i>
+        </div>
+
+      </div>
+
+    </td>
 
     </tr>
   </tbody>

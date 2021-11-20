@@ -8,5 +8,5 @@ export interface Solicitud{
   fechaInicio:string,
   fechaFin:string,
   documentoActa:any,
-
+  terminado?: boolean
 } 
