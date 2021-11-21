@@ -12,7 +12,7 @@ export class CuboComponent implements OnInit {
   pivotGridDataSource: any;
     constructor() {
         this.pivotGridDataSource = {
-          fields: [
+          /*fields: [
               { dataField: '[Product].[Category]', area: 'row' },
               { 
                   dataField: "[Product].[Subcategory]", 
@@ -24,12 +24,16 @@ export class CuboComponent implements OnInit {
               { dataField: '[Ship Date].[Calendar Year]', area: 'column' },
               { dataField: '[Ship Date].[Month of Year]', area: 'column' },
               { dataField: "[Measures].[Reseller Freight Cost]", area: "data", format: "currency" }
-          ],
+          ],*/
           store: {
+              // type: 'xmla',
+              // url: 'https://demos.devexpress.com/Services/OLAP/msmdpump.dll',
+              // catalog: 'Adventure Works DW Standard Edition',
+              // cube: 'Adventure Works'
               type: 'xmla',
-              url: 'https://demos.devexpress.com/Services/OLAP/msmdpump.dll',
-              catalog: 'Adventure Works DW Standard Edition',
-              cube: 'Adventure Works'
+              url: 'http://192.168.100.136:9500/',
+              catalog: 'ProyectoMultidimensional',
+              cube: 'Northwind'
           }
       }
     }
