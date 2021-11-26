@@ -1,7 +1,7 @@
 "use strict";
 export default class Functionary {
 
-    // Constructor que revise los parámetros de los objetos
+    // Constructor que recibe los parámetros de los objetos
     constructor( idFuncionario=null, idSexo, idDepartamento, idTipoFuncionario, nombre, apellido_1, apellido_2, fechaNacimiento, correo, contrasenia, urlFoto, estado=null, dobleAuth=null, secretUrl=null ) {
         this.idFuncionario = idFuncionario;
         this.idSexo = idSexo;

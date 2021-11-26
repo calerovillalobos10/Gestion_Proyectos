@@ -1,7 +1,7 @@
 "use strict";
 export default class Department {
 
-    // Constructor que revise los parámetros de los objetos
+    // Constructor que recibe los parámetros de los objetos
     constructor(idDepartamento, descripcion, estado) {
         this.idDepartamento = idDepartamento;
         this.descripcion = descripcion;
