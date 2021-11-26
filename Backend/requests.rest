@@ -26,10 +26,10 @@ Authorization: Barrer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhQkQiOnsibm9tY
 ###
 POST http://localhost:4000/deleteDepartment
 Content-Type: application/json
-Authorization: Barrer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhQkQiOnsibm9tYnJlIjoiTHVpcyIsImNvcnJlbyI6Ikx1aXNAZ21haWwuY29tIiwiZG9ibGVBdXRoIjp0cnVlLCJlc3RhZG8iOnRydWV9LCJpYXQiOjE2MzY3NzcyMjQsImV4cCI6MTYzNjgxMzIyNH0.iQFs4Nzj1s7AfHcNDbb3MTTMuRd_6YkwqBaE9Bl1p94
+Authorization: Barrer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhQkQiOnsibm9tYnJlIjoiTHVpcyIsImNvcnJlbyI6Ikx1aXNAZ21haWwuY29tIiwiZG9ibGVBdXRoIjp0cnVlLCJlc3RhZG8iOnRydWV9LCJpYXQiOjE2Mzc5MTI5MTUsImV4cCI6MTYzNzk0ODkxNX0.sjmKZ69DInwhGIxJJtIRS3G0SIIQDMcbmE0DGhHKAYE
 
 {
-  "id": 7
+  "id": 1
 }
 
 ###

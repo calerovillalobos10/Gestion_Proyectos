@@ -166,7 +166,7 @@ BEGIN
 	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
-	SELECT F.nombre, F.correo,F.urlFoto, F.dobleAuth
+	SELECT F.idFuncionario, F.nombre, F.correo,F.urlFoto, F.dobleAuth
 	FROM tb_Funcionarios as F
 	WHERE @correoBE = F.correo AND PWDCOMPARE(@contraseniaBE, F.contrasenia) = 1
 END
@@ -496,4 +496,21 @@ AS
          inner join tb_Avances s on t.idTrimestre = s.idTrimestre
          where YEAR(fechaAvance) = @year
 	END
+GO
+
+CREATE PROCEDURE sp_verifyDeleteDepartment
+(
+@idDepartmentBE int
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT idFuncionario
+	FROM tb_Funcionarios
+	WHERE idDepartamento = @idDepartmentBE
+END
 GO

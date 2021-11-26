@@ -18,7 +18,6 @@ export default class LoginController {
     getNombreCorreo = async (dataLogin) => {
         
         let pool = null
-        let request = null
         let correoRes = dataLogin.correo
         let contraseniaRes = dataLogin.contrasenia
 
@@ -28,14 +27,14 @@ export default class LoginController {
 
             try {
                 pool = await getConnection()
-                request = pool.request()
-                // Parámetros de entrada y salida del sp
-                request.input("correoBE", sql.VarChar(50), correoRes)
-                request.input("contraseniaBE", sql.VarChar(16), contraseniaRes)
-                // Ejecución del sp
-                const result = await request.execute('sp_login')
+                // Parámetros de entrada y salida del sp y ejecución del mismo
+                const result = await pool.request()
+                .input("correoBE", sql.VarChar(50), correoRes)
+                .input("contraseniaBE", sql.VarChar(16), contraseniaRes)
+                .execute('sp_login')
                 // Retorno del objeto con los parámetros que se ocupan en el frontend
                 return {
+                    id: result.recordset[0].idFuncionario,
                     nombre: result.recordset[0].nombre,
                     correo: result.recordset[0].correo,
                     dobleAuth: result.recordset[0].dobleAuth,
@@ -43,7 +42,6 @@ export default class LoginController {
                     estado: true
                 }
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
@@ -51,7 +49,6 @@ export default class LoginController {
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
@@ -64,18 +61,16 @@ export default class LoginController {
 
         try {
             pool = await getConnection()
-            const request = pool.request()
-            // Parámetros de entrada y salida del sp
-            request.input("correoBE", sql.VarChar(50), correo)
-            // Ejecución del sp
-            const result = await request.execute('sp_recuperarSecret')
+            // Parámetros de entrada y salida del sp y ejecución del mismo
+            const result = await pool.request()
+            .input("correoBE", sql.VarChar(50), correo)
+            .execute('sp_recuperarSecret')
             // Retorno del objeto con los parámetros que se ocupan en el frontend
             return {
                 secretUrl: result.recordset[0].secretUrl,
                 estado: true
             }
         } catch (err) {
-
             console.log(err);
             return false
         } finally {
@@ -88,7 +83,6 @@ export default class LoginController {
     verifySecret = (secret, token) => {
 
         const verify = speakeasy.totp.verify({
-
             secret: secret,
             encoding: 'ascii',
             token: token
@@ -159,4 +153,6 @@ export default class LoginController {
         })
     }
 
+    // Esta función sirve para recuperar el id del funcionario aplicativo desde el payload del token
+    recoverIdFunctionaryToken = (token) => jwt.decode(token).dataBD.id
 }
