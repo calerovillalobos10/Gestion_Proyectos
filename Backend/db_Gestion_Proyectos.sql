@@ -7,14 +7,12 @@ GO
 
 CREATE TABLE tb_Sexos(
   idSexo TINYINT IDENTITY(1, 1) PRIMARY KEY,
-  descripcion VARCHAR(15) NOT NULL,
-  estado BIT DEFAULT 1 NOT NULL
+  descripcion VARCHAR(15) NOT NULL
 );
 
 CREATE TABLE tb_Trimestres(
   idTrimestre TINYINT IDENTITY(1, 1) PRIMARY KEY,
-  descripcion VARCHAR(50) NOT NULL,
-  estado BIT DEFAULT 1 NOT NULL
+  descripcion VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE tb_Departamentos(
@@ -25,8 +23,7 @@ CREATE TABLE tb_Departamentos(
 
 CREATE TABLE tb_TipoFuncionarios(
   idTipoFuncionario TINYINT IDENTITY(1, 1) PRIMARY KEY,
-  descripcion VARCHAR(15) NOT NULL,
-  estado BIT DEFAULT 1 NOT NULL
+  descripcion VARCHAR(15) NOT NULL
 );
 
 CREATE TABLE tb_Funcionarios(
@@ -392,9 +389,7 @@ BEGIN
 END
 GO
 
-
-
-CREATE OR ALTER   PROCEDURE [dbo].[sp_modifyFunctionary]
+CREATE OR ALTER PROCEDURE sp_modifyFunctionary
 (
 @idFuncionarioBE smallint,
 @idSexoBE tinyint,
@@ -414,3 +409,91 @@ BEGIN
 	urlFoto = @urlFotoBE
 	WHERE @idFuncionarioBE = idFuncionario
 END
+GO
+
+CREATE OR ALTER PROCEDURE sp_graph_all_changed_solicitude
+AS
+	BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @changed int  = 0
+	DECLARE @total int = 0
+
+	SELECT @total = count(s.idSolicitud)
+	FROM tb_Solicitudes s 
+
+	SELECT @changed = count(s.idSolicitud)
+	FROM tb_Solicitudes s 
+	inner join tb_Bitacoras b on s.idSolicitud = b.idSolicitud 
+	WHERE b.idTransaccion = 4 
+
+
+	SELECT (@changed * 100/@total) as changed, (@total - @changed)*100/@total as unchanged
+	END
+GO
+
+CREATE OR ALTER PROCEDURE sp_graph_all_finished_solicitude
+AS
+	BEGIN
+		declare @finished int = 0
+		declare @unfinished int = 0
+		select @finished = count(idSolicitud) from tb_Solicitudes where terminado = 0
+		select @unfinished = count(idSolicitud) from tb_Solicitudes where terminado = 1
+		select @finished finished , @unfinished unfinished
+	END
+GO
+
+CREATE OR ALTER PROCEDURE sp_graph_all_trimester_advance
+AS
+	BEGIN
+		 select descripcion from tb_Trimestres t 
+         inner join tb_Avances s on t.idTrimestre = s.idTrimestre
+	END
+GO
+
+CREATE OR ALTER PROCEDURE sp_graph_year_changed_solicitude
+(@year INT)
+AS
+	BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @changed int  = 0
+	DECLARE @total int = 0
+
+	SELECT @total = count(s.idSolicitud)
+	FROM tb_Solicitudes s
+	WHERE YEAR(fechaSolicitud) = @year  
+
+	SELECT @changed = count(s.idSolicitud)
+	FROM tb_Solicitudes s 
+	INNER JOIN tb_Bitacoras b on s.idSolicitud = b.idSolicitud 
+	WHERE b.idTransaccion = 4 AND  YEAR(fechaSolicitud) = @year  
+
+	IF @total != 0
+		SELECT (@changed * 100/@total) as changed, (@total - @changed)*100/@total as unchanged
+	END
+GO
+
+CREATE OR ALTER PROCEDURE sp_graph_year_finished_solicitude
+(@year INT)
+AS
+	BEGIN
+		SET NOCOUNT ON;
+		declare @finished int = 0
+		declare @unfinished int = 0
+		select @finished = count(idSolicitud) from tb_Solicitudes where terminado = 0 and YEAR(fechaSolicitud) = @year
+		select @unfinished = count(idSolicitud) from tb_Solicitudes where terminado = 1 and YEAR(fechaSolicitud) = @year
+		select @finished finished , @unfinished unfinished
+	END
+
+GO
+
+CREATE OR ALTER PROCEDURE sp_graph_year_trimester_advance
+(@year INT)
+AS
+	BEGIN
+		 select descripcion from tb_Trimestres t 
+         inner join tb_Avances s on t.idTrimestre = s.idTrimestre
+         where YEAR(fechaAvance) = @year
+	END
+GO
