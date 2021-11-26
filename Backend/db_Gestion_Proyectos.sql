@@ -498,7 +498,7 @@ AS
 	END
 GO
 
-CREATE PROCEDURE sp_verifyDeleteDepartment
+CREATE OR ALTER PROCEDURE sp_verifyDeleteDepartment
 (
 @idDepartmentBE int
 )
@@ -515,10 +515,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_recoverFunctionaryNameById 
-(
-@idFuncionarioBE smallInt
-)
+CREATE OR ALTER PROCEDURE sp_listBinnacle
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -526,8 +523,8 @@ BEGIN
 	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
-	SELECT nombre, apellido_1, apellido_2
-	FROM tb_Funcionarios
-	WHERE idFuncionario = @idFuncionarioBE
+	SELECT T.descripcion AS transaccion, F.nombre, F.apellido_1, F.apellido_1, F.apellido_2, B.idAvance AS idAvance, B.idSolicitud AS idSolicitud, format(B.fechaBitacora, 'yyyy-MM-dd') AS fechaBitacora
+	FROM tb_Bitacoras AS B
+	inner join tb_Transacciones AS T ON B.idTransaccion = T.idTransaccion
+	inner join tb_Funcionarios AS F ON B.idFuncionario_Aplicativo = F.idFuncionario
 END
-GO

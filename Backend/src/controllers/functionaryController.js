@@ -343,34 +343,5 @@ export default class FunctionaryController{
             return false
         }
     }
-
-    // Este método recupera el nombre, apellido_1 y apellido_2 del funcionario aplicativo mediante el id extraído del token
-    recoverFunctionaryNameById = async (id) => {
-        
-        let pool = null
-
-        try {
-            // Conección a la base
-            pool = await getConnection()
-            // Parámetros de entrada y ejecución del sp
-            const result = await pool.request()
-                .input("idFuncionarioBE", sql.SmallInt, id)
-                .execute('sp_recoverFunctionaryNameById')
-
-            const funcionario = {
-                nombre: result.recordset[0].nombre, 
-                apellido_1: result.recordset[0].apellido_1, 
-                apellido_2: result.recordset[0].apellido_2,
-            }
-            // validación sobre la inserción del objeto
-            return ( result.recordset.length > 0) ? funcionario : false
-        } catch (err) {
-            console.log(err);
-            return false
-        } finally {
-            // Cerrar la conexión
-            pool.close()
-        }
-    }
 }
 
