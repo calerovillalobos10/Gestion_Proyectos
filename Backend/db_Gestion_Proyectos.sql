@@ -514,3 +514,20 @@ BEGIN
 	WHERE idDepartamento = @idDepartmentBE
 END
 GO
+
+CREATE PROCEDURE sp_recoverFunctionaryNameById 
+(
+@idFuncionarioBE smallInt
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT nombre, apellido_1, apellido_2
+	FROM tb_Funcionarios
+	WHERE idFuncionario = @idFuncionarioBE
+END
+GO
