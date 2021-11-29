@@ -1,3 +1,4 @@
+import { ReactiveFormsModule } from '@angular/forms';
 import { BitacoraComponent } from './pages/bitacora.component';
 import { DataTablesModule } from 'angular-datatables';
 import { NgModule } from '@angular/core';
@@ -12,8 +13,8 @@ import { BitacoraRoutingModule } from './bitacora-routing.module';
   imports: [
     CommonModule,
     DataTablesModule,
-    BitacoraRoutingModule
-   
+    BitacoraRoutingModule,
+    ReactiveFormsModule
   ]
 })
 export class BitacoraModule { }

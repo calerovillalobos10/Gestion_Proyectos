@@ -6,6 +6,24 @@
   <span (click)='addAdvance()' class="add_crud"><i class="fas fa-plus " ></i> Insertar</span>
 </div>
 
+<div class="filter_range">
+
+  <div class="input_date_group">
+    <label>Desde</label>
+    <i class="fas fa-eraser" title="Remover filtro" (click)='removeMinDate()'></i>
+    <br>
+    <input type="date" min={{minDateAllowed}} max={{maxDateFiltered1}} (change)="changeMinDate($event)" [formControl]="formControlMin"/>
+  </div>
+  <div class="input_date_group">
+    <label>Hasta</label>
+    <i class="fas fa-eraser" title="Remover filtro" (click)='removeMaxDate()'></i>
+    <br>
+    <input type="date" min={{minDateFiltered2}} max={{maxDateAllowed}} (change)="changeMaxDate($event)" [formControl]="formControlMax"/>
+    
+  </div>
+</div>
+
+
 <table
   id="data"
   class="display responsive nowrap"
@@ -26,7 +44,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let avance of allRows">
+    <tr *ngFor="let avance of filteredRows">
       <td>{{ avance.idAvance }}</td>
       <td>{{ avance.trimestre | trimestre}}</td>
       <td>{{ avance.funcionarioAplicativo }}</td>

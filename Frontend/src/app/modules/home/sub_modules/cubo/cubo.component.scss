@@ -6,3 +6,25 @@
   position: relative;
   background-color: white;
 }
+
+
+.download_button{
+  height: 2em;
+  color: black;
+  box-shadow: 0 0 16px -5px;
+  padding: .5em;
+  border-radius: .5em;
+  position: relative;
+  left: 95%;
+
+  background-color: white;
+  transition: transform 250ms;
+  transform: translate(-1em, -5em);
+}
+
+.download_button:hover{
+  transform: translate(-1em, -5em) scale(1.1);
+}
+.download_button:active{
+  transform: translate(-1em, -5em) scale(1);
+}

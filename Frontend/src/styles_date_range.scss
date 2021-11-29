@@ -1,0 +1,43 @@
+
+.table_wrapper{
+  margin-top: 55em !important;
+}
+
+.filter_range{
+  position: absolute;
+  display: inline-block;
+  width: 80%;
+  top: 9em;
+  justify-content: center;
+  display: flex;
+  min-width: 500px;
+}
+
+@media (max-width:640px) {
+  .filter_range{
+    top: 8em;
+  }
+}
+
+.filter_range label{
+  width: 50px;
+  display: inline-block;
+  
+  margin-left: 2em;
+  margin-right: 1em;
+}
+
+.filter_range input{
+  margin-left: 2em;
+  width: 150px;
+  margin-bottom: 2em;
+}
+
+.fa-eraser{
+  margin-left: .5em;
+  padding: .8em;
+  color: var(--clr-base-100);
+
+  border-radius: .5em;
+  cursor: pointer;
+}

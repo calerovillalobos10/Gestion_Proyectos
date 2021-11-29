@@ -1,9 +1,11 @@
 <h1 class="crud_title">Cubo </h1>
 <div class="mb-2"></div>
 
-<div class="scollable">
+<div class="scollable" id="cube_table">
   <dx-pivot-grid
   [dataSource]="pivotGridDataSource">
 
   </dx-pivot-grid>
+
+  <a class="download_button fas fa-download" (click)='capture()' style="cursor: pointer;" title="Descargar datos de cubo en pdf"> </a>
 </div>

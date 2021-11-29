@@ -60,21 +60,6 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       return this.form.markAllAsTouched();
     }
 
-    // Si el email existe mostramos una alerta.
-    /*this.service.validateEmail(this.form.value.correo).subscribe(
-      res => {
-
-        // Si es true el email esta en el sistema.
-        if (res['estado']) {
-          return this.alertService.simpleAlert('El email ya se encuentra registrado')
-        } else {
-          this.proceedCreate();
-        }
-      },
-      err => {
-        return this.alertService.simpleAlert('Surgio un error al validar el email')
-      }
-    )*/
     this.proceedCreate();
   }
 

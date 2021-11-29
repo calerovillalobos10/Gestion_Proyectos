@@ -5,7 +5,7 @@ import { RelatedAdvancesComponent } from './components/related-advances-modal/re
 import { DetModalComponent } from './components/det-modal/det-modal.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { AddModalComponent } from './components/add-modal/add-modal.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -27,6 +27,7 @@ import { DataTablesModule } from 'angular-datatables';
     CommonModule,
     SolicitudesRoutingModule,
     ReactiveFormsModule,
+    FormsModule,
     PdfViewerModule,
     DataTablesModule,
     SharedModule

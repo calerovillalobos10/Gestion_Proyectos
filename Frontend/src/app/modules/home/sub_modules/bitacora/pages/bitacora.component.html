@@ -1,11 +1,27 @@
-<h1 class="crud_title">Solicitudes</h1>
+<h1 class="crud_title">Bitácora</h1>
 <div class="mb-5"></div>
 
+<div class="filter_range">
+
+  <div class="input_date_group">
+    <label>Desde</label>
+    <i class="fas fa-eraser" title="Remover filtro" (click)='removeMinDate()'></i>
+    <br>
+    <input type="date" min={{minDateAllowed}} max={{maxDateFiltered1}} (change)="changeMinDate($event)" [formControl]="formControlMin"/>
+  </div>
+  <div class="input_date_group">
+    <label>Hasta</label>
+    <i class="fas fa-eraser" title="Remover filtro" (click)='removeMaxDate()'></i>
+    <br>
+    <input type="date" min={{minDateFiltered2}} max={{maxDateAllowed}} (change)="changeMaxDate($event)" [formControl]="formControlMax"/>
+    
+  </div>
+</div>
 
 <table
   id="table"
   class="display responsive nowrap"
-  style="width: 100%"
+  style="width: 100%;"
   datatable
   [dtOptions]="dtOptions"
   [dtTrigger]="dtTrigger"
@@ -21,7 +37,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let bitacora of allRows">
+    <tr *ngFor="let bitacora of filteredRows">
       <td>{{ bitacora.idBitacora }}</td>
       <td>{{ bitacora.idTransaccion }}</td>
       <td>{{ bitacora.idFuncionario }}</td>
