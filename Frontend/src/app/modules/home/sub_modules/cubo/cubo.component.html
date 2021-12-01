@@ -2,10 +2,8 @@
 <div class="mb-2"></div>
 
 <div class="scollable" id="cube_table">
-  <dx-pivot-grid
-  [dataSource]="pivotGridDataSource">
+  
+  <dx-pivot-grid [dataSource]="pivotGridDataSource" style="min-height: 67vh;"> </dx-pivot-grid>
+  <a class="download_button fas fa-download" (click)='capture()' title="Descargar datos de cubo en pdf"> </a>
 
-  </dx-pivot-grid>
-
-  <a class="download_button fas fa-download" (click)='capture()' style="cursor: pointer;" title="Descargar datos de cubo en pdf"> </a>
 </div>

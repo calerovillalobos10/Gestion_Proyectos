@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-//cubo
-import XmlaStore from "devextreme/ui/pivot_grid/xmla_store";
-import PivotGridDataSource from "devextreme/ui/pivot_grid/data_source";
 
 import { jsPDF } from "jspdf";
 import html2canvas from 'html2canvas';
@@ -15,19 +12,11 @@ export class CuboComponent implements OnInit {
   pivotGridDataSource: any;
   constructor() {
     this.pivotGridDataSource = {
-      /*fields: [
-          { dataField: '[Product].[Category]', area: 'row' },
-          { 
-              dataField: "[Product].[Subcategory]", 
-              area: "row",
-              headerFilter: {
-                  allowSearch: true
-              } 
-          },
-          { dataField: '[Ship Date].[Calendar Year]', area: 'column' },
-          { dataField: '[Ship Date].[Month of Year]', area: 'column' },
-          { dataField: "[Measures].[Reseller Freight Cost]", area: "data", format: "currency" }
-      ],*/
+      fields: [
+          { dataField: '[Funcionario]', area: 'row' },
+          { dataField: '[Month]', area: 'column' },
+          { dataField: "[Recuento Olap Solicitudes Fact]", area: "data"}
+      ],
       store: {
         type: 'xmla',
         url: 'http://192.168.100.136:9500/',
@@ -37,8 +26,7 @@ export class CuboComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   capture() {
     const table: HTMLElement = document.getElementById('cube_table') || new HTMLElement;
