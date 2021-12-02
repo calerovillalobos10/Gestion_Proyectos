@@ -8,6 +8,7 @@ import fileRoute from './routes/fileRouter'
 import functionaryRoute from './routes/functionaryRouter'
 import binnacleRoute from './routes/binnacleRouter'
 import solicitationRoute from './routes/solicitationRouter'
+import advanceRoute from './routes/advanceRouter'
 
 // Instancia
 const app = express()
@@ -28,6 +29,7 @@ app.use(fileRoute)
 app.use(functionaryRoute)
 app.use(binnacleRoute)
 app.use(solicitationRoute)
+app.use(advanceRoute)
 
 export default app
 

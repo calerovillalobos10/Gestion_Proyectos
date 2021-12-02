@@ -63,7 +63,7 @@ router.put('/solicitation', loginController.recuperarToken, loginController.veri
 })
 
 // Se comunica con el controller para eliminar una soliciud
-router.post('/deletesolicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
+router.post('/deleteSolicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     // Se llama a la función que elimina la solicitud por el id
     const verifyDelete = await solicitationController.deleteSolicitation(req.body.idSolicitud, req.body.idFuncionario_Aplicativo)

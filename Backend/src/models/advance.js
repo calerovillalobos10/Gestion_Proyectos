@@ -2,7 +2,7 @@
 export default class Advance {
 
     // Constrcutor que recibe los parámetros de los objetos
-    constrcutor(idAvance, trimestre, funcionarioAplicativo, idSolicitud, fechaAvance, documento, estado) {
+    constructor(idAvance, trimestre, funcionarioAplicativo, idSolicitud, fechaAvance, documento, estado) {
         this.idAvance = idAvance;
         this.trimestre = trimestre;
         this.funcionarioAplicativo = funcionarioAplicativo;

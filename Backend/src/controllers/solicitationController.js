@@ -69,7 +69,6 @@ export default class SolicitationController{
                 // validación sobre la inserción del objeto
                 return ( result.rowsAffected[0] > 0 ) ? true : false
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
@@ -77,7 +76,6 @@ export default class SolicitationController{
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
@@ -107,7 +105,7 @@ export default class SolicitationController{
         
         let verifyFechaFin = ( fechaFin != null && this.validacionController.verifySpecialCharacters(fechaFin) && this.validacionController.verifyDate(fechaFin) ) ? true : false
         
-        let verifyDocumentoActaConst = ( verifyDocumentoActaConst != null ) && this.validacionController.verifyExtDocument(documentoActaConst) ? true : false;
+        let verifyDocumentoActaConst = ( documentoActaConst != null ) && this.validacionController.verifyExtDocument(documentoActaConst) ? true : false;
         
         return ( verifyIdFuncionarioAplicativo &&  verifyIdFuncionarioResponsable && verifyIdFuncionarioFinal && verifyFechaSolicitud && verifyFechaInicio && verifyFechaFin ) ? true : false
     }
@@ -164,7 +162,7 @@ export default class SolicitationController{
     recoverSolicitationById = async (idSolicitud, idFuncionarioAplicativo) => {
         
         let pool = null
-        console.log(idSolicitud, idFuncionarioAplicativo);
+
         // Este if se encarga de llamar a las validaciones
         if ( idSolicitud != null && this.validacionController.verifyNumber(idSolicitud) && this.validacionController.verifySpecialCharacters(idSolicitud) && this.validacionController.verifyMinSize(idSolicitud)
             && idFuncionarioAplicativo != null && this.validacionController.verifyNumber(idFuncionarioAplicativo) && this.validacionController.verifySpecialCharacters(idFuncionarioAplicativo) && this.validacionController.verifyMinSize(idFuncionarioAplicativo) ) {
@@ -192,7 +190,6 @@ export default class SolicitationController{
                 // validación sobre la inserción del objeto
                 return ( result.recordset.length > 0) ? solicitation : false
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
