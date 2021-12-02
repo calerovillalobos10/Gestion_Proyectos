@@ -113,8 +113,7 @@ CREATE TABLE tb_Bitacoras(
   idTransaccion TINYINT NOT NULL,
   idFuncionario_Aplicativo SMALLINT NOT NULL,
   idAvance TINYINT,
-  idSolicitud SMALLINT NOT NULL,
-  descripcion VARCHAR(150) NOT NULL,
+  idSolicitud SMALLINT NULL,
   fechaBitacora SMALLDATETIME NOT NULL
 
   CONSTRAINT fk_Bitacora_Transaccion 
@@ -528,3 +527,194 @@ BEGIN
 	inner join tb_Transacciones AS T ON B.idTransaccion = T.idTransaccion
 	inner join tb_Funcionarios AS F ON B.idFuncionario_Aplicativo = F.idFuncionario
 END
+GO
+
+CREATE OR ALTER PROCEDURE sp_insertSolicitation
+(
+@idFuncionarioAplicativoBE SMALLINT,
+@idFuncionarioResponsableBE SMALLINT,
+@idFuncionarioFinalBE SMALLINT,
+@fechaSolicitudBE SMALLDATETIME,
+@fechaInicioBE DATE,
+@fechaFinBE DATE,
+@documentoActaConstBE VARBINARY(MAX),
+@estadoBE BIT,
+@terminadoBE BIT
+)
+AS
+BEGIN
+	
+	INSERT INTO tb_Solicitudes (idFuncionario_Aplicativo, idFuncionario_Responsable, idFuncionario_final, fechaSolicitud, fechaInicio, fechaFin, documentoActa, estado, terminado)
+	VALUES (@idFuncionarioAplicativoBE, @idFuncionarioResponsableBE, @idFuncionarioFinalBE, @fechaSolicitudBE, @fechaInicioBE, @fechaFinBE, @documentoActaConstBE, @estadoBE, @terminadoBE)
+END
+GO 
+
+CREATE OR ALTER PROCEDURE sp_listSolicitation
+(
+@idFuncionarioAplicativoBE SMALLINT
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	BEGIN TRANSACTION
+	
+		BEGIN TRY
+
+			-- Insert statements for procedure here
+			SELECT S.idSolicitud AS idSolicitud, CONCAT(FA.nombre, +' '+ FA.apellido_1, +' '+ FA.apellido_2) AS funcionario_aplicativo, 
+			CONCAT(FR.nombre, + ' ' + FR.apellido_1, + ' ' + FR.apellido_2) AS funcionario_responsable, 
+			CONCAT(FF.nombre, + ' ' + FF.apellido_1, + ' ' + FF.apellido_2) AS funcionario_final, format(S.fechaSolicitud, 'yyyy-MM-d hh:mm:ss') AS fechaSolicitud, 
+			format(S.fechaInicio, 'yyyy-MM-dd') AS fechaInicio, format(S.fechaFin, 'yyyy-MM-dd') AS fechaFin, 
+			S.documentoActa AS documentoActa, S.estado AS estado, S.terminado AS terminado 
+			FROM tb_Solicitudes AS S
+			inner join tb_Funcionarios AS FA ON S.idFuncionario_Aplicativo = FA.idFuncionario
+			inner join tb_Funcionarios AS FR ON S.idFuncionario_Aplicativo = FR.idFuncionario
+			inner join tb_Funcionarios AS FF ON S.idFuncionario_Aplicativo = FF.idFuncionario
+
+			DECLARE @fechaHoraActual SMALLDATETIME = CURRENT_TIMESTAMP;
+
+			INSERT INTO tb_Bitacoras(idTransaccion, idFuncionario_Aplicativo, idAvance, idSolicitud, fechaBitacora)
+			VALUES(3, @idFuncionarioAplicativoBE, NULL, NULL, @fechaHoraActual)
+
+			COMMIT TRANSACTION
+		END TRY
+
+		BEGIN CATCH
+
+			ROLLBACK TRANSACTION
+			PRINT 'Se produjo un error'
+
+		END CATCH
+END
+GO	
+
+CREATE OR ALTER PROCEDURE sp_verifySolicitation
+(
+@idFuncionarioAplicativoBE SMALLINT,
+@idFuncionarioResponsableBE SMALLINT,
+@idFuncionarioFinalBE SMALLINT,
+@fechaSolicitudBE SMALLDATETIME,
+@fechaInicioBE DATE,
+@fechaFinBE DATE,
+@documentoActaConstBE VARBINARY(MAX),
+@estadoBE BIT,
+@terminadoBE BIT
+)
+AS
+BEGIN
+
+    -- Insert statements for procedure here
+	UPDATE tb_Solicitudes SET estado = 1
+	WHERE idFuncionario_Aplicativo = @idFuncionarioAplicativoBE AND idFuncionario_Responsable = @idFuncionarioResponsableBE AND idFuncionario_final = @idFuncionarioFinalBE 
+	AND fechaSolicitud = @fechaSolicitudBE AND fechaInicio = @fechaInicioBE AND fechaFin = @fechaFinBE AND documentoActa = @documentoActaConstBE
+	AND terminado = @terminadoBE
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_recoverSolicitationById
+(
+@idFuncionarioAplicativoBE SMALLINT,
+@idSolicitudBE SMALLINT
+)
+AS
+BEGIN
+	
+	BEGIN TRANSACTION
+
+		BEGIN TRY
+
+			SELECT idSolicitud, idFuncionario_Aplicativo, idFuncionario_Responsable, idFuncionario_Final, fechaSolicitud, fechaInicio, fechaFin, documentoActa, estado, terminado
+			FROM tb_Solicitudes
+			WHERE idSolicitud = @idSolicitudBE
+
+			DECLARE @fechaHoraActual SMALLDATETIME = CURRENT_TIMESTAMP;
+
+			INSERT INTO tb_Bitacoras(idTransaccion, idFuncionario_Aplicativo, idAvance, idSolicitud, fechaBitacora)
+			VALUES(3, @idFuncionarioAplicativoBE, NULL, NULL, @fechaHoraActual)
+
+			COMMIT TRANSACTION
+		END TRY
+
+		BEGIN CATCH
+
+			ROLLBACK TRANSACTION
+			PRINT 'Se produjo un error'
+
+		END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_deleteSolicitation
+(
+@idFuncionarioAplicativoBE SMALLINT,
+@idSolicitudBE SMALLINT
+)
+AS
+BEGIN
+	BEGIN TRANSACTION
+
+		BEGIN TRY
+
+			UPDATE tb_Solicitudes SET estado = 0
+			WHERE idSolicitud = @idSolicitudBE
+
+			DECLARE @fechaHoraActual SMALLDATETIME = CURRENT_TIMESTAMP;
+
+			INSERT INTO tb_Bitacoras(idTransaccion, idFuncionario_Aplicativo, idAvance, idSolicitud, fechaBitacora)
+			VALUES(2, @idFuncionarioAplicativoBE, NULL, NULL, @fechaHoraActual)
+
+			COMMIT TRANSACTION
+		END TRY
+
+		BEGIN CATCH
+
+			ROLLBACK TRANSACTION
+			PRINT 'Se produjo un error'
+
+		END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_modifySolicitation
+(
+@idSolicitudBE SMALLINT,
+@idFuncionarioAplicativoBE SMALLINT,
+@idFuncionarioResponsableBE SMALLINT,
+@idFuncionarioFinalBE SMALLINT,
+@fechaSolicitudBE SMALLDATETIME,
+@fechaInicioBE DATE,
+@fechaFinBE DATE,
+@documentoActaConstBE VARBINARY(MAX),
+@estadoBE BIT,
+@terminadoBE BIT
+)
+AS
+BEGIN
+	BEGIN TRANSACTION
+	
+		BEGIN TRY
+
+			UPDATE tb_Solicitudes SET @idFuncionarioAplicativoBE = @idFuncionarioAplicativoBE, @idFuncionarioResponsableBE = @idFuncionarioResponsableBE,
+			@idFuncionarioFinalBE = @idFuncionarioFinalBE, fechaSolicitud = @fechaSolicitudBE, fechaInicio = @fechaInicioBE, 
+			fechaFin = @fechaFinBE, documentoActa = @documentoActaConstBE, estado = @estadoBE, terminado = @terminadoBE
+			WHERE idSolicitud = @idSolicitudBE
+	
+			DECLARE @fechaHoraActual SMALLDATETIME = CURRENT_TIMESTAMP;
+
+			INSERT INTO tb_Bitacoras(idTransaccion, idFuncionario_Aplicativo, idAvance, idSolicitud, fechaBitacora)
+			VALUES(4, @idFuncionarioAplicativoBE, NULL, @idSolicitudBE, @fechaHoraActual)
+			
+			COMMIT TRANSACTION
+
+		END TRY
+
+		BEGIN CATCH
+
+			ROLLBACK TRANSACTION
+			PRINT 'Se produjo un error'
+		END CATCH
+END
+GO
