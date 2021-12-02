@@ -1,215 +1,127 @@
 // Importaciones necesarias
 import { getConnection, sql } from '../database/connection'
 import ValidacionController from '../controllers/validationController'
-import speakeasy from 'speakeasy'
-import qrcode from 'qrcode'
 import Solicitation from '../models/solicitation'
-import MailerController from '../controllers/mailerController'
 
 export default class SolicitationController{
 
     validacionController;
-    mailerController;
 
     // Constructor donde se inicializan las instancias
     constructor() {
-
         this.validacionController = new ValidacionController()
-        this.mailerController = new MailerController()
     }
 
-    // Esta función obtiene una lista de funcionarios de la base de datos
-    listsolicitation = async () => {
+    // Esta función obtiene una lista de solicitudes de la base de datos
+    listSolicitation = async (idFuncionarioAplicativo) => {
 
         let pool = null
 
-        try {
-            // Conección a la base
-            pool = await getConnection()
-            // Ejecución del sp
-            const result = await pool.request().execute('sp_listsolicitation')
-            // Retorno del objeto con los parámetros que se ocupan en el frontend
-            return result.recordset
-        } catch (err) {
-            console.log(err);
+        if ( idFuncionarioAplicativo != null && this.validacionController.verifyNumber(idFuncionarioAplicativo) && this.validacionController.verifySpecialCharacters(idFuncionarioAplicativo) && this.validacionController.verifyMinSize(idFuncionarioAplicativo) ) {
+            
+            try {
+                // Conección a la base
+                pool = await getConnection()
+                // Ejecución del sp
+                const result = await pool.request()
+                .input("idFuncionarioAplicativoBE", sql.SmallInt, idFuncionarioAplicativo)
+                .execute('sp_listSolicitation')
+                // Retorno del objeto con los parámetros que se ocupan en el frontend
+                return result.recordset
+            } catch (err) {
+                console.log(err);
+                return false
+            } finally {
+                // Cerrar la conexión
+                pool.close()
+            }
+        } else {
+            console.log('Falló el proceso de validación de datos');
             return false
-        } finally {
-            // Cerrar la conexión
-            pool.close()
-        }
+        }  
     }
 
     // Esta función se encarga de enviar los parámetros del objeto solicitation a la base de datos para que sean insertados
-    insertsolicitation = async (dataLogin) => {
+    insertSolicitation = async (dataLogin) => {
 
         let pool = null
         // Se llama al método que se encarga de verificar los atributos del objeto solicitation
-        const verifyAtributes = this.verifyAttributessolicitation(dataLogin)
+        const verifyAtributes = this.verifyAttributesSolicitation(dataLogin)
 
         // Este if se encarga de llamar a las validaciones
         if ( verifyAtributes ) {
 
             try {
-                // Se llama al método que crea el secret para el funcionario
-                const secret = this.createSecret()
                 // Conección a la base
                 pool = await getConnection()
                 // Parámetros de entrada y salida del sp y ejecución del mismo
                 const result = await pool.request()
-                    .input("idSexoBE", sql.TinyInt, dataLogin.getSexo)
-                    .input("idDepartamentoBE", sql.SmallInt, dataLogin.getDepartment)
-                    .input("idTipoFuncionarioBE", sql.TinyInt, dataLogin.getTipoFuncionario)
-                    .input("nombreBE", sql.VarChar(15), dataLogin.getNombre)
-                    .input("apellido_1BE", sql.VarChar(15), dataLogin.getApellido_1)
-                    .input("apellido_2BE", sql.VarChar(15), dataLogin.getApellido_2)
-                    .input("fechaNacimientoBE", sql.Date, dataLogin.getFechaNacimiento)
-                    .input("correoBE", sql.VarChar(50), dataLogin.getCorreo)
-                    .input("contraseniaBE", sql.VarChar(16), dataLogin.getContrasenia)
-                    .input("urlFotoBE", sql.VarChar(180), dataLogin.getUrlFoto)
+                    .input("idFuncionarioAplicativoBE", sql.SmallInt, dataLogin.getFuncionarioAplicativo)
+                    .input("idFuncionarioResponsableBE", sql.SmallInt, dataLogin.getFuncionarioResponsable)
+                    .input("idFuncionarioFinalBE", sql.SmallInt, dataLogin.getFuncionarioFinal)
+                    .input("fechaSolicitudBE", sql.SmallDateTime, dataLogin.getFechaSolicitud)
+                    .input("fechaInicioBE", sql.Date, dataLogin.getFechaIncio)
+                    .input("fechaFinBE", sql.Date, dataLogin.getFechaFin)
+                    .input("documentoActaConstBE", sql.VarBinary, dataLogin.getDocumentoActaConst.data)
                     .input("estadoBE", sql.Bit, dataLogin.getEstado)
-                    .input("dobleAuthBE", sql.Bit, dataLogin.getDobleAuth)
-                    .input("secretUrlBE", sql.VarChar(180), secret.ascii)
-                    .execute('sp_insertsolicitation')
-
-                    console.log(result);
-                // Verificación de la inserción en la base de datos
-                if( result.rowsAffected[0] > 0 ) {
-                    
-                    // Obtiene el url de la base64 del qr y la envía a una función del node mailer que se encarga de enviar el qr al funcionario
-                    let sendEmail = this.findQRCode(secret).then( data => this.mailerController.mailer(dataLogin.getCorreo, data) )
-
-                    if( (await sendEmail) ) {
-                        return true
-                    }
-                } else {
-
-                    return false
-                }
+                    .input("terminadoBE", sql.Bit, dataLogin.getTerminado)
+                    .execute('sp_insertSolicitation')
+                // validación sobre la inserción del objeto
+                return ( result.rowsAffected[0] > 0 ) ? true : false
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
                 // Cerrar la conexión
-                //pool.close()
+                pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
     }
 
     // Esta función se encarga de verificar los atributos del objeto solicitation 
-    verifyAttributessolicitation = (dataLogin) => {
+    verifyAttributesSolicitation = (dataLogin) => {
 
-        const sexoRes = dataLogin.getSexo
-        const departmentoRes = dataLogin.getDepartment
-        const tipoFuncionarioRes = dataLogin.getTipoFuncionario
-        const nombreRes = dataLogin.getNombre
-        const apellido_1Res = dataLogin.getApellido_1
-        const apellido_2Res = dataLogin.getApellido_2
-        const fechaNacimientoRes = dataLogin.getFechaNacimiento
-        const correoRes = dataLogin.getCorreo
-        const contraseniaRes = dataLogin.getContrasenia
-        const urlFotoRes = dataLogin.getUrlFoto
-        const estadoRes = dataLogin.getEstado
+        const idFuncionarioAplicativo = dataLogin.getFuncionarioAplicativo
+        const idFuncionarioResponsable = dataLogin.getFuncionarioResponsable
+        const idFuncionarioFinal = dataLogin.getFuncionarioFinal
+        const fechaSolicitud = dataLogin.getFechaSolicitud
+        const fechaInicio = dataLogin.getFechaIncio
+        const fechaFin = dataLogin.getFechaFin
+        const documentoActaConst = dataLogin.getDocumentoActaConst
 
         // Verificaciones de los diferentes atributos del objeto solicitation
-        let verifySexo = ( sexoRes != null && this.validacionController.verifySpecialCharacters(parseInt(sexoRes, 10)) && this.validacionController.verifyMinSize(parseInt(sexoRes, 10), 1) && this.validacionController.verifyNumber(parseInt(sexoRes, 10)) ) ? true : false
+        let verifyIdFuncionarioAplicativo = ( idFuncionarioAplicativo != null && this.validacionController.verifySpecialCharacters(parseInt(idFuncionarioAplicativo, 10)) && this.validacionController.verifyMinSize(parseInt(idFuncionarioAplicativo, 10), 1) && this.validacionController.verifyNumber(parseInt(idFuncionarioAplicativo, 10)) ) ? true : false
         
-        let verifyDepartmento = ( departmentoRes != null && this.validacionController.verifySpecialCharacters(parseInt(departmentoRes, 10)) && this.validacionController.verifyMinSize(parseInt(departmentoRes, 10), 1) && this.validacionController.verifyNumber(parseInt(departmentoRes, 10)) ) ? true : false
+        let verifyIdFuncionarioResponsable = ( idFuncionarioResponsable != null && this.validacionController.verifySpecialCharacters(parseInt(idFuncionarioResponsable, 10)) && this.validacionController.verifyMinSize(parseInt(idFuncionarioResponsable, 10), 1) && this.validacionController.verifyNumber(parseInt(idFuncionarioResponsable, 10)) ) ? true : false
         
-        let verifyTipoFuncionario = ( tipoFuncionarioRes != null && this.validacionController.verifySpecialCharacters(parseInt(tipoFuncionarioRes, 10)) && this.validacionController.verifyMinSize(parseInt(tipoFuncionarioRes, 10), 1) && this.validacionController.verifyNumber(parseInt(tipoFuncionarioRes, 10)) ) ? true : false
+        let verifyIdFuncionarioFinal = ( idFuncionarioFinal != null && this.validacionController.verifySpecialCharacters(parseInt(idFuncionarioFinal, 10)) && this.validacionController.verifyMinSize(parseInt(idFuncionarioFinal, 10), 1) && this.validacionController.verifyNumber(parseInt(idFuncionarioFinal, 10)) ) ? true : false
         
-        let verifyNombre = ( nombreRes != null && this.validacionController.verifySpecialCharacters(nombreRes) && this.validacionController.verifyMinSize(nombreRes, 3) && this.validacionController.verifyMaxSize(nombreRes, 15) ) ? true : false
+        let verifyFechaSolicitud = ( fechaSolicitud != null && this.validacionController.verifySpecialCharacters(fechaSolicitud) && this.validacionController.verifyDateTime(fechaSolicitud) ) ? true : false
         
-        let verifyApellido_1 = ( apellido_1Res != null && this.validacionController.verifySpecialCharacters(apellido_1Res) && this.validacionController.verifyMinSize(apellido_1Res, 3) && this.validacionController.verifyMaxSize(apellido_1Res, 15) ) ? true : false
+        let verifyFechaInicio = ( fechaInicio != null && this.validacionController.verifySpecialCharacters(fechaInicio) && this.validacionController.verifyDate(fechaInicio) ) ? true : false
         
-        let verifyApellido_2 = ( apellido_2Res != null && this.validacionController.verifySpecialCharacters(apellido_2Res) && this.validacionController.verifyMinSize(apellido_2Res, 3) && this.validacionController.verifyMaxSize(apellido_2Res, 15) ) ? true : false
+        let verifyFechaFin = ( fechaFin != null && this.validacionController.verifySpecialCharacters(fechaFin) && this.validacionController.verifyDate(fechaFin) ) ? true : false
         
-        let verifyFechaNacimiento = ( fechaNacimientoRes != null && this.validacionController.verifySpecialCharacters(fechaNacimientoRes) && this.validacionController.verifyDate(fechaNacimientoRes) ) ? true : false
+        let verifyDocumentoActaConst = ( documentoActaConst != null ) && this.validacionController.verifyExtDocument(documentoActaConst) ? true : false;
         
-        let verifyCorreo = ( correoRes != null && this.validacionController.verifyEmail(correoRes) && this.validacionController.verifyMinSize(correoRes, 12) && this.validacionController.verifyMaxSize(correoRes, 50) ) ? true : false
-        
-        let verifyContrasenia = ( contraseniaRes != null && this.validacionController.verifySpecialCharacters(contraseniaRes) && this.validacionController.verifyMinSize(contraseniaRes, 8) && this.validacionController.verifyMaxSize(contraseniaRes, 16) ) ? true : false
-        
-        let verifyUrlFoto = ( urlFotoRes != null && this.validacionController.verifySpecialCharacters(urlFotoRes) && this.validacionController.verifyMinSize(urlFotoRes, 5) && this.validacionController.verifyMaxSize(urlFotoRes, 180) ) ? true : false
-        
-        let verifyEstado = ( estadoRes != null && this.validacionController.verifySpecialCharacters(estadoRes) && this.validacionController.verifyMinSize(estadoRes, 1) && this.validacionController.verifyNumber(estadoRes) ) ? true : false
-        
-        return ( verifySexo &&  verifyDepartmento && verifyTipoFuncionario && verifyNombre && verifyApellido_1 && verifyApellido_2 && verifyFechaNacimiento && verifyCorreo && verifyContrasenia && verifyUrlFoto && verifyEstado) ? true : false
-    }
-
-    // Esta función se encarga de crear el secret para el funcionario. Este secret es el que se utiliza en el código qr
-    createSecret = () => {
-
-        const secret = speakeasy.generateSecret({
-            name: "GestionDevs"
-        })
-
-        return secret
-    }
-
-    // Esta función se encarga de sacar la data del qr para poder formar la imagen
-    findQRCode = async (secret) => {
-
-        let qr = null
-
-        try {
-            // Extra el url del data, que está en base64 y corresponde al qr
-            qr = await qrcode.toDataURL(secret.otpauth_url)
-        } catch (err){
-            console.log(err);
-        }
-
-        return qr
-    }
-
-    // Esta función se encarga de validar que no se encuentre registrado el correo en la base de datos, para así poder insertar el nuevo funcionario
-    verifyEmailsolicitation = async (correo) => {
-
-        let pool = null
-
-        // Este if se encarga de llamar a las validaciones
-        if ( correo != null && this.validacionController.verifyEmail(correo) ) {
-
-            try {
-                // Conección a la base
-                pool = await getConnection()
-                // Parámetros de entrada del sp y ejecución del mismo
-                const result = await pool.request()
-                    .input("correoBE", sql.VarChar(50), correo)
-                    .execute('sp_verifyEmailsolicitation')
-                // validación sobre la inserción del objeto
-                return ( result.recordset.length > 0 ) ? false : true
-            } catch (err) {
-
-                console.log(err);
-                return false
-            } finally {
-                // Cerrar la conexión
-                pool.close()
-            }
-        } else {
-
-            console.log('Falló el proceso de validación de datos');
-            return false
-        }
+        return ( verifyIdFuncionarioAplicativo &&  verifyIdFuncionarioResponsable && verifyIdFuncionarioFinal && verifyFechaSolicitud && verifyFechaInicio && verifyFechaFin ) ? true : false
     }
 
     /* 
-        Esta función se encarga de verificar si ya existe un funcionario con los campos que se le pasan por atributo a la función.
+        Esta función se encarga de verificar si ya existe una solicitud con los campos que se le pasan por atributo a la función.
         Esto con el fin de evitar algún conflicto u error cuando dos o más usarios modifican al mismo tiempo. Por otra parte, si existe
-        el funcionario con los mismos cambios cambiar el estado a 1 para que sea visible si es que el método se llama cuando se 
+        la solicitud con los mismos valores se cambia el estado a 1 para que sea visible si es que el método se llama cuando se 
         quiere insertar a la bd
     */
-    verifysolicitation = async (dataLogin) => {
+    verifySolicitation = async (dataLogin) => {
 
         let pool = null
 
         // Se llama al método que se encarga de verificar los atributos del objeto solicitation
-        const verifyAtributes = this.verifyAttributessolicitation(dataLogin)
+        const verifyAtributes = this.verifyAttributesSolicitation(dataLogin)
 
         // Este if se encarga de llamar a las validaciones
         if ( verifyAtributes ) {
@@ -219,17 +131,16 @@ export default class SolicitationController{
                 pool = await getConnection()
                 // Parámetros de entrada del sp y ejecución del mismo
                 const result = await pool.request()
-                    .input("idSexoBE", sql.TinyInt, dataLogin.getSexo)
-                    .input("idDepartamentoBE", sql.SmallInt, dataLogin.getDepartment)
-                    .input("idTipoFuncionarioBE", sql.TinyInt, dataLogin.getTipoFuncionario)
-                    .input("nombreBE", sql.VarChar(15), dataLogin.getNombre)
-                    .input("apellido_1BE", sql.VarChar(15), dataLogin.getApellido_1)
-                    .input("apellido_2BE", sql.VarChar(15), dataLogin.getApellido_2)
-                    .input("fechaNacimientoBE", sql.Date, dataLogin.getFechaNacimiento)
-                    .input("correoBE", sql.VarChar(50), dataLogin.getCorreo)
-                    .input("contraseniaBE", sql.VarChar(16), dataLogin.getContrasenia)
-                    .input("urlFotoBE", sql.VarChar(180), dataLogin.getUrlFoto)
-                    .execute('sp_verifysolicitation')
+                .input("idFuncionarioAplicativoBE", sql.SmallInt, dataLogin.getFuncionarioAplicativo)
+                .input("idFuncionarioResponsableBE", sql.SmallInt, dataLogin.getFuncionarioResponsable)
+                .input("idFuncionarioFinalBE", sql.SmallInt, dataLogin.getFuncionarioFinal)
+                .input("fechaSolicitudBE", sql.SmallDateTime, dataLogin.getFechaSolicitud)
+                .input("fechaInicioBE", sql.Date, dataLogin.getFechaIncio)
+                .input("fechaFinBE", sql.Date, dataLogin.getFechaFin)
+                .input("documentoActaConstBE", sql.VarBinary, dataLogin.getDocumentoActaConst.data)
+                .input("estadoBE", sql.Bit, dataLogin.getEstado)
+                .input("terminadoBE", sql.Bit, dataLogin.getTerminado)
+                .execute('sp_verifySolicitation')
                 // validación sobre la inserción del objeto
                 return ( result.rowsAffected[0] > 0 ) ? true : false
             } catch (err) {
@@ -247,38 +158,38 @@ export default class SolicitationController{
         }
     }
 
-    // Esta función recupera un objeto funcionario mediante el id
-    recoversolicitationById = async (id) => {
+    // Esta función recupera un objeto solicitud mediante el id
+    recoverSolicitationById = async (idSolicitud, idFuncionarioAplicativo) => {
         
         let pool = null
 
         // Este if se encarga de llamar a las validaciones
-        if ( id != null && this.validacionController.verifyNumber(id) && this.validacionController.verifySpecialCharacters(id) && this.validacionController.verifyMinSize(id) ) {
+        if ( idSolicitud != null && this.validacionController.verifyNumber(idSolicitud) && this.validacionController.verifySpecialCharacters(idSolicitud) && this.validacionController.verifyMinSize(idSolicitud)
+            && idFuncionarioAplicativo != null && this.validacionController.verifyNumber(idFuncionarioAplicativo) && this.validacionController.verifySpecialCharacters(idFuncionarioAplicativo) && this.validacionController.verifyMinSize(idFuncionarioAplicativo) ) {
 
             try {
                 // Conección a la base
                 pool = await getConnection()
                 // Parámetros de entrada y ejecución del sp
                 const result = await pool.request()
-                    .input("idFuncionarioBE", sql.SmallInt, id)
-                    .execute('sp_recoversolicitationById')
+                    .input("idFuncionarioAplicativoBE", sql.SmallInt, idFuncionarioAplicativo)
+                    .input("idSolicitudBE", sql.SmallInt, idSolicitud)
+                    .execute('sp_recoverSolicitationById')
                 // Creación del objeto funcionario
-                const funcionario = new solicitation(
-                    result.recordset[0].idFuncionario, 
-                    result.recordset[0].idSexo, 
-                    result.recordset[0].iddepartamento,
-                    result.recordset[0].idTipoFuncionario, 
-                    result.recordset[0].nombre, 
-                    result.recordset[0].apellido_1, 
-                    result.recordset[0].apellido_2, 
-                    result.recordset[0].fechaNacimiento, 
-                    result.recordset[0].correo, 1, 
-                    result.recordset[0].urlFoto,1,1,1)
+                const solicitation = new Solicitation(
+                    result.recordset[0].idSolicitud, 
+                    result.recordset[0].idFuncionario_Aplicativo, 
+                    result.recordset[0].idFuncionario_Responsable,
+                    result.recordset[0].idFuncionario_Final, 
+                    result.recordset[0].fechaSolicitud, 
+                    result.recordset[0].fechaInicio, 
+                    result.recordset[0].fechaFin, 
+                    result.recordset[0].documentoActa,
+                    result.recordset[0].estado, 
+                    result.recordset[0].terminado)
                 // validación sobre la inserción del objeto
-               
-                return ( result.recordset.length > 0) ? funcionario : false
+                return ( result.recordset.length > 0) ? solicitation : false
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
@@ -286,31 +197,30 @@ export default class SolicitationController{
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
     }
 
     // Esta función se encarga de cambiar el estado 
-    deletesolicitation = async (id) => {
+    deleteSolicitation = async (idSolicitud, idFuncionarioAplicativo) => {
         
         let pool = null
-        console.log(id);
         // Este if se encarga de llamar a las validaciones
-        if ( id != null && this.validacionController.verifyNumber(id) && this.validacionController.verifySpecialCharacters(id) && this.validacionController.verifyMinSize(id) ) {
+        if ( idSolicitud != null && this.validacionController.verifyNumber(idSolicitud) && this.validacionController.verifySpecialCharacters(idSolicitud) && this.validacionController.verifyMinSize(idSolicitud)
+            && idFuncionarioAplicativo != null && this.validacionController.verifyNumber(idFuncionarioAplicativo) && this.validacionController.verifySpecialCharacters(idFuncionarioAplicativo) && this.validacionController.verifyMinSize(idFuncionarioAplicativo) ) {
 
             try {
                 // Conección a la base
                 pool = await getConnection()
                 // Parámetros de entrada y ejecución del sp
                 const result = await pool.request()
-                    .input("idFuncionarioBE", sql.SmallInt, id)
-                    .execute('sp_deletesolicitation')
+                    .input("idFuncionarioAplicativoBE", sql.SmallInt, idFuncionarioAplicativo)
+                    .input("idSolicitudBE", sql.SmallInt, idSolicitud)
+                    .execute('sp_deleteSolicitation')
                 // validación sobre la inserción del objeto
                 return ( result.rowsAffected[0] > 0 ) ? true : false
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
@@ -318,40 +228,42 @@ export default class SolicitationController{
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
     }
 
-    // Esta función se encarga de modificar el funcionario en la base de datos
-    modifysolicitation = async (dataLogin) => {
-        console.log(dataLogin);
-        let pool = null
-        // Se llama al método que se encarga de verificar los atributos del objeto solicitation
-        const verifyAtributes = this.verifyAttributessolicitation(dataLogin)
-        
-        if ( verifyAtributes ) {
+    // Esta función se encarga de modificar la solicitud en la base de datos
+    modifySolicitation = async (dataLogin) => {
 
+        let pool = null
+        const idSolicitud = parseInt(dataLogin.getIdSolicitud, 10)
+        const terminado = parseInt(dataLogin.getTerminado, 10)
+        // Se llama al método que se encarga de verificar los atributos del objeto solicitation
+        const verifyAtributes = this.verifyAttributesSolicitation(dataLogin)
+
+        if ( verifyAtributes && idSolicitud != null && this.validacionController.verifyNumber(idSolicitud) && this.validacionController.verifySpecialCharacters(idSolicitud) && this.validacionController.verifyMinSize(idSolicitud) 
+           && terminado != null && this.validacionController.verifySpecialCharacters(terminado) && this.validacionController.verifyMinSize(terminado, 1) && this.validacionController.verifyNumber(terminado) ){
+            
             try {
                 // Conección a la base
                 pool = await getConnection()
                 // Parámetros de entrada y ejecución del sp
                 const result = await pool.request()
-                    .input("idFuncionarioBE", sql.SmallInt, dataLogin.getIdFuncionario)
-                    .input("idSexoBE", sql.TinyInt, dataLogin.getSexo)
-                    .input("idDepartamentoBE", sql.SmallInt, dataLogin.getDepartment)
-                    .input("idTipoFuncionarioBE", sql.TinyInt, dataLogin.getTipoFuncionario)
-                    .input("nombreBE", sql.VarChar(15), dataLogin.getNombre)
-                    .input("apellido_1BE", sql.VarChar(15), dataLogin.getApellido_1)
-                    .input("apellido_2BE", sql.VarChar(15), dataLogin.getApellido_2)
-                    .input("fechaNacimientoBE", sql.Date, dataLogin.getFechaNacimiento)
-                    .input("urlFotoBE", sql.VarChar(180), dataLogin.getUrlFoto)
-                    .execute('sp_modifysolicitation')
+                .input("idSolicitudBE", sql.SmallInt, idSolicitud)
+                .input("idFuncionarioAplicativoBE", sql.SmallInt, dataLogin.getFuncionarioAplicativo)
+                .input("idFuncionarioResponsableBE", sql.SmallInt, dataLogin.getFuncionarioResponsable)
+                .input("idFuncionarioFinalBE", sql.SmallInt, dataLogin.getFuncionarioFinal)
+                .input("fechaSolicitudBE", sql.SmallDateTime, dataLogin.getFechaSolicitud)
+                .input("fechaInicioBE", sql.Date, dataLogin.getFechaIncio)
+                .input("fechaFinBE", sql.Date, dataLogin.getFechaFin)
+                .input("documentoActaConstBE", sql.VarBinary, dataLogin.getDocumentoActaConst.data)
+                .input("estadoBE", sql.Bit, dataLogin.getEstado)
+                .input("terminadoBE", sql.Bit, dataLogin.getTerminado)
+                .execute('sp_modifySolicitation')
                 // validación sobre la inserción del objeto
                 return (result.rowsAffected[0] > 0) ? true : false
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
@@ -359,12 +271,9 @@ export default class SolicitationController{
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
     }
-
-    // TODO: Hacer método que recupere el nombre, apellido_1, apellido_2 mediante al id, para la parte de solicitudes
 }
 

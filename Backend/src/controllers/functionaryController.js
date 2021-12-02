@@ -13,7 +13,6 @@ export default class FunctionaryController{
 
     // Constructor donde se inicializan las instancias
     constructor() {
-
         this.validacionController = new ValidacionController()
         this.mailerController = new MailerController()
     }
@@ -45,7 +44,6 @@ export default class FunctionaryController{
         let pool = null
         // Se llama al método que se encarga de verificar los atributos del objeto functionary
         const verifyAtributes = this.verifyAttributesFunctionary(dataLogin)
-
         // Este if se encarga de llamar a las validaciones
         if ( verifyAtributes ) {
 
@@ -70,11 +68,8 @@ export default class FunctionaryController{
                     .input("dobleAuthBE", sql.Bit, dataLogin.getDobleAuth)
                     .input("secretUrlBE", sql.VarChar(180), secret.ascii)
                     .execute('sp_insertFunctionary')
-
-                    console.log(result);
                 // Verificación de la inserción en la base de datos
                 if( result.rowsAffected[0] > 0 ) {
-                    
                     // Obtiene el url de la base64 del qr y la envía a una función del node mailer que se encarga de enviar el qr al funcionario
                     let sendEmail = this.findQRCode(secret).then( data => this.mailerController.mailer(dataLogin.getCorreo, data) )
 
@@ -86,15 +81,13 @@ export default class FunctionaryController{
                     return false
                 }
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
                 // Cerrar la conexión
-                //pool.close()
+                pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
@@ -184,7 +177,6 @@ export default class FunctionaryController{
                 // validación sobre la inserción del objeto
                 return ( result.recordset.length > 0 ) ? false : true
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
@@ -192,7 +184,6 @@ export default class FunctionaryController{
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
@@ -207,10 +198,8 @@ export default class FunctionaryController{
     verifyFunctionary = async (dataLogin) => {
 
         let pool = null
-
         // Se llama al método que se encarga de verificar los atributos del objeto functionary
         const verifyAtributes = this.verifyAttributesFunctionary(dataLogin)
-
         // Este if se encarga de llamar a las validaciones
         if ( verifyAtributes ) {
 
@@ -233,7 +222,6 @@ export default class FunctionaryController{
                 // validación sobre la inserción del objeto
                 return ( result.rowsAffected[0] > 0 ) ? true : false
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
@@ -241,7 +229,6 @@ export default class FunctionaryController{
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
@@ -275,10 +262,8 @@ export default class FunctionaryController{
                     result.recordset[0].correo, 1, 
                     result.recordset[0].urlFoto,1,1,1)
                 // validación sobre la inserción del objeto
-               
                 return ( result.recordset.length > 0) ? funcionario : false
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
@@ -286,7 +271,6 @@ export default class FunctionaryController{
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
@@ -296,7 +280,6 @@ export default class FunctionaryController{
     deleteFunctionary = async (id) => {
         
         let pool = null
-        console.log(id);
         // Este if se encarga de llamar a las validaciones
         if ( id != null && this.validacionController.verifyNumber(id) && this.validacionController.verifySpecialCharacters(id) && this.validacionController.verifyMinSize(id) ) {
 
@@ -310,7 +293,6 @@ export default class FunctionaryController{
                 // validación sobre la inserción del objeto
                 return ( result.rowsAffected[0] > 0 ) ? true : false
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
@@ -318,7 +300,6 @@ export default class FunctionaryController{
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
@@ -326,7 +307,7 @@ export default class FunctionaryController{
 
     // Esta función se encarga de modificar el funcionario en la base de datos
     modifyFunctionary = async (dataLogin) => {
-        console.log(dataLogin);
+
         let pool = null
         // Se llama al método que se encarga de verificar los atributos del objeto functionary
         const verifyAtributes = this.verifyAttributesFunctionary(dataLogin)
@@ -351,7 +332,6 @@ export default class FunctionaryController{
                 // validación sobre la inserción del objeto
                 return (result.rowsAffected[0] > 0) ? true : false
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
@@ -359,12 +339,9 @@ export default class FunctionaryController{
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
     }
-
-    // TODO: Hacer método que recupere el nombre, apellido_1, apellido_2 mediante al id, para la parte de solicitudes
 }
 

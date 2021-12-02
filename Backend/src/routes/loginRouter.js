@@ -8,12 +8,13 @@ const loginController = new LoginController()
 
 // Rutas de login
 /*
+    Verificar el pin del 2fa que ingresa el usuario
     Envía el secret mediante el código, para ver si es válido
     Obtiene el correo del frontend y un pin
 */
 router.post('/autenticar', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
-    const correo = req.body.correo; // Falta validar este dato
+    const correo = req.body.correo; // TODO: Falta validar este dato
     const pin = req.body.pin; // Falta validar este dato
     const secret = await loginController.getSecret(correo);
 
@@ -50,9 +51,10 @@ router.post('/login', async (req, res) => {
         const token = loginController.getToken(dataBD, res);
 
         if ( token ) {
-
+            // TODO: nunca se envía ya que el res lo tiene el getToken
             // Se envía el nombre, correo y dobleaAuth al frontend
             res.json({
+                "id": dataBD.id,
                 "nombre": dataBD.nombre,
                 "correo": dataBD.correo,
                 "dobleAuth": dataBD.dobleAuth,

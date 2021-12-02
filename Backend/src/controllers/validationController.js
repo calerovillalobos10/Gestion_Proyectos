@@ -37,9 +37,15 @@ export default class validationController {
 
     // Esta función verifica la fecha
     verifyDate = (date) => /^\d{2,4}\-\d{1,2}\-\d{1,2}$/.test(date)
+    
+    // Esta función verifica la fecha y hora
+    verifyDateTime = (date) => /^\d{2,4}\-\d{1,2}\-\d{1,2}\ \d{1,2}\:\d{1,2}\:\d{1,2}$/.test(date)
 
     // Esta función verifica el tipo de extensión de una imagen
     verifyExtImage = (file) => ( file.mimetype.toLowerCase() === 'image/jpeg' || file.mimetype.toLowerCase() === 'image/jpg' || file.mimetype.toLowerCase() === 'image/png' ) ? true : false
+
+    // Esta función verifica el tipo de extensión del archivo ingresado
+    verifyExtDocument = (file) => ( file.mimetype.toLowerCase() === 'application/pdf' ) ? true : false
 
     // Esta función verifica si el nombre de la imagen está repetido en la carpeta de archivos
     verifyNameImage = (file) => {

@@ -1,50 +1,30 @@
 // Importaciones necesarias
 import { Router } from 'express'
-import path from 'path'
-import fileUpload from 'express-fileupload'
 import LoginController from '../controllers/loginController'
-import FileController from '../controllers/fileController'
 import Solicitation from '../models/solicitation'
 import SolicitationController from '../controllers/solicitationController'
 
 // Instancia
 const router = Router()
 const loginController = new LoginController()
-const fileController = new FileController()
 const solicitationController = new SolicitationController()
 
-// validaciones del fileUpload 
-router.use(fileUpload({
-    createParentPath: true,
-    limits: {
-        filesize: 1024
-    },
-}))
-
 // Rutas de department
+// Se encarga de comunicarse con el controller para insertar una solicitud
+router.post('/solicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
-// Se encarga de comunicarse con el controller para insertar un funcionario
-router.post('/solicitation', loginController.recuperarToken, loginController.verifyToken, fileController.upload, async (req, res) => {
+    const solicitation = new Solicitation(1, req.body.idFuncionario_Aplicativo, req.body.idFuncionario_Responsable, req.body.idFuncionario_Final, req.body.fechaSolicitud, req.body.fechaInicio, req.body.fechaFin, req.files.documentoActaConst, 1, 1)
+    // Se llama al método del controller para que verifique si existe la solicitud en la bd y está con estado 0
+    const verifySolicitation = solicitationController.verifySolicitation(solicitation)
 
-    const solicitation = new solicitation(1, req.body.idSexo, req.body.idDepartamento, req.body.idTipoFuncionario, req.body.nombre, req.body.apellido_1, req.body.apellido_2, req.body.fechaNacimiento, req.body.correo, req.body.contrasenia, req.files.urlFoto.name, 1, 1, '')
-    // Se llama al método del controller para que verifique si existe el funcionario en la bd y está con estado 0
-    const verifysolicitation = solicitationController.verifysolicitation(solicitation)
-    const verifyEmailsolicitation = solicitationController.verifyEmailsolicitation(req.body.correo)
-
-    if ( (await verifysolicitation) && (await !verifyEmailsolicitation) ) {
+    if ( (await verifySolicitation) ) {
 
         res.json({
             "estado": true
         })
-    } else if ( await !verifyEmailsolicitation ) {
-
-        res.json({
-            "mensaje": "No se pudo insertar el funcionario",
-            "estado": false,
-        })
     } else {
-        // Se llama a la función inserta el departamento
-        const verifyInsert = await solicitationController.insertsolicitation(solicitation)
+        // Se llama a la función que inserta la solicitud
+        const verifyInsert = await solicitationController.insertSolicitation(solicitation)
 
         if (verifyInsert) {
             // Se envía el secret al frontend
@@ -54,29 +34,21 @@ router.post('/solicitation', loginController.recuperarToken, loginController.ver
         } else {
             // Si sucede algún error se le notifica al frontend
             res.json({
-                "mensaje": "No se pudo insertar el funcionario",
+                "mensaje": "No se pudo insertar la solicitud",
                 "estado": false,
             })
         }
     }
 })
 
-// Se encarga de comunicarse con el controller para modificar un funcionario
-router.put('/solicitation', loginController.recuperarToken, loginController.verifyToken, fileController.upload, async (req, res) => {
+// Se encarga de comunicarse con el controller para modificar una solicitud
+router.put('/solicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
-    let solicitation = null
+    const solicitation = new Solicitation(req.body.idSolicitud, req.body.idFuncionario_Aplicativo, req.body.idFuncionario_Responsable, req.body.idFuncionario_Final, req.body.fechaSolicitud, req.body.fechaInicio, req.body.fechaFin, req.files.documentoActaConst, 1, req.body.terminado)
+    // Se llama a la función que modifica la solicitud
+    const verifyModify = await solicitationController.modifySolicitation(solicitation)
 
-    if( req.body.urlFoto != undefined ){
-        
-        solicitation = new solicitation(req.body.idFuncionario, req.body.idSexo, req.body.idDepartamento, req.body.idTipoFuncionario, req.body.nombre, req.body.apellido_1, req.body.apellido_2, req.body.fechaNacimiento, req.body.correo, req.body.contrasenia, req.body.urlFoto, 1, 1, '')
-    } else {
-
-        solicitation = new solicitation(req.body.idFuncionario, req.body.idSexo, req.body.idDepartamento, req.body.idTipoFuncionario, req.body.nombre, req.body.apellido_1, req.body.apellido_2, req.body.fechaNacimiento, req.body.correo, req.body.contrasenia, req.files.urlFoto.name, 1, 1, '')
-    }
-    
-    const verifyModify = await solicitationController.modifysolicitation(solicitation)
-
-    if (verifyModify) {
+    if ( verifyModify )  {
         // Se envía el secret al frontend
         res.json({
             "estado": true
@@ -84,17 +56,17 @@ router.put('/solicitation', loginController.recuperarToken, loginController.veri
     } else {
         // Si sucede algún error se le notifica al frontend
         res.json({
-            "mensaje": "No se pudo modificar el funcionario",
+            "mensaje": "No se pudo modificar la solicitud",
             "estado": false,
         })
     }
 })
 
-// Se comunica con el controller para aliminar un funcionario
-router.post('/deletesolicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
+// Se comunica con el controller para eliminar una soliciud
+router.post('/deleteSolicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
-    // Se llama a la función que elimina el funcionario por el id
-    const verifyDelete = await solicitationController.deletesolicitation(req.body.idFuncionario)
+    // Se llama a la función que elimina la solicitud por el id
+    const verifyDelete = await solicitationController.deleteSolicitation(req.body.idSolicitud, req.body.idFuncionario_Aplicativo)
 
     if (verifyDelete) {
 
@@ -105,16 +77,16 @@ router.post('/deletesolicitation', loginController.recuperarToken, loginControll
     } else {
         // Si sucede algún error se le notifica al frontend
         res.json({
-            "mensaje": "No se pudo eliminar el funcionario",
+            "mensaje": "No se pudo eliminar la solicitud",
             "estado": false,
         })
     }
 })
 
-// Se encarga de comunicarse con el controller para recuperar un listado de funcionarios
+// Se encarga de comunicarse con el controller para recuperar un listado de solicitudes
 router.get('/solicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
     // Se llama a la función recupera la lista
-    const list = await solicitationController.listsolicitation()
+    const list = await solicitationController.listSolicitation(req.body.idFuncionario_Aplicativo)
 
     if (list) {
 
@@ -126,18 +98,18 @@ router.get('/solicitation', loginController.recuperarToken, loginController.veri
     } else {
         // Si sucede algún error se le notifica al frontend
         res.json({
-            "mensaje": "No se pudo recuperar la lista de funcionarios",
+            "mensaje": "No se pudo recuperar la lista de solicitudes",
             "estado": false,
         })
     }
 })
 
-// Se encarga de comunicarse con el controller para recuperar un objeto funcionario
+// Se encarga de comunicarse con el controller para recuperar un objeto solicitud
 router.post('/solicitationById', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
    
     // Se llama a la función recupera el funcionario por el id
-    const solicitation = await solicitationController.recoversolicitationById(req.body.idFuncionario)
-    console.log(solicitation);
+    const solicitation = await solicitationController.recoverSolicitationById(req.body.idSolicitud, req.body.idFuncionario_Aplicativo)
+
     if (solicitation) {
 
         // Se envía el secret al frontend
@@ -148,7 +120,7 @@ router.post('/solicitationById', loginController.recuperarToken, loginController
     } else {
         // Si sucede algún error se le notifica al frontend
         res.json({
-            "mensaje": "No se pudo recuperar el funcionario",
+            "mensaje": "No se pudo recuperar la solicitud",
             "estado": false,
         })
     }

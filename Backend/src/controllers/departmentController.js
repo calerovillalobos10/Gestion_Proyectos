@@ -9,7 +9,6 @@ export default class DeparmentController{
 
     // Constructor donde se inicializan las instancias
     constructor() {
-
         this.validacionController = new ValidacionController()
     }
 
@@ -17,19 +16,15 @@ export default class DeparmentController{
     listDepartment = async () => {
 
         let pool = null
-        let request = null
 
         try {
             // Conección a la base
             pool = await getConnection()
-            request = pool.request()
             // Ejecución del sp
-            const result = await request.execute('sp_listDepartment')
+            const result = await pool.request().execute('sp_listDepartment')
             // Retorno del objeto con los parámetros que se ocupan en el frontend
-
             return result.recordset
         } catch (err) {
-
             console.log(err);
             return false
         } finally {
@@ -42,7 +37,6 @@ export default class DeparmentController{
     insertDepartment = async (dataLogin) => {
         
         let pool = null
-        let request = null
         let descripcionRes = dataLogin.descripcion
 
         // Este if se encarga de llamar a las validaciones
@@ -52,15 +46,13 @@ export default class DeparmentController{
             try {
                 // Conección a la base
                 pool = await getConnection()
-                request = pool.request()
-                // Parámetros de entrada y salida del sp
-                request.input("descripcionBE", sql.VarChar(30), descripcionRes)
-                // Ejecución del sp
-                const result = await request.execute('sp_insertDepartment')
+                // Parámetros de entrada y salida del sp y ejecución del mismo
+                const result = await pool.request()
+                .input("descripcionBE", sql.VarChar(30), descripcionRes)
+                .execute('sp_insertDepartment')
                 // validación sobre la inserción del objeto
                 return ( result.rowsAffected[0] > 0 ) ? true : false
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
@@ -68,7 +60,6 @@ export default class DeparmentController{
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
@@ -78,7 +69,6 @@ export default class DeparmentController{
     deleteDepartment = async (dataLogin) => {
         
         let pool = null
-        let request = null
         let idDepartmentRes = dataLogin.id
 
         // Este if se encarga de llamar a las validaciones
@@ -87,15 +77,13 @@ export default class DeparmentController{
             try {
                 // Conección a la base
                 pool = await getConnection()
-                request = pool.request()
-                // Parámetros de entrada y salida del sp
-                request.input("idDepartmentBE", sql.Int, idDepartmentRes)
-                // Ejecución del sp
-                const result = await request.execute('sp_deleteDepartment')
+                // Parámetros de entrada y salida del sp y ejecución del mismo
+                const result = await pool.request()
+                .input("idDepartmentBE", sql.Int, idDepartmentRes)
+                .execute('sp_deleteDepartment')
                 // validación sobre la inserción del objeto
                 return ( result.rowsAffected[0] > 0 ) ? true : false
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
@@ -103,7 +91,6 @@ export default class DeparmentController{
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
@@ -113,7 +100,6 @@ export default class DeparmentController{
     modifyDepartment = async (dataLogin) => {
         
         let pool = null
-        let request = null
         let idDepartamentoRes = dataLogin.getIdDepartamento
         let descripcionRes = dataLogin.getDescripcion
 
@@ -124,16 +110,14 @@ export default class DeparmentController{
             try {
                 // Conección a la base
                 pool = await getConnection()
-                request = pool.request()
-                // Parámetros de entrada y salida del sp
-                request.input("idDepartamentoBE", sql.Int, idDepartamentoRes)
-                request.input("descripcionBE", sql.VarChar(30), descripcionRes)
-                // Ejecución del sp
-                const result = await request.execute('sp_modifyDepartment')
+                // Parámetros de entrada y salida del sp y ejecución del mismo
+                const result = await pool.request()
+                .input("idDepartamentoBE", sql.Int, idDepartamentoRes)
+                .input("descripcionBE", sql.VarChar(30), descripcionRes)
+                .execute('sp_modifyDepartment')
                 // validación sobre la inserción del objeto
                 return (result.rowsAffected[0] > 0) ? true : false
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
@@ -141,7 +125,6 @@ export default class DeparmentController{
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
@@ -151,7 +134,6 @@ export default class DeparmentController{
     recoverDepartmentId = async (dataLogin) => {
         
         let pool = null
-        let request = null
         let idDepartmentRes = dataLogin.id
 
         // Este if se encarga de llamar a las validaciones
@@ -160,17 +142,15 @@ export default class DeparmentController{
             try {
                 // Conección a la base
                 pool = await getConnection()
-                request = pool.request()
-                // Parámetros de entrada y salida del sp
-                request.input("idDepartamentoBE", sql.Int, idDepartmentRes)
-                // Ejecución del sp
-                const result = await request.execute('sp_recoverDepartmentId')
+                // Parámetros de entrada y salida del sp y ejecución del mismo
+                const result = await pool.request()
+                .input("idDepartamentoBE", sql.Int, idDepartmentRes)
+                .execute('sp_recoverDepartmentId')
                 // Creación del objeto departamento
                 const departamento = new Department(result.recordset[0].idDepartamento, result.recordset[0].descripcion, result.recordset[0].estado)
                 // validación sobre la inserción del objeto
                 return ( result.recordset.length > 0) ? departamento : false
             } catch (err) {
-
                 console.log(err);
                 return false
             } finally {
@@ -178,7 +158,6 @@ export default class DeparmentController{
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return false
         }
@@ -188,7 +167,6 @@ export default class DeparmentController{
     verifyDepartment = async (description) => {
 
         let pool = null
-        let request = null
 
         // Este if se encarga de llamar a las validaciones
         if ( description != null && this.validacionController.verifySpecialCharacters(description) && this.validacionController.verifyText(description) ) {
@@ -196,15 +174,13 @@ export default class DeparmentController{
             try {
                 // Conección a la base
                 pool = await getConnection()
-                request = pool.request()
-                // Parámetros de entrada y salida del sp
-                request.input("descripcionBE", sql.VarChar(30), description)
-                // Ejecución del sp
-                const result = await request.execute('sp_verifyDepartment')
+                // Parámetros de entrada y salida del sp y ejecución del mismo
+                const result = await pool.request()
+                .input("descripcionBE", sql.VarChar(30), description)
+                .execute('sp_verifyDepartment')
                 // validación sobre la inserción del objeto
                 return ( result.rowsAffected[0] > 0 ) ? {mensaje:'Se ingresó correctamente el departamento', estado: false} : {estado: true}
             } catch (err) {
-
                 console.log(err);
                 return {
                     mensaje: 'Ocurrió un error en el servidor',
@@ -215,12 +191,42 @@ export default class DeparmentController{
                 pool.close()
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
             return {
                 mensaje: 'Por favor ingrese los datos correctamente',
                 estado: false
             }
+        }
+    }
+
+    // Esta función verifica si el departamento está relacionado con uno o más funcionarios, para permitir o no hacer la eliminación lógica
+    verifyDeleteDepartment = async (dataLogin) => {
+
+        let pool = null
+        let idDepartmentRes = dataLogin.id
+
+        // Este if se encarga de llamar a las validaciones
+        if ( idDepartmentRes != null && this.validacionController.verifyNumber(idDepartmentRes) && this.validacionController.verifySpecialCharacters(idDepartmentRes) ) {
+            
+            try {
+                // Conección a la base
+                pool = await getConnection()
+                // Parámetros de entrada y salida del sp y ejecución del mismo
+                const result = await pool.request()
+                .input("idDepartmentBE", sql.Int, idDepartmentRes)
+                .execute('sp_verifyDeleteDepartment')
+                console.log(result);
+                return ( result.recordset.length > 0 ) ? false : true
+            } catch (err) {
+                console.log(err);
+                return false 
+            } finally {
+                // Cerrar la conexión
+                pool.close()
+            }
+        } else {
+            console.log('Falló el proceso de validación de datos');
+            return false
         }
     }
 }
