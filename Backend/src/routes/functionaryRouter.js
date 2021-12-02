@@ -137,7 +137,7 @@ router.post('/functionaryById', loginController.recuperarToken, loginController.
    
     // Se llama a la función recupera el funcionario por el id
     const functionary = await functionaryController.recoverFunctionaryById(req.body.idFuncionario)
-    console.log(functionary);
+
     if (functionary) {
 
         // Se envía el secret al frontend

@@ -7,14 +7,12 @@ GO
 
 CREATE TABLE tb_Sexos(
   idSexo TINYINT IDENTITY(1, 1) PRIMARY KEY,
-  descripcion VARCHAR(15) NOT NULL,
-  estado BIT DEFAULT 1 NOT NULL
+  descripcion VARCHAR(15) NOT NULL
 );
 
 CREATE TABLE tb_Trimestres(
   idTrimestre TINYINT IDENTITY(1, 1) PRIMARY KEY,
-  descripcion VARCHAR(50) NOT NULL,
-  estado BIT DEFAULT 1 NOT NULL
+  descripcion VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE tb_Departamentos(
@@ -25,8 +23,7 @@ CREATE TABLE tb_Departamentos(
 
 CREATE TABLE tb_TipoFuncionarios(
   idTipoFuncionario TINYINT IDENTITY(1, 1) PRIMARY KEY,
-  descripcion VARCHAR(15) NOT NULL,
-  estado BIT DEFAULT 1 NOT NULL
+  descripcion VARCHAR(15) NOT NULL
 );
 
 CREATE TABLE tb_Funcionarios(
@@ -116,8 +113,7 @@ CREATE TABLE tb_Bitacoras(
   idTransaccion TINYINT NOT NULL,
   idFuncionario_Aplicativo SMALLINT NOT NULL,
   idAvance TINYINT,
-  idSolicitud SMALLINT NOT NULL,
-  descripcion VARCHAR(150) NOT NULL,
+  idSolicitud SMALLINT NULL,
   fechaBitacora SMALLDATETIME NOT NULL
 
   CONSTRAINT fk_Bitacora_Transaccion 
@@ -169,7 +165,7 @@ BEGIN
 	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
-	SELECT F.nombre, F.correo,F.urlFoto, F.dobleAuth
+	SELECT F.idFuncionario, F.nombre, F.correo,F.urlFoto, F.dobleAuth
 	FROM tb_Funcionarios as F
 	WHERE @correoBE = F.correo AND PWDCOMPARE(@contraseniaBE, F.contrasenia) = 1
 END
@@ -392,9 +388,7 @@ BEGIN
 END
 GO
 
-
-
-CREATE OR ALTER   PROCEDURE [dbo].[sp_modifyFunctionary]
+CREATE OR ALTER PROCEDURE sp_modifyFunctionary
 (
 @idFuncionarioBE smallint,
 @idSexoBE tinyint,
@@ -414,3 +408,511 @@ BEGIN
 	urlFoto = @urlFotoBE
 	WHERE @idFuncionarioBE = idFuncionario
 END
+GO
+
+CREATE OR ALTER PROCEDURE sp_graph_all_changed_solicitude
+AS
+	BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @changed int  = 0
+	DECLARE @total int = 0
+
+	SELECT @total = count(s.idSolicitud)
+	FROM tb_Solicitudes s 
+
+	SELECT @changed = count(s.idSolicitud)
+	FROM tb_Solicitudes s 
+	inner join tb_Bitacoras b on s.idSolicitud = b.idSolicitud 
+	WHERE b.idTransaccion = 4 
+
+
+	SELECT (@changed * 100/@total) as changed, (@total - @changed)*100/@total as unchanged
+	END
+GO
+
+CREATE OR ALTER PROCEDURE sp_graph_all_finished_solicitude
+AS
+	BEGIN
+		declare @finished int = 0
+		declare @unfinished int = 0
+		select @finished = count(idSolicitud) from tb_Solicitudes where terminado = 0
+		select @unfinished = count(idSolicitud) from tb_Solicitudes where terminado = 1
+		select @finished finished , @unfinished unfinished
+	END
+GO
+
+CREATE OR ALTER PROCEDURE sp_graph_all_trimester_advance
+AS
+	BEGIN
+		 select descripcion from tb_Trimestres t 
+         inner join tb_Avances s on t.idTrimestre = s.idTrimestre
+	END
+GO
+
+CREATE OR ALTER PROCEDURE sp_graph_year_changed_solicitude
+(@year INT)
+AS
+	BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @changed int  = 0
+	DECLARE @total int = 0
+
+	SELECT @total = count(s.idSolicitud)
+	FROM tb_Solicitudes s
+	WHERE YEAR(fechaSolicitud) = @year  
+
+	SELECT @changed = count(s.idSolicitud)
+	FROM tb_Solicitudes s 
+	INNER JOIN tb_Bitacoras b on s.idSolicitud = b.idSolicitud 
+	WHERE b.idTransaccion = 4 AND  YEAR(fechaSolicitud) = @year  
+
+	IF @total != 0
+		SELECT (@changed * 100/@total) as changed, (@total - @changed)*100/@total as unchanged
+	END
+GO
+
+CREATE OR ALTER PROCEDURE sp_graph_year_finished_solicitude
+(@year INT)
+AS
+	BEGIN
+		SET NOCOUNT ON;
+		declare @finished int = 0
+		declare @unfinished int = 0
+		select @finished = count(idSolicitud) from tb_Solicitudes where terminado = 0 and YEAR(fechaSolicitud) = @year
+		select @unfinished = count(idSolicitud) from tb_Solicitudes where terminado = 1 and YEAR(fechaSolicitud) = @year
+		select @finished finished , @unfinished unfinished
+	END
+
+GO
+
+CREATE OR ALTER PROCEDURE sp_graph_year_trimester_advance
+(@year INT)
+AS
+	BEGIN
+		 select descripcion from tb_Trimestres t 
+         inner join tb_Avances s on t.idTrimestre = s.idTrimestre
+         where YEAR(fechaAvance) = @year
+	END
+GO
+
+CREATE OR ALTER PROCEDURE sp_verifyDeleteDepartment
+(
+@idDepartmentBE int
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT idFuncionario
+	FROM tb_Funcionarios
+	WHERE idDepartamento = @idDepartmentBE
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_listBinnacle
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT T.descripcion AS transaccion, F.nombre, F.apellido_1, F.apellido_1, F.apellido_2, B.idAvance AS idAvance, B.idSolicitud AS idSolicitud, format(B.fechaBitacora, 'yyyy-MM-dd') AS fechaBitacora
+	FROM tb_Bitacoras AS B
+	inner join tb_Transacciones AS T ON B.idTransaccion = T.idTransaccion
+	inner join tb_Funcionarios AS F ON B.idFuncionario_Aplicativo = F.idFuncionario
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_insertSolicitation
+(
+@idFuncionarioAplicativoBE SMALLINT,
+@idFuncionarioResponsableBE SMALLINT,
+@idFuncionarioFinalBE SMALLINT,
+@fechaSolicitudBE SMALLDATETIME,
+@fechaInicioBE DATE,
+@fechaFinBE DATE,
+@documentoActaConstBE VARBINARY(MAX),
+@estadoBE BIT,
+@terminadoBE BIT
+)
+AS
+BEGIN
+	
+	INSERT INTO tb_Solicitudes (idFuncionario_Aplicativo, idFuncionario_Responsable, idFuncionario_final, fechaSolicitud, fechaInicio, fechaFin, documentoActa, estado, terminado)
+	VALUES (@idFuncionarioAplicativoBE, @idFuncionarioResponsableBE, @idFuncionarioFinalBE, @fechaSolicitudBE, @fechaInicioBE, @fechaFinBE, @documentoActaConstBE, @estadoBE, @terminadoBE)
+END
+GO 
+
+CREATE OR ALTER PROCEDURE sp_listSolicitation
+(
+@idFuncionarioAplicativoBE SMALLINT
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	BEGIN TRANSACTION
+	
+		BEGIN TRY
+
+			-- Insert statements for procedure here
+			SELECT S.idSolicitud AS idSolicitud, CONCAT(FA.nombre, +' '+ FA.apellido_1, +' '+ FA.apellido_2) AS funcionario_aplicativo, 
+			CONCAT(FR.nombre, + ' ' + FR.apellido_1, + ' ' + FR.apellido_2) AS funcionario_responsable, 
+			CONCAT(FF.nombre, + ' ' + FF.apellido_1, + ' ' + FF.apellido_2) AS funcionario_final, format(S.fechaSolicitud, 'yyyy-MM-d hh:mm:ss') AS fechaSolicitud, 
+			format(S.fechaInicio, 'yyyy-MM-dd') AS fechaInicio, format(S.fechaFin, 'yyyy-MM-dd') AS fechaFin, 
+			S.documentoActa AS documentoActa, S.estado AS estado, S.terminado AS terminado 
+			FROM tb_Solicitudes AS S
+			inner join tb_Funcionarios AS FA ON S.idFuncionario_Aplicativo = FA.idFuncionario
+			inner join tb_Funcionarios AS FR ON S.idFuncionario_Aplicativo = FR.idFuncionario
+			inner join tb_Funcionarios AS FF ON S.idFuncionario_Aplicativo = FF.idFuncionario
+			WHERE S.estado != 0
+
+			DECLARE @fechaHoraActual SMALLDATETIME = CURRENT_TIMESTAMP;
+
+			INSERT INTO tb_Bitacoras(idTransaccion, idFuncionario_Aplicativo, idAvance, idSolicitud, fechaBitacora)
+			VALUES(3, @idFuncionarioAplicativoBE, NULL, NULL, @fechaHoraActual)
+
+			COMMIT TRANSACTION
+		END TRY
+
+		BEGIN CATCH
+
+			ROLLBACK TRANSACTION
+			PRINT 'Se produjo un error'
+
+		END CATCH
+END
+GO	
+
+CREATE OR ALTER PROCEDURE sp_verifySolicitation
+(
+@idFuncionarioAplicativoBE SMALLINT,
+@idFuncionarioResponsableBE SMALLINT,
+@idFuncionarioFinalBE SMALLINT,
+@fechaSolicitudBE SMALLDATETIME,
+@fechaInicioBE DATE,
+@fechaFinBE DATE,
+@documentoActaConstBE VARBINARY(MAX),
+@estadoBE BIT,
+@terminadoBE BIT
+)
+AS
+BEGIN
+
+    -- Insert statements for procedure here
+	UPDATE tb_Solicitudes SET estado = 1
+	WHERE idFuncionario_Aplicativo = @idFuncionarioAplicativoBE AND idFuncionario_Responsable = @idFuncionarioResponsableBE AND idFuncionario_final = @idFuncionarioFinalBE 
+	AND fechaSolicitud = @fechaSolicitudBE AND fechaInicio = @fechaInicioBE AND fechaFin = @fechaFinBE AND documentoActa = @documentoActaConstBE
+	AND terminado = @terminadoBE
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_recoverSolicitationById
+(
+@idFuncionarioAplicativoBE SMALLINT,
+@idSolicitudBE SMALLINT
+)
+AS
+BEGIN
+	
+	BEGIN TRANSACTION
+
+		BEGIN TRY
+
+			SELECT idSolicitud, idFuncionario_Aplicativo, idFuncionario_Responsable, idFuncionario_Final, fechaSolicitud, fechaInicio, fechaFin, documentoActa, estado, terminado
+			FROM tb_Solicitudes
+			WHERE idSolicitud = @idSolicitudBE
+
+			DECLARE @fechaHoraActual SMALLDATETIME = CURRENT_TIMESTAMP;
+
+			INSERT INTO tb_Bitacoras(idTransaccion, idFuncionario_Aplicativo, idAvance, idSolicitud, fechaBitacora)
+			VALUES(3, @idFuncionarioAplicativoBE, NULL, @idSolicitudBE, @fechaHoraActual)
+
+			COMMIT TRANSACTION
+		END TRY
+
+		BEGIN CATCH
+
+			ROLLBACK TRANSACTION
+			PRINT 'Se produjo un error'
+
+		END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_deleteSolicitation
+(
+@idFuncionarioAplicativoBE SMALLINT,
+@idSolicitudBE SMALLINT
+)
+AS
+BEGIN
+	BEGIN TRANSACTION
+
+		BEGIN TRY
+
+			UPDATE tb_Solicitudes SET estado = 0
+			WHERE idSolicitud = @idSolicitudBE
+
+			DECLARE @fechaHoraActual SMALLDATETIME = CURRENT_TIMESTAMP;
+
+			INSERT INTO tb_Bitacoras(idTransaccion, idFuncionario_Aplicativo, idAvance, idSolicitud, fechaBitacora)
+			VALUES(2, @idFuncionarioAplicativoBE, NULL, @idSolicitudBE, @fechaHoraActual)
+
+			COMMIT TRANSACTION
+		END TRY
+
+		BEGIN CATCH
+
+			ROLLBACK TRANSACTION
+			PRINT 'Se produjo un error'
+
+		END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_modifySolicitation
+(
+@idSolicitudBE SMALLINT,
+@idFuncionarioAplicativoBE SMALLINT,
+@idFuncionarioResponsableBE SMALLINT,
+@idFuncionarioFinalBE SMALLINT,
+@fechaSolicitudBE SMALLDATETIME,
+@fechaInicioBE DATE,
+@fechaFinBE DATE,
+@documentoActaConstBE VARBINARY(MAX),
+@estadoBE BIT,
+@terminadoBE BIT
+)
+AS
+BEGIN
+	BEGIN TRANSACTION
+	
+		BEGIN TRY
+
+			UPDATE tb_Solicitudes SET @idFuncionarioAplicativoBE = @idFuncionarioAplicativoBE, @idFuncionarioResponsableBE = @idFuncionarioResponsableBE,
+			@idFuncionarioFinalBE = @idFuncionarioFinalBE, fechaSolicitud = @fechaSolicitudBE, fechaInicio = @fechaInicioBE, 
+			fechaFin = @fechaFinBE, documentoActa = @documentoActaConstBE, estado = @estadoBE, terminado = @terminadoBE
+			WHERE idSolicitud = @idSolicitudBE
+	
+			DECLARE @fechaHoraActual SMALLDATETIME = CURRENT_TIMESTAMP;
+
+			INSERT INTO tb_Bitacoras(idTransaccion, idFuncionario_Aplicativo, idAvance, idSolicitud, fechaBitacora)
+			VALUES(4, @idFuncionarioAplicativoBE, NULL, @idSolicitudBE, @fechaHoraActual)
+			
+			COMMIT TRANSACTION
+
+		END TRY
+
+		BEGIN CATCH
+
+			ROLLBACK TRANSACTION
+			PRINT 'Se produjo un error'
+		END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_listAdvance
+(
+@idFuncionarioAplicativoBE SMALLINT
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    	BEGIN TRANSACTION
+	
+		BEGIN TRY
+
+			-- Insert statements for procedure here
+			SELECT A.idAvance AS idAvance, T.descripcion AS descripcion, 
+			CONCAT(FA.nombre, +' '+ FA.apellido_1, +' '+ FA.apellido_2) AS funcionario_aplicativo,
+			A.idSolicitud AS idSolicitud, format(A.fechaAvance, 'yyyy-MM-d hh:mm:ss') AS fechaAvance, 
+			A.documento AS documento, A.estado AS estado
+			FROM tb_Avances AS A
+			inner join tb_Trimestres AS T ON A.idTrimestre = T.idTrimestre
+			inner join tb_Funcionarios AS FA ON A.idFuncionario_Aplicativo = FA.idFuncionario
+			WHERE A.estado != 0
+
+			DECLARE @fechaHoraActual SMALLDATETIME = CURRENT_TIMESTAMP;
+
+			INSERT INTO tb_Bitacoras(idTransaccion, idFuncionario_Aplicativo, idAvance, idSolicitud, fechaBitacora)
+			VALUES(7, @idFuncionarioAplicativoBE, NULL, NULL, @fechaHoraActual)
+
+			COMMIT TRANSACTION
+		END TRY
+
+		BEGIN CATCH
+
+			ROLLBACK TRANSACTION
+			PRINT 'Se produjo un error'
+
+		END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_insertAdvance
+(
+@idTrimestreBE TinyInt,
+@idFuncionarioAplicativoBE SmallInt,
+@idSolicitudBE SmallInt,
+@fechaAvanceBE SmallDateTime,
+@documentoBE VarBinary(max),
+@estadoBE Bit
+)
+AS
+BEGIN
+	BEGIN TRANSACTION
+	
+		BEGIN TRY
+
+			INSERT INTO tb_Avances (idTrimestre, idFuncionario_Aplicativo, idSolicitud, fechaAvance, documento, estado)
+			VALUES (@idTrimestreBE, @idFuncionarioAplicativoBE, @idSolicitudBE, @fechaAvanceBE, @documentoBE, @estadoBE)
+	
+			DECLARE @idNuevo TINYINT
+			DECLARE @fechaHoraActual SMALLDATETIME = CURRENT_TIMESTAMP;
+
+			SELECT @idNuevo = SCOPE_IDENTITY()
+			INSERT INTO tb_Bitacoras(idTransaccion, idFuncionario_Aplicativo, idAvance, idSolicitud, fechaBitacora)
+			VALUES(5, @idFuncionarioAplicativoBE, @idNuevo, @idSolicitudBE, @fechaHoraActual)
+			
+			COMMIT TRANSACTION
+
+		END TRY
+
+		BEGIN CATCH
+
+			ROLLBACK TRANSACTION
+			PRINT 'Se produjo un error'
+		END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_verifyAdvance
+(
+@idTrimestreBE TinyInt,
+@idFuncionarioAplicativoBE SmallInt,
+@idSolicitudBE SmallInt,
+@fechaAvanceBE SmallDateTime,
+@documentoBE VarBinary(max),
+@estadoBE Bit
+)
+AS
+BEGIN
+	
+	UPDATE tb_Avances SET estado = 1
+	WHERE idTrimestre = @idTrimestreBE AND idFuncionario_Aplicativo = @idFuncionarioAplicativoBE 
+	AND idSolicitud = @idSolicitudBE AND fechaAvance = @fechaAvanceBE 
+	AND documento = @documentoBE AND estado = @estadoBE
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_recoverAdvanceById
+(
+@idFuncionarioAplicativoBE SmallInt,
+@idAvanceBE TinyInt
+)
+AS
+BEGIN
+		BEGIN TRANSACTION
+
+		BEGIN TRY
+
+			SELECT idAvance, idTrimestre, idFuncionario_Aplicativo, idSolicitud, fechaAvance, documento, estado
+			FROM tb_Avances
+			WHERE idAvance = @idAvanceBE
+
+			DECLARE @fechaHoraActual SMALLDATETIME = CURRENT_TIMESTAMP;
+
+			INSERT INTO tb_Bitacoras(idTransaccion, idFuncionario_Aplicativo, idAvance, idSolicitud, fechaBitacora)
+			VALUES(7, @idFuncionarioAplicativoBE, @idAvanceBE, NULL, @fechaHoraActual)
+
+			COMMIT TRANSACTION
+		END TRY
+
+		BEGIN CATCH
+
+			ROLLBACK TRANSACTION
+			PRINT 'Se produjo un error'
+
+		END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_deleteAdvance 
+(
+@idFuncionarioAplicativoBE SmallInt,
+@idAvanceBE TinyInt
+)
+AS
+BEGIN
+	BEGIN TRANSACTION
+
+		BEGIN TRY
+
+			UPDATE tb_Avances SET estado = 0
+			WHERE idAvance = @idAvanceBE
+
+			DECLARE @fechaHoraActual SMALLDATETIME = CURRENT_TIMESTAMP;
+
+			INSERT INTO tb_Bitacoras(idTransaccion, idFuncionario_Aplicativo, idAvance, idSolicitud, fechaBitacora)
+			VALUES(6, @idFuncionarioAplicativoBE, @idAvanceBE, NULL, @fechaHoraActual)
+
+			COMMIT TRANSACTION
+		END TRY
+
+		BEGIN CATCH
+
+			ROLLBACK TRANSACTION
+			PRINT 'Se produjo un error'
+
+		END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_modifyAdvance
+(
+@idAvanceBE TinyInt,
+@idTrimestreBE TinyInt,
+@idFuncionarioAplicativoBE SmallInt,
+@idSolicitudBE SmallInt,
+@fechaAvanceBE SmallDateTime,
+@documentoBE VarBinary(max),
+@estadoBE Bit
+)
+AS
+BEGIN
+		BEGIN TRANSACTION
+	
+		BEGIN TRY
+
+			UPDATE tb_Avances SET idTrimestre = @idTrimestreBE, idFuncionario_Aplicativo = @idFuncionarioAplicativoBE,
+			idSolicitud = @idSolicitudBE, fechaAvance = @fechaAvanceBE, documento = @documentoBE, estado = @estadoBE 
+			WHERE idAvance = @idAvanceBE
+	
+			DECLARE @fechaHoraActual SMALLDATETIME = CURRENT_TIMESTAMP;
+
+			INSERT INTO tb_Bitacoras(idTransaccion, idFuncionario_Aplicativo, idAvance, idSolicitud, fechaBitacora)
+			VALUES(8, @idFuncionarioAplicativoBE, @idAvanceBE, @idSolicitudBE, @fechaHoraActual)
+			
+			COMMIT TRANSACTION
+
+		END TRY
+
+		BEGIN CATCH
+
+			ROLLBACK TRANSACTION
+			PRINT 'Se produjo un error'
+		END CATCH
+END
+GO

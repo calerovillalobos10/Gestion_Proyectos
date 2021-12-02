@@ -186,20 +186,35 @@
 											"top": 436,
 											"width": 325.525390625,
 											"height": 13
+										},
+										{
+											"_type": "ERDColumnView",
+											"_id": "AAAAAAF9Wg+RMZif5DE=",
+											"_parent": {
+												"$ref": "AAAAAAF74e2/rrS4S8o="
+											},
+											"model": {
+												"$ref": "AAAAAAF9Wg+RJZicXfg="
+											},
+											"font": "Arial;13;0",
+											"left": 213,
+											"top": 451,
+											"width": 325.525390625,
+											"height": 13
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 208,
 									"top": 311,
 									"width": 335.525390625,
-									"height": 143
+									"height": 158
 								}
 							],
 							"font": "Arial;13;0",
 							"left": 208,
 							"top": 288,
 							"width": 335.525390625,
-							"height": 166,
+							"height": 181,
 							"nameLabel": {
 								"$ref": "AAAAAAF74e2/rrS3iYw="
 							},
@@ -1611,7 +1626,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 327,
-									"top": 567,
+									"top": 575,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -1645,7 +1660,7 @@
 									},
 									"font": "Arial;13;0",
 									"left": 327,
-									"top": 472,
+									"top": 487,
 									"height": 13,
 									"alpha": -0.5235987755982988,
 									"distance": 30,
@@ -1662,7 +1677,7 @@
 								"$ref": "AAAAAAF74gFNCLcPYEQ="
 							},
 							"lineStyle": 2,
-							"points": "342:696;342:453",
+							"points": "342:696;342:468",
 							"nameLabel": {
 								"$ref": "AAAAAAF74gnHubgtThM="
 							},
@@ -2050,7 +2065,7 @@
 									},
 									"font": "Arial;13;0",
 									"left": 441,
-									"top": 472,
+									"top": 487,
 									"height": 13,
 									"alpha": -0.5235987755982988,
 									"distance": 30,
@@ -2067,7 +2082,7 @@
 								"$ref": "AAAAAAF74gLVALd5D9A="
 							},
 							"lineStyle": 2,
-							"points": "560:560;456:560;456:453",
+							"points": "560:560;456:560;456:468",
 							"nameLabel": {
 								"$ref": "AAAAAAF79OVlFBq93y4="
 							},
@@ -2303,6 +2318,16 @@
 								"$ref": "AAAAAAF74e2/rbS05nk="
 							},
 							"name": "estado",
+							"type": "BIT",
+							"length": 0
+						},
+						{
+							"_type": "ERDColumn",
+							"_id": "AAAAAAF9Wg+RJZicXfg=",
+							"_parent": {
+								"$ref": "AAAAAAF74e2/rbS05nk="
+							},
+							"name": "terminado",
 							"type": "BIT",
 							"length": 0
 						}

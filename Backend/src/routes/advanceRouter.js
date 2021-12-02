@@ -1,50 +1,30 @@
 // Importaciones necesarias
 import { Router } from 'express'
-import path from 'path'
-import fileUpload from 'express-fileupload'
 import LoginController from '../controllers/loginController'
-import FileController from '../controllers/fileController'
 import Advance from '../models/advance'
 import AdvanceController from '../controllers/advanceController'
 
 // Instancia
 const router = Router()
 const loginController = new LoginController()
-const fileController = new FileController()
 const advanceController = new AdvanceController()
 
-// validaciones del fileUpload 
-router.use(fileUpload({
-    createParentPath: true,
-    limits: {
-        filesize: 1024
-    },
-}))
-
 // Rutas de department
+// Se encarga de comunicarse con el controller para insertar un avance
+router.post('/advance', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
-// Se encarga de comunicarse con el controller para insertar un funcionario
-router.post('/advance', loginController.recuperarToken, loginController.verifyToken, fileController.upload, async (req, res) => {
+    const advance = new Advance(1, req.body.idTrimestre, req.body.idFuncionario_Aplciativo, req.body.idSolicitud, req.body.fechaAvance, req.files.documento, 1)
+    // Se llama al método del controller para que verifique si existe el avance en la bd y está con estado 0
+    const verifyAdvance = advanceController.verifyAdvance(advance)
 
-    const advance = new advance(1, req.body.idSexo, req.body.idDepartamento, req.body.idTipoFuncionario, req.body.nombre, req.body.apellido_1, req.body.apellido_2, req.body.fechaNacimiento, req.body.correo, req.body.contrasenia, req.files.urlFoto.name, 1, 1, '')
-    // Se llama al método del controller para que verifique si existe el funcionario en la bd y está con estado 0
-    const verifyadvance = advanceController.verifyadvance(advance)
-    const verifyEmailadvance = advanceController.verifyEmailadvance(req.body.correo)
-
-    if ( (await verifyadvance) && (await !verifyEmailadvance) ) {
+    if ( (await verifyAdvance) ) {
 
         res.json({
             "estado": true
         })
-    } else if ( await !verifyEmailadvance ) {
-
-        res.json({
-            "mensaje": "No se pudo insertar el funcionario",
-            "estado": false,
-        })
     } else {
-        // Se llama a la función inserta el departamento
-        const verifyInsert = await advanceController.insertadvance(advance)
+        // Se llama a la función que inserta el avance
+        const verifyInsert = await advanceController.insertAdvance(advance)
 
         if (verifyInsert) {
             // Se envía el secret al frontend
@@ -54,29 +34,21 @@ router.post('/advance', loginController.recuperarToken, loginController.verifyTo
         } else {
             // Si sucede algún error se le notifica al frontend
             res.json({
-                "mensaje": "No se pudo insertar el funcionario",
+                "mensaje": "No se pudo insertar el avance",
                 "estado": false,
             })
         }
     }
 })
 
-// Se encarga de comunicarse con el controller para modificar un funcionario
-router.put('/advance', loginController.recuperarToken, loginController.verifyToken, fileController.upload, async (req, res) => {
+// Se encarga de comunicarse con el controller para modificar un avance
+router.put('/advance', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
-    let advance = null
+    const advance = new Advance(req.body.idAvance, req.body.idTrimestre, req.body.idFuncionario_Aplciativo, req.body.idSolicitud, req.body.fechaAvance, req.files.documento, 1)
+    // Se llama a la función que modifica el avance
+    const verifyModify = await advanceController.modifyAdvance(advance)
 
-    if( req.body.urlFoto != undefined ){
-        
-        advance = new advance(req.body.idFuncionario, req.body.idSexo, req.body.idDepartamento, req.body.idTipoFuncionario, req.body.nombre, req.body.apellido_1, req.body.apellido_2, req.body.fechaNacimiento, req.body.correo, req.body.contrasenia, req.body.urlFoto, 1, 1, '')
-    } else {
-
-        advance = new advance(req.body.idFuncionario, req.body.idSexo, req.body.idDepartamento, req.body.idTipoFuncionario, req.body.nombre, req.body.apellido_1, req.body.apellido_2, req.body.fechaNacimiento, req.body.correo, req.body.contrasenia, req.files.urlFoto.name, 1, 1, '')
-    }
-    
-    const verifyModify = await advanceController.modifyadvance(advance)
-
-    if (verifyModify) {
+    if ( verifyModify )  {
         // Se envía el secret al frontend
         res.json({
             "estado": true
@@ -84,17 +56,17 @@ router.put('/advance', loginController.recuperarToken, loginController.verifyTok
     } else {
         // Si sucede algún error se le notifica al frontend
         res.json({
-            "mensaje": "No se pudo modificar el funcionario",
+            "mensaje": "No se pudo modificar el avance",
             "estado": false,
         })
     }
 })
 
-// Se comunica con el controller para aliminar un funcionario
-router.post('/deleteadvance', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
+// Se comunica con el controller para eliminar un avance
+router.post('/deleteAdvance', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
-    // Se llama a la función que elimina el funcionario por el id
-    const verifyDelete = await advanceController.deleteadvance(req.body.idFuncionario)
+    // Se llama a la función que elimina el avance por el id
+    const verifyDelete = await advanceController.deleteAdvance(req.body.idAvance, req.body.idFuncionario_Aplicativo)
 
     if (verifyDelete) {
 
@@ -105,16 +77,16 @@ router.post('/deleteadvance', loginController.recuperarToken, loginController.ve
     } else {
         // Si sucede algún error se le notifica al frontend
         res.json({
-            "mensaje": "No se pudo eliminar el funcionario",
+            "mensaje": "No se pudo eliminar el avance",
             "estado": false,
         })
     }
 })
 
-// Se encarga de comunicarse con el controller para recuperar un listado de funcionarios
+// Se encarga de comunicarse con el controller para recuperar un listado de avances
 router.get('/advance', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
     // Se llama a la función recupera la lista
-    const list = await advanceController.listadvance()
+    const list = await advanceController.listAdvance(req.body.idFuncionario_Aplicativo)
 
     if (list) {
 
@@ -126,18 +98,18 @@ router.get('/advance', loginController.recuperarToken, loginController.verifyTok
     } else {
         // Si sucede algún error se le notifica al frontend
         res.json({
-            "mensaje": "No se pudo recuperar la lista de funcionarios",
+            "mensaje": "No se pudo recuperar la lista de avances",
             "estado": false,
         })
     }
 })
 
-// Se encarga de comunicarse con el controller para recuperar un objeto funcionario
+// Se encarga de comunicarse con el controller para recuperar un objeto avance
 router.post('/advanceById', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
    
     // Se llama a la función recupera el funcionario por el id
-    const advance = await advanceController.recoveradvanceById(req.body.idFuncionario)
-    console.log(advance);
+    const advance = await advanceController.recoverAdvanceById(req.body.idAvance, req.body.idFuncionario_Aplicativo)
+
     if (advance) {
 
         // Se envía el secret al frontend
@@ -148,7 +120,7 @@ router.post('/advanceById', loginController.recuperarToken, loginController.veri
     } else {
         // Si sucede algún error se le notifica al frontend
         res.json({
-            "mensaje": "No se pudo recuperar el funcionario",
+            "mensaje": "No se pudo recuperar el avance",
             "estado": false,
         })
     }

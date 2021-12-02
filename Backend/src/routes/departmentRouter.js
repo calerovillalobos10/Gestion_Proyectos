@@ -95,18 +95,31 @@ router.post('/departmentById', loginController.recuperarToken, loginController.v
 router.post('/deleteDepartment', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     // Se llama a la función elimina el departamento por el id
-    const verifyDelete = await departmentController.deleteDepartment(req.body)
+    const verifyRelationship = await departmentController.verifyDeleteDepartment(req.body)
 
-    if (verifyDelete) {
+    // Verifica que el departamento no esté relacionado con un funcionario
+    if (verifyRelationship) {
 
-        // Se envía el secret al frontend
-        res.json({
-            "estado": true
-        })
+        // Se llama a la función elimina el departamento por el id
+       const verifyDelete = await departmentController.deleteDepartment(req.body)
+
+        if (verifyDelete) {
+
+            // Se envía el secret al frontend
+            res.json({
+                "estado": true
+            })
+        } else {
+            // Si sucede algún error se le notifica al frontend
+            res.json({
+                "mensaje": "No se pudo eliminar el departamento",
+                "estado": false,
+            })
+        }
     } else {
-        // Si sucede algún error se le notifica al frontend
+        // Si existe un funcionario que esté relacionado con el departamento no se permite eliminar
         res.json({
-            "mensaje": "No se pudo eliminar el departamento",
+            "mensaje": "No se pudo eliminar el departamento debido a que existe uno o más funcionarios que están relacionados con este",
             "estado": false,
         })
     }

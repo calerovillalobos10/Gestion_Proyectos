@@ -6,6 +6,9 @@ import loginRoute from './routes/loginRouter'
 import departmentRoute from './routes/departmentRouter'
 import fileRoute from './routes/fileRouter'
 import functionaryRoute from './routes/functionaryRouter'
+import binnacleRoute from './routes/binnacleRouter'
+import solicitationRoute from './routes/solicitationRouter'
+import advanceRoute from './routes/advanceRouter'
 
 // Instancia
 const app = express()
@@ -24,6 +27,9 @@ app.use(loginRoute)
 app.use(departmentRoute)
 app.use(fileRoute)
 app.use(functionaryRoute)
+app.use(binnacleRoute)
+app.use(solicitationRoute)
+app.use(advanceRoute)
 
 export default app
 
