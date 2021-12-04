@@ -50,9 +50,9 @@
   <tbody>
     <tr *ngFor="let solicitud of filteredRows">
       <td>{{ solicitud.idSolicitud }}</td>
-      <td>{{ solicitud.funcionarioAplicativo }}</td>
-      <td>{{ solicitud.funcionarioResponsable }}</td>
-      <td>{{ solicitud.funcionarioFinal }}</td>
+      <td>{{ solicitud.funcionario_aplicativo }}</td>
+      <td>{{ solicitud.funcionario_responsable }}</td>
+      <td>{{ solicitud.funcionario_final }}</td>
       <td>{{ solicitud.fechaSolicitud | date: "dd/MM/yyyy" }}</td>
       <td>{{ solicitud.fechaInicio | date: "dd/MM/yyyy" }}</td>
       <td>{{ solicitud.fechaFin | date: "dd/MM/yyyy" }}</td>

@@ -33,6 +33,9 @@ export default class LoginController {
                 .input("contraseniaBE", sql.VarChar(16), contraseniaRes)
                 .execute('sp_login')
                 // Retorno del objeto con los parámetros que se ocupan en el frontend
+
+                console.log(result);
+                
                 return {
                     id: result.recordset[0].idFuncionario,
                     nombre: result.recordset[0].nombre,
@@ -141,12 +144,13 @@ export default class LoginController {
     verifyToken = (req, res, next) => {
 
         // La información de authData debe ser la enviada al getToken
-        jwt.verify(req.token, process.env.SECRETKEY + '', (err) => {
-
+        jwt.verify(req.token, process.env.SECRETKEY + '', (err, data) => {
+           
             if (err) {
                 // Ruta o acceso prohibido
                 res.sendStatus(403)
             } else {
+                req.token = data.dataBD;
                 // Si el token coincide entonces se indica que el acceso es permitido
                 next()
             }

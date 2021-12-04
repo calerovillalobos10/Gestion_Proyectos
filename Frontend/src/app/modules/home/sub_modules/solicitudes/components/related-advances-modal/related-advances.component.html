@@ -5,7 +5,7 @@
     <button class="btn_close" (click)='onCloseModal()'><i class="fas fa-window-close"></i></button>
     <div>
 
-      <h2 class="ta-center">Avances asociados a la solicitud</h2>
+      <h2 class="ta-center">Avances asociados a la solicitud #{{solicitudId}}</h2>
 
       <table
       id="related"
@@ -28,9 +28,9 @@
       <tbody>
         <tr *ngFor="let avance of allRows">
           <td>{{ avance.idAvance }}</td>
-          <td>{{ avance.trimestre | trimestre}}</td>
-          <td>{{ avance.funcionarioAplicativo }}</td>
-          <td>{{ avance.solicitud }}</td>
+          <td>{{ avance.descripcion }}</td>
+          <td>{{ avance.funcionario_aplicativo }}</td>
+          <td>{{ avance.idSolicitud }}</td>
           <td>{{ avance.fechaAvance| date: 'dd/MM/yyyy' }}</td>
         </tr>
       </tbody>

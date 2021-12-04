@@ -48,11 +48,19 @@ export class AvancesComponent implements OnInit {
     this.setTableOptions();
     this.loadTable();
     this.add_Listeners();
+
+
+    this.service.updateNeeded.subscribe((data) => {
+      if (data) {
+        this.loadTable();
+      }
+    })
   }
 
   deleteAdvance(id:any){
     
     const advance: Avance | undefined = this.getAdvance(id);
+
     this.alertService.confirmAlert('¿Está seguro de eliminar?', `Registro: ${advance!.idAvance}`)
       .then(async (res) => {
         // Confirmacion del usuario
@@ -64,7 +72,8 @@ export class AvancesComponent implements OnInit {
   proceedDelete(id: any) {
     this.service.deleteById(id).subscribe(res => {
       if(res['estado']){
-        this.alertService.simpleAlert('Se elimino correctamente');
+        this.alertService.simpleAlert('Se eliminó correctamente');
+        this.loadTable();
       }else{
         this.alertService.simpleAlert('Surgió un error al eliminar');
       }
@@ -90,7 +99,7 @@ export class AvancesComponent implements OnInit {
     this.dtOptions = DT_OPTIONS;
     this.dtOptions.columns = [
       { title: 'Id', data: 'idAvance', orderable: true },
-      { title: 'Trimestre', data: 'trimestre', orderable: true },
+      { title: 'Trimestre', data: 'descripcion', orderable: true },
       { title: 'Aplicativo', data: 'funcionarioAplicativo', orderable: true },
       { title: '# Solicitud', data: 'fechaAvance', orderable: true },
       { title: 'Fecha de avance', data: 'solicitud', orderable: true },
@@ -105,9 +114,10 @@ export class AvancesComponent implements OnInit {
         this.allRows = res['estado'] ? res['list'] : [];
         this.removeFilters();
         this.filteredRows = this.allRows;
+        this.rerender();
       },
       err => {
-        this.allRows = fixedRows;
+        this.allRows = [];
         this.removeFilters();
         this.filteredRows = this.allRows;
         this.rerender();
@@ -123,7 +133,8 @@ export class AvancesComponent implements OnInit {
   getAdvance(id: number) {
     let solicitude: Avance | undefined = undefined;
     this.allRows.forEach((element) => {
-      if (element.idAvance === id) {
+    
+      if (element.idAvance == id) {
         solicitude = element;
       }
     });
@@ -186,6 +197,10 @@ export class AvancesComponent implements OnInit {
   
       $('tbody').on("click", "div.eliminar", (evt) => {
         const selectedId = evt.target.closest('.row').id;
+
+        
+        
+
         this.deleteAdvance(selectedId)
       });
   
@@ -216,8 +231,3 @@ export class AvancesComponent implements OnInit {
 
 }
 
-const fixedRows = [
-  {  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis Leiton Iglesias', trimestre: 1, idAvance: 1, solicitud: 1, documento: '../../../assets/book/book.pdf'},
-  {  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis Leiton Iglesias', trimestre: 2, idAvance: 2, solicitud: 1, documento: '../../../assets/book/book.pdf'},
-  {  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis Leiton Iglesias', trimestre: 3, idAvance: 3, solicitud: 3, documento: '../../../assets/book/book.pdf'}
-];

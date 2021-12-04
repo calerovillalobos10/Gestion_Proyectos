@@ -18,7 +18,7 @@ export class RelatedAdvancesComponent extends ModalSkeleton implements OnInit, O
   public allRows: Array<Avance> = [];
   public dtOpt: any = {};
   public dtTri: Subject<any>;
-  private solicitudId: number;
+  public solicitudId: number;
 
   constructor(
     private service: SolicitudeService,
@@ -51,13 +51,14 @@ export class RelatedAdvancesComponent extends ModalSkeleton implements OnInit, O
 
   loadTable() {
     
-    this.advanceService.getBySolicitude(this.solicitudId).subscribe(
+    this.advanceService.getAll().subscribe(
       res => {
         this.allRows = res['estado'] ? res['list'] : [];
+        this.filterRows();
+        this.rerender();
       },
       err => {
         this.allRows = [];
-        this.allRows = fixedRows.filter(element => element.solicitud == this.solicitudId);
         this.rerender();
       })
   }
@@ -83,10 +84,9 @@ export class RelatedAdvancesComponent extends ModalSkeleton implements OnInit, O
     this.dtTri.next();
   }
 
-}
+  filterRows(){
+    this.allRows = this.allRows.filter(element => element.idSolicitud == this.solicitudId);
+  }
 
-const fixedRows = [
-  {  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis Leiton Iglesias', trimestre: 1, idAvance: 1, solicitud: 1, documento: '../../../assets/book/book.pdf'},
-  {  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis Leiton Iglesias', trimestre: 2, idAvance: 2, solicitud: 1, documento: '../../../assets/book/book.pdf'},
-  {  fechaAvance: "2020-02-01", funcionarioAplicativo: 'Luis Leiton Iglesias', trimestre: 3, idAvance: 3, solicitud: 3, documento: '../../../assets/book/book.pdf'}
-];
+
+}

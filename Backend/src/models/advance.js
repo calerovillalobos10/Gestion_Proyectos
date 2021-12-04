@@ -2,10 +2,10 @@
 export default class Advance {
 
     // Constrcutor que recibe los parámetros de los objetos
-    constructor(idAvance, trimestre, funcionarioAplicativo, idSolicitud, fechaAvance, documento, estado) {
+    constructor(idAvance, trimestre, funcionario_aplicativo, idSolicitud, fechaAvance, documento, estado) {
         this.idAvance = idAvance;
         this.trimestre = trimestre;
-        this.funcionarioAplicativo = funcionarioAplicativo;
+        this.funcionario_aplicativo = funcionario_aplicativo;
         this.idSolicitud = idSolicitud;
         this.fechaAvance = fechaAvance;
         this.documento = documento;
@@ -29,11 +29,11 @@ export default class Advance {
     }
 
     get getFuncionarioAplicativo () {
-        return this.funcionarioAplicativo;
+        return this.funcionario_aplicativo;
     }
 
-    set setFuncionarioAplicativo (funcionarioAplicativo) {
-        this.funcionarioAplicativo = funcionarioAplicativo;
+    set setFuncionarioAplicativo (funcionario_aplicativo) {
+        this.funcionario_aplicativo = funcionario_aplicativo;
     }
 
     get getIdSolicitud () {

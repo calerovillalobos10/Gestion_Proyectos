@@ -28,7 +28,7 @@
 >
   <thead>
     <tr>
-      <th>Id</th>
+   
       <th>Transaccion</th>
       <th>Funcionario</th>
       <th>Avance</th>
@@ -38,10 +38,9 @@
   </thead>
   <tbody>
     <tr *ngFor="let bitacora of filteredRows">
-      <td>{{ bitacora.idBitacora }}</td>
-      <td>{{ bitacora.idTransaccion }}</td>
-      <td>{{ bitacora.idFuncionario }}</td>
-      <td>{{ bitacora.idAvance }}</td>
+      <td>{{ bitacora.transaccion }}</td>
+      <td>{{ bitacora.nombre }} {{bitacora.apellido_1[0]}} {{bitacora.apellido_2}}</td>
+      <td>{{ bitacora.idAvance != null ? bitacora.idAvance : 'N/A'}}</td>
       <td>{{ bitacora.idSolicitud }}</td>
       <td>{{ bitacora.fechaBitacora | date: 'dd/MM/yyyy'}}</td>
     </tr>

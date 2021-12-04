@@ -94,19 +94,19 @@ export default class SolicitationController{
 
         // Verificaciones de los diferentes atributos del objeto solicitation
         let verifyIdFuncionarioAplicativo = ( idFuncionarioAplicativo != null && this.validacionController.verifySpecialCharacters(parseInt(idFuncionarioAplicativo, 10)) && this.validacionController.verifyMinSize(parseInt(idFuncionarioAplicativo, 10), 1) && this.validacionController.verifyNumber(parseInt(idFuncionarioAplicativo, 10)) ) ? true : false
-        
+    
         let verifyIdFuncionarioResponsable = ( idFuncionarioResponsable != null && this.validacionController.verifySpecialCharacters(parseInt(idFuncionarioResponsable, 10)) && this.validacionController.verifyMinSize(parseInt(idFuncionarioResponsable, 10), 1) && this.validacionController.verifyNumber(parseInt(idFuncionarioResponsable, 10)) ) ? true : false
-        
+    
         let verifyIdFuncionarioFinal = ( idFuncionarioFinal != null && this.validacionController.verifySpecialCharacters(parseInt(idFuncionarioFinal, 10)) && this.validacionController.verifyMinSize(parseInt(idFuncionarioFinal, 10), 1) && this.validacionController.verifyNumber(parseInt(idFuncionarioFinal, 10)) ) ? true : false
-        
-        let verifyFechaSolicitud = ( fechaSolicitud != null && this.validacionController.verifySpecialCharacters(fechaSolicitud) && this.validacionController.verifyDateTime(fechaSolicitud) ) ? true : false
-        
+    
+        let verifyFechaSolicitud = ( fechaSolicitud != null && this.validacionController.verifySpecialCharacters(fechaSolicitud) && this.validacionController.verifyDate(fechaSolicitud) ) ? true : false
+    
         let verifyFechaInicio = ( fechaInicio != null && this.validacionController.verifySpecialCharacters(fechaInicio) && this.validacionController.verifyDate(fechaInicio) ) ? true : false
-        
+    
         let verifyFechaFin = ( fechaFin != null && this.validacionController.verifySpecialCharacters(fechaFin) && this.validacionController.verifyDate(fechaFin) ) ? true : false
-        
+    
         let verifyDocumentoActaConst = ( documentoActaConst != null ) && this.validacionController.verifyExtDocument(documentoActaConst) ? true : false;
-        
+    
         return ( verifyIdFuncionarioAplicativo &&  verifyIdFuncionarioResponsable && verifyIdFuncionarioFinal && verifyFechaSolicitud && verifyFechaInicio && verifyFechaFin ) ? true : false
     }
 

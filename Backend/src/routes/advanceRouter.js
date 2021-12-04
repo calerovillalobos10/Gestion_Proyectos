@@ -12,11 +12,11 @@ const advanceController = new AdvanceController()
 // Rutas de department
 // Se encarga de comunicarse con el controller para insertar un avance
 router.post('/advance', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
-
-    const advance = new Advance(1, req.body.idTrimestre, req.body.idFuncionario_Aplciativo, req.body.idSolicitud, req.body.fechaAvance, req.files.documento, 1)
+    
+    const advance = new Advance(1, req.body.idTrimestre, req.body.idFuncionario_Aplicativo, req.body.idSolicitud, req.body.fechaAvance, req.files.documento, 1)
     // Se llama al método del controller para que verifique si existe el avance en la bd y está con estado 0
     const verifyAdvance = advanceController.verifyAdvance(advance)
-
+    
     if ( (await verifyAdvance) ) {
 
         res.json({
@@ -66,7 +66,7 @@ router.put('/advance', loginController.recuperarToken, loginController.verifyTok
 router.post('/deleteAdvance', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     // Se llama a la función que elimina el avance por el id
-    const verifyDelete = await advanceController.deleteAdvance(req.body.idAvance, req.body.idFuncionario_Aplicativo)
+    const verifyDelete = await advanceController.deleteAdvance(+req.body.idAvance, req.token.id)
 
     if (verifyDelete) {
 
@@ -86,7 +86,7 @@ router.post('/deleteAdvance', loginController.recuperarToken, loginController.ve
 // Se encarga de comunicarse con el controller para recuperar un listado de avances
 router.get('/advance', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
     // Se llama a la función recupera la lista
-    const list = await advanceController.listAdvance(req.body.idFuncionario_Aplicativo)
+    const list = await advanceController.listAdvance(req.token.id)
 
     if (list) {
 
@@ -108,7 +108,7 @@ router.get('/advance', loginController.recuperarToken, loginController.verifyTok
 router.post('/advanceById', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
    
     // Se llama a la función recupera el funcionario por el id
-    const advance = await advanceController.recoverAdvanceById(req.body.idAvance, req.body.idFuncionario_Aplicativo)
+    const advance = await advanceController.recoverAdvanceById(+req.body.idAvance, req.token.id)
 
     if (advance) {
 

@@ -182,7 +182,6 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     postData.append('idFuncionario_Aplicativo', this.form.value.aplicativo);
     postData.append('idSolicitud', this.form.value.solicitud);
     postData.append('fechaAvance', this.form.value.fechaAvance);
-    postData.append('documento', this.form.value.documento);
 
     if (this.modalType == 'edicion') {
       // Validacion, si cambia la foto sube el file, sino solo pasa url viejo.
@@ -222,7 +221,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
       urlDocumento: ["",
         [Validators.required,
-        Validators.pattern('^(.)*.(pdf)$')
+        //Validators.pattern('^(.)*.(pdf)$')
         ]],
     })
   }
@@ -297,24 +296,15 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   loadEditModal(id: number) {
     this.service.getById(id).subscribe(
       (res) => {
-
-        if (res['estado']) {
-          this.patchData(res['avance'], id);
-        } else {
-          this.onErrorClose();
-        }
+        console.log(res);
+        
+      
+          this.patchData(res['advance'], id);
+       
 
       }, (err => {
-        //this.onErrorClose();----------------------------------------------
-        this.patchData(
-          {
-            funcionarioAplicativo: 1,
-            trimestre: 3,
-            fechaAvance: '2020-01-03',
-            solicitud: 1,
-            documento: "../../../assets/book/book.pdf"
-          },
-          id);
+        this.onErrorClose();
+
       }
     ))
   }
@@ -327,16 +317,16 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   }
 
   // Este metodo coloca los datos a editar en el formulario
-  patchData(advance: Avance, id: number) {
+  patchData(advance: any, id: number) {
 
     this.oldDocument = advance.documento;
     this.idAdvance = id;
 
     this.form.patchValue({
-      aplicativo: advance.funcionarioAplicativo,
+      aplicativo: advance.funcionario_aplicativo,
       trimestre: advance.trimestre,
-      fechaAvance: advance.fechaAvance,
-      solicitud: advance.solicitud,
+      fechaAvance: advance.fechaAvance.substring(0,10),
+      solicitud: advance.idSolicitud,
       urlDocumento: this.oldDocument
     })
     this.form.controls['fechaAvance'].enable();

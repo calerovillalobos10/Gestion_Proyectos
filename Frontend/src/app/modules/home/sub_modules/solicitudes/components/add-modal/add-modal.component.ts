@@ -1,6 +1,6 @@
-import { Funcionario } from '@core/models/Funcionario';
+
 import { MAX_FILE } from '@core/others/Enviroment';
-import { Solicitud } from '@core/models/Solicitud';
+
 import { FuncionariosService } from '@core/services/funcionarios/funcionarios.service';
 import { SolicitudeService } from '@core/services/solicitude/solicitude.service';
 import { ModalSkeleton } from '@core/others/ModalSkeleton';
@@ -107,10 +107,12 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
             this.idSolicitude = -1;
           })
         } else {
+          alert('123')
           this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
         }
       },
       err => {
+        alert('321')
         this.alertService.simpleAlert('Surgió un error inténtelo nuevamente')
       }
     )
@@ -175,9 +177,9 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     const postData = new FormData();
 
     postData.append('idSolicitud', this.idSolicitude + '');
-    postData.append('aplicativo', this.form.value.aplicativo);
-    postData.append('responsable', this.form.value.responsable);
-    postData.append('final', this.form.value.final);
+    postData.append('funcionarioAplicativo', this.form.value.aplicativo);
+    postData.append('funcionarioResponsable', this.form.value.responsable);
+    postData.append('funcionarioFinal', this.form.value.final);
     postData.append('fechaInicio', this.form.value.fechaInicio);
     postData.append('fechaFin', this.form.value.fechaFin);
     postData.append('fechaSolicitud', this.form.value.fechaSolicitud);
@@ -185,16 +187,17 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     if (this.modalType == 'edicion') {
       // Validacion, si cambia la foto sube el file, sino solo pasa url viejo.
       if (this.oldDocument == this.form.value.urlActa) {
-        postData.append('documento', this.oldDocument);
-        console.log(this.oldDocument)
+        postData.append('documentoActaConst', this.oldDocument);
+        
       } else {
-        postData.append('documento', this.form.value.acta);
+        postData.append('documentoActaConst', this.form.value.acta);
        
       }
     }else{  
       postData.append('documento', this.form.value.acta);
     }
-
+  
+    
     return postData;
   }
 
@@ -226,7 +229,7 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       ],
       urlActa: ["",
         [Validators.required,
-        Validators.pattern('^(.)*.(pdf)$')
+       // Validators.pattern('^(.)*.(pdf)$')
         ]],
     })
   }
@@ -310,24 +313,14 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
       (res) => {
 
         if (res['estado']) {
-          this.patchData(res['solicitud'], id);
+          
+          this.patchData(res['solicitation'], id);
         } else {
           this.onErrorClose();
         }
 
       }, (err => {
-        //this.onErrorClose();----------------------------------------------
-        this.patchData(
-          {
-            funcionarioAplicativo: 1,
-            funcionarioFinal: 3,
-            funcionarioResponsable: 2,
-            fechaInicio: '2020-01-03',
-            fechaFin: '2020-01-05',
-            fechaSolicitud: "2020-01-02",
-            documentoActa: "../../../assets/book/book.pdf"
-          },
-          id);
+        this.onErrorClose();
       }
     ))
   }
@@ -340,17 +333,17 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   }
 
   // Este metodo coloca los datos a editar en el formulario
-  patchData(solicitude: Solicitud, id: number) {
-    this.oldDocument = solicitude.documentoActa;
+  patchData(solicitude: any, id: number) {
+    this.oldDocument = solicitude.documentoActaConst;
     this.idSolicitude = id;
 
     this.form.patchValue({
       aplicativo: solicitude.funcionarioAplicativo,
       responsable: solicitude.funcionarioResponsable,
       final: solicitude.funcionarioFinal,
-      fechaInicio: solicitude.fechaInicio,
-      fechaFin: solicitude.fechaFin,
-      fechaSolicitud: solicitude.fechaSolicitud,
+      fechaInicio: solicitude.fechaIncio.substring(0,10),
+      fechaFin: solicitude.fechaFin.substring(0,10),
+      fechaSolicitud: solicitude.fechaSolicitud.substring(0,10),
       urlActa: this.oldDocument
     })
     this.form.controls['fechaInicio'].enable();
@@ -366,15 +359,3 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
   }
 
 }
-
-
-const fixedRows:Array<Funcionario> = [
-  { nombre: 'Luis', apellido_1: 'Leiton', apellido_2: 'Iglesias', urlFoto: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Terry_Crews_by_Gage_Skidmore_5.jpg/250px-Terry_Crews_by_Gage_Skidmore_5.jpg', correo: 'Luis@gmail', 
-    fechaNacimiento: '1995-09-09', idDepartamento: 4, idSexo: 1, idTipoFuncionario: 1, idFuncionario: 1 },
-  
-  { nombre: 'Fernando', apellido_1: 'Alvarez', apellido_2: 'Salas', urlFoto: 'https://miracomosehace.com/wp-content/uploads/2020/05/hombre-gorra-camara-1.jpg', correo: 'Fernando@gmail.com',
-  fechaNacimiento: '1999-09-09', idDepartamento: 2, idSexo: 1, idTipoFuncionario: 2, idFuncionario: 2 },
-
-  { nombre: 'Ana', apellido_1: 'Soto', apellido_2: 'Salas', urlFoto: 'https://www.dzoom.org.es/wp-content/uploads/2010/09/retrato-fondo-profundidad-campo-734x489.jpg', correo: 'ana@gmail', 
-  fechaNacimiento: '1989-09-09', idDepartamento: 2, idSexo: 2, idTipoFuncionario: 3, idFuncionario: 3 }
-]

@@ -1,10 +1,10 @@
 export interface Avance{
 
   idAvance?:number;
-  trimestre:number | string,
-  funcionarioAplicativo:number | string, 
+  descripcion: string,
+  funcionario_aplicativo:number | string, 
   fechaAvance:string,
-  solicitud: number,
+  idSolicitud: number,
   documento:any
 
 } 

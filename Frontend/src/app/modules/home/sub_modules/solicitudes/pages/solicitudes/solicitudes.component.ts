@@ -13,8 +13,6 @@ import { FormControl } from '@angular/forms';
 })
 export class SolicitudesComponent implements OnInit {
 
-
-
   public dtOptions: any = {};
   public dtTrigger: Subject<any> = new Subject<any>();
   public allRows: Array<Solicitud> = [];
@@ -49,6 +47,13 @@ export class SolicitudesComponent implements OnInit {
     this.setTableOptions();
     this.loadTable()
     this.add_Listeners()
+
+    this.service.updateNeeded.subscribe((data) => {
+      if (data) {
+        this.loadTable();
+      }
+    })
+
   }
 
   deleteSolicitude(id: any) {
@@ -142,14 +147,10 @@ export class SolicitudesComponent implements OnInit {
         this.rerender();
       },
       err => {
-        this.allRows = [
-          { fechaInicio: "2020-02-01", fechaFin: "2020-04-05", fechaSolicitud: "2020-01-01", funcionarioAplicativo: 'Luis Leiton Iglesias', funcionarioResponsable: 'Fernando Alvarez Salas', funcionarioFinal: 'Ana Soto Salas', idSolicitud: 1, documentoActa: '../../../assets/book/book.pdf', terminado: true },
-          { fechaInicio: "2020-05-01", fechaFin: "2020-08-05", fechaSolicitud: "2020-04-01", funcionarioAplicativo: 'Luis Leiton Iglesias', funcionarioResponsable: 'Fernando Alvarez Salas', funcionarioFinal: 'Ana Soto Salas', idSolicitud: 2, documentoActa: '../../../assets/book/book.pdf', terminado: false },
-          { fechaInicio: "2020-10-01", fechaFin: "2020-12-05", fechaSolicitud: "2020-09-01", funcionarioAplicativo: 'Luis Leiton Iglesias', funcionarioResponsable: 'Fernando Alvarez Salas', funcionarioFinal: 'Ana Soto Salas', idSolicitud: 3, documentoActa: '../../../assets/book/book.pdf', terminado: true }];
-       
-          this.removeFilters();
-          this.filteredRows = this.allRows;
-          this.rerender();
+        this.allRows = [];
+        this.removeFilters();
+        this.filteredRows = this.allRows;
+        this.rerender();
       }
     )
   }

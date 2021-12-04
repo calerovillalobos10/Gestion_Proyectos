@@ -48,7 +48,7 @@ export class BitacoraComponent implements OnInit {
   setTableOptions() {
     this.dtOptions = DT_OPTIONS
     this.dtOptions.columns = [
-      { title: 'Id', data: 'idBitacora', orderable: true },
+     
       { title: 'Transaccion', data: 'idTransaccion', orderable: true },
       { title: 'Funcionario', data: 'idFuncionario', orderable: true },
       { title: 'Avance', data: 'idAvance', orderable: true },
@@ -67,7 +67,7 @@ export class BitacoraComponent implements OnInit {
         this.rerender();
       },
       err => {
-        this.allRows = fixedData;
+        this.allRows = [];
         this.removeFilters();
         this.filteredRows = this.allRows;
         this.rerender();
@@ -100,7 +100,6 @@ export class BitacoraComponent implements OnInit {
       this.minDateFiltered2 = evt.target.value;
     }
     this.filterBetween();
-   
   }
 
   changeMaxDate(evt:any){
@@ -110,7 +109,6 @@ export class BitacoraComponent implements OnInit {
       this.maxDateFiltered1 = evt.target.value;
     }
     this.filterBetween();
-    
   }
 
   removeFilters(){
@@ -143,9 +141,3 @@ export class BitacoraComponent implements OnInit {
     }
 
 }
-
-const fixedData = [
-  { idBitacora: 1, idAvance:'N/A', fechaBitacora: '2021-01-01', idFuncionario: 'Luis Leiton Iglesias', idTransaccion: "Insert en tabla de solicitudes", idSolicitud: 1},
-  { idBitacora: 2, idAvance:'1', fechaBitacora: '2021-01-01', idFuncionario: 'Ana Soto Salas', idTransaccion: "Insert en tabla de avances", idSolicitud: 1},
-  { idBitacora: 3, idAvance:'N/A', fechaBitacora: '2021-01-01', idFuncionario: 'Luis Leiton Iglesias', idTransaccion: "Update en tabla de solicitudes", idSolicitud: 2},
-]

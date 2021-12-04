@@ -58,8 +58,8 @@ export default class AdvanceController{
                 const result = await pool.request()
                     .input("idTrimestreBE", sql.TinyInt, parseInt(dataLogin.getTrimestre,10))
                     .input("idFuncionarioAplicativoBE", sql.SmallInt, parseInt(dataLogin.getFuncionarioAplicativo, 10))
-                    .input("idSolicitudBE", sql.SmallInt, parseInt(dataLogin.getTrimestre, 10))
-                    .input("fechaAvanceBE", sql.SmallDateTime, dataLogin.getFechaSolicitud)
+                    .input("idSolicitudBE", sql.SmallInt, parseInt(dataLogin.getIdSolicitud, 10))
+                    .input("fechaAvanceBE", sql.SmallDateTime, dataLogin.getFechaAvance)
                     .input("documentoBE", sql.VarBinary, dataLogin.getDocumento.data)
                     .input("estadoBE", sql.Bit, dataLogin.getEstado)
                     .execute('sp_insertAdvance')
@@ -81,7 +81,7 @@ export default class AdvanceController{
 
     // Esta función se encarga de verificar los atributos del objeto avance 
     verifyAttributesAdvance = (dataLogin) => {
-
+        
         const idTrimestre = dataLogin.getTrimestre
         const idFuncionarioAplicativo = dataLogin.getFuncionarioAplicativo
         const idSolicitud = dataLogin.getIdSolicitud
@@ -90,15 +90,15 @@ export default class AdvanceController{
 
         // Verificaciones de los diferentes atributos del objeto avance
         let verifyIdTrimestre = ( idTrimestre != null && this.validacionController.verifySpecialCharacters(parseInt(idTrimestre, 10)) && this.validacionController.verifyMinSize(parseInt(idTrimestre, 10), 1) && this.validacionController.verifyNumber(parseInt(idTrimestre, 10)) ) ? true : false
-
+        
         let verifyIdFuncionarioAplicativo = ( idFuncionarioAplicativo != null && this.validacionController.verifySpecialCharacters(parseInt(idFuncionarioAplicativo, 10)) && this.validacionController.verifyMinSize(parseInt(idFuncionarioAplicativo, 10), 1) && this.validacionController.verifyNumber(parseInt(idFuncionarioAplicativo, 10)) ) ? true : false
         
         let verifyIdSolicitud = ( idSolicitud != null && this.validacionController.verifySpecialCharacters(parseInt(idSolicitud, 10)) && this.validacionController.verifyMinSize(parseInt(idSolicitud, 10), 1) && this.validacionController.verifyNumber(parseInt(idSolicitud, 10)) ) ? true : false
-
-        let verifyFechaAvance = ( fechaAvance != null && this.validacionController.verifySpecialCharacters(fechaAvance) && this.validacionController.verifyDateTime(fechaAvance) ) ? true : false
-
+        
+        let verifyFechaAvance = ( fechaAvance != null && this.validacionController.verifySpecialCharacters(fechaAvance) && this.validacionController.verifyDate(fechaAvance) ) ? true : false
+        
         let verifyDocumento = ( documento != null ) && this.validacionController.verifyExtDocument(documento) ? true : false;
-
+        
         return ( verifyIdTrimestre && verifyIdFuncionarioAplicativo && verifyIdSolicitud && verifyFechaAvance && verifyDocumento ) ? true : false
     }
 
@@ -114,7 +114,7 @@ export default class AdvanceController{
 
         // Se llama al método que se encarga de verificar los atributos del objeto avance
         const verifyAtributes = this.verifyAttributesAdvance(dataLogin)
-
+     
         // Este if se encarga de llamar a las validaciones
         if ( verifyAtributes ) {
 
@@ -130,6 +130,7 @@ export default class AdvanceController{
                 .input("documentoBE", sql.VarBinary, dataLogin.getDocumento.data)
                 .input("estadoBE", sql.Bit, dataLogin.getEstado)
                 .execute('sp_verifyAdvance')
+                
                 // validación sobre la inserción del objeto
                 return ( result.rowsAffected[0] > 0 ) ? true : false
             } catch (err) {

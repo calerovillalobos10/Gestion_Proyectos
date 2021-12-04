@@ -13,7 +13,6 @@ import { AdvancesService } from '@core/services/advances/advances.service';
 export class DetModalComponent implements OnInit {
 
   public avance: Avance | undefined;
-  public funcionario_Aplicativo: Funcionario | undefined
   public pdfSrc: String;
   public formToggle: boolean;
   public openedModal: boolean;
@@ -21,7 +20,6 @@ export class DetModalComponent implements OnInit {
 
   constructor(
     private service: AdvancesService,
-    private functionaryService: FuncionariosService,
     private alertService: AlertService
   ) {
     this.advanceId = 0;
@@ -47,32 +45,7 @@ export class DetModalComponent implements OnInit {
   async loadAvance() {
     this.service.getById(this.advanceId).subscribe(
       res => {
-        if (res['estado']) {
-          this.avance = res['avance']
-          this.pdfSrc = this.avance?.documento;
-
-          this.loadUser();
-        } else {
-          this.closeOnError();
-        }
-      },
-      err => {
-        this.avance = {idAvance: 1, funcionarioAplicativo: 1, trimestre: 1, fechaAvance: '2000-01-01', solicitud: 1, documento:"../../../assets/book/book.pdf"}
-        this.funcionario_Aplicativo = {nombre: 'Luis', apellido_1: 'Leiton', apellido_2:'Iglesias', urlFoto:'', correo: 'Luis@gmail', fechaNacimiento:'1995-09-09',idDepartamento:1, idSexo: 1, idTipoFuncionario:1, idFuncionario:1}
-        this.pdfSrc = this.avance?.documento;
-        //this.closeOnError();--------------------------------------------------------------------------------------
-      }
-    )
-  }
-
-  loadUser() {
-    this.functionaryService.getById(this.avance?.funcionarioAplicativo).subscribe(
-      res => {
-        if (res['estado']) {
-          this.funcionario_Aplicativo = res['avance']
-        } else {
-          this.closeOnError();
-        }
+        this.pdfSrc = res['advance'].documento;
       },
       err => {
         this.closeOnError();
@@ -84,8 +57,8 @@ export class DetModalComponent implements OnInit {
     this.formToggle = true;
     setTimeout(() => {
       this.openedModal = false
-      this.funcionario_Aplicativo = undefined;
     }, 500)
+    this.pdfSrc = '';
   }
 
   // Este metodo cierra el modal mostrando una alerta de error.

@@ -23,7 +23,6 @@
   </div>
 </div>
 
-
 <table
   id="data"
   class="display responsive nowrap"
@@ -45,13 +44,14 @@
   </thead>
   <tbody>
     <tr *ngFor="let avance of filteredRows">
+
       <td>{{ avance.idAvance }}</td>
-      <td>{{ avance.trimestre | trimestre}}</td>
-      <td>{{ avance.funcionarioAplicativo }}</td>
-      <td>{{ avance.solicitud }}</td>
+      <td>{{ avance.descripcion}}</td>
+      <td>{{ avance.funcionario_aplicativo }}</td>
+      <td>{{ avance.idSolicitud }}</td>
       <td>{{ avance.fechaAvance| date: 'dd/MM/yyyy' }}</td>
       <td>
-        <div class="row action_wrap">
+        <div class="row action_wrap" id={{avance.idAvance}}>
 
           <div class="action_btn det detalle"  title="Documento">
             <i class="far fa-file"></i>

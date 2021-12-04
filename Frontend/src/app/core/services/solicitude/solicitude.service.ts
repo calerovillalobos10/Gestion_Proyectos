@@ -19,22 +19,23 @@ export class SolicitudeService {
 
   // Metodo de obtencion por id.  METHOD: Get/:id
   getById(id: number){
-    return this.http.post<any>(`${API_URL}/solicitudById`, {id: id})
+    return this.http.post<any>(`${API_URL}/solicitationById`, {idSolicitud: id})
   }
 
   // Metodo de creacion de solicitud.  METHOD: Post
   create(sol: FormData) {
-    return this.http.post<any>(`${API_URL}/solicitudes`, sol)
+    return this.http.post<any>(`${API_URL}/solicitation`, sol)
   }
 
   // Metodo de actualizacion de solicitud.  METHOD: Put
-  update(dept: FormData) {
-    return  this.http.put<any>(`${API_URL}/solicitudes`, dept)
+  update(sol: FormData) {
+    console.log(sol);
+    return  this.http.put<any>(`${API_URL}/solicitation`, sol)
   }
 
   // Elimina una solicitud por id     METHOD: Delete
   deleteById(id: number) {
-    return this.http.post<any>(`${API_URL}/deleteSolicitud`, {id: id})
+    return this.http.post<any>(`${API_URL}/deleteSolicitation`, {idSolicitud: id})
   }
 
   // Finaliza una solicitud por id     METHOD: post
@@ -44,6 +45,6 @@ export class SolicitudeService {
 
   //Obtiene todas las solicitudes     METHOD: Get
   getAll(){
-    return this.http.get<any>(`${API_URL}/solicitudes`)
+    return this.http.get<any>(`${API_URL}/solicitation`)
   }
 }

@@ -13,7 +13,8 @@ const solicitationController = new SolicitationController()
 // Se encarga de comunicarse con el controller para insertar una solicitud
 router.post('/solicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
-    const solicitation = new Solicitation(1, req.body.idFuncionario_Aplicativo, req.body.idFuncionario_Responsable, req.body.idFuncionario_Final, req.body.fechaSolicitud, req.body.fechaInicio, req.body.fechaFin, req.files.documentoActaConst, 1, 1)
+    const solicitation = new Solicitation(1, req.token.id, +req.body.funcionarioResponsable, +req.body.funcionarioFinal, req.body.fechaSolicitud, req.body.fechaInicio, req.body.fechaFin, req.files.documento, 1, 0)
+    
     // Se llama al método del controller para que verifique si existe la solicitud en la bd y está con estado 0
     const verifySolicitation = solicitationController.verifySolicitation(solicitation)
 
@@ -43,11 +44,12 @@ router.post('/solicitation', loginController.recuperarToken, loginController.ver
 
 // Se encarga de comunicarse con el controller para modificar una solicitud
 router.put('/solicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
-
-    const solicitation = new Solicitation(req.body.idSolicitud, req.body.idFuncionario_Aplicativo, req.body.idFuncionario_Responsable, req.body.idFuncionario_Final, req.body.fechaSolicitud, req.body.fechaInicio, req.body.fechaFin, req.files.documentoActaConst, 1, req.body.terminado)
+    
+    const solicitation = new Solicitation(req.body.idSolicitud, req.token.id, req.body.funcionarioResponsable, req.body.funcionarioFinal, req.body.fechaSolicitud, req.body.fechaInicio, req.body.fechaFin, req.files.documentoActaConst, 1, 0)
     // Se llama a la función que modifica la solicitud
-    const verifyModify = await solicitationController.modifySolicitation(solicitation)
 
+    const verifyModify = await solicitationController.modifySolicitation(solicitation)
+    console.log(2);
     if ( verifyModify )  {
         // Se envía el secret al frontend
         res.json({
@@ -66,7 +68,7 @@ router.put('/solicitation', loginController.recuperarToken, loginController.veri
 router.post('/deleteSolicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
 
     // Se llama a la función que elimina la solicitud por el id
-    const verifyDelete = await solicitationController.deleteSolicitation(req.body.idSolicitud, req.body.idFuncionario_Aplicativo)
+    const verifyDelete = await solicitationController.deleteSolicitation(+req.body.idSolicitud, req.token.id)
 
     if (verifyDelete) {
 
@@ -86,8 +88,9 @@ router.post('/deleteSolicitation', loginController.recuperarToken, loginControll
 // Se encarga de comunicarse con el controller para recuperar un listado de solicitudes
 router.get('/solicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
     // Se llama a la función recupera la lista
-    const list = await solicitationController.listSolicitation(req.body.idFuncionario_Aplicativo)
 
+    const list = await solicitationController.listSolicitation(req.token.id)
+    
     if (list) {
 
         // Se envía el secret al frontend
@@ -108,8 +111,8 @@ router.get('/solicitation', loginController.recuperarToken, loginController.veri
 router.post('/solicitationById', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
    
     // Se llama a la función recupera el funcionario por el id
-    const solicitation = await solicitationController.recoverSolicitationById(req.body.idSolicitud, req.body.idFuncionario_Aplicativo)
-
+    const solicitation = await solicitationController.recoverSolicitationById(+req.body.idSolicitud, +req.token.id)
+        
     if (solicitation) {
 
         // Se envía el secret al frontend

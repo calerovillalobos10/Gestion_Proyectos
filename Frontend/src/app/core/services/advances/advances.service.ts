@@ -21,12 +21,12 @@ export class AdvancesService {
   // Metodo de obtencion por id. 
   getById(id: any){
     
-    return this.http.post<any>(`${API_URL}/avanceById`, {id: id})
+    return this.http.post<any>(`${API_URL}/advanceById`, {idAvance: id})
   }
 
   // Metodo de creacion de avance.  
   create(adv: FormData) {
-    return this.http.post<any>(`${API_URL}/avances`, adv)
+    return this.http.post<any>(`${API_URL}/advance`, adv)
   }
 
   // Metodo de actualizacion de avance. 
@@ -36,12 +36,12 @@ export class AdvancesService {
 
   // Elimina un avance por id     
   deleteById(id: number) {
-    return this.http.post<any>(`${API_URL}/deleteAvance`, {id: id})
+    return this.http.post<any>(`${API_URL}/deleteAdvance`, {idAvance: id})
   }
 
   //Obtiene todas los avances     
   getAll(){
-    return this.http.get<any>(`${API_URL}/avances`)
+    return this.http.get<any>(`${API_URL}/advance`)
   }
 
   // Obtiene todos los avances de una determinada solicitud
