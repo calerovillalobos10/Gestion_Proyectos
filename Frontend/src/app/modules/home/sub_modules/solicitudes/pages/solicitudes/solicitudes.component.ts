@@ -89,7 +89,7 @@ export class SolicitudesComponent implements OnInit {
       .then(async (res) => {
         // Confirmacion del usuario
         if (res.isConfirmed) {
-          this.proceedDelete(id);
+          this.proceedEnd(id);
         }
       })
   }

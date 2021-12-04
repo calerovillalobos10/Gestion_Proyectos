@@ -262,10 +262,11 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
       res => {
         this.solicitudes = res['estado'] ? res['list'] : [];
+        this.filterNotEnded();
       },
 
       err => {
-        this.solicitudes = [{ idSolicitud: '1', funcionarioResponsable: 'Luis', fechaInicio: '2021-11-11', fechaFin: '2021-11-14' }];// [];
+        this.solicitudes = [];
       }
     )
   }
@@ -338,6 +339,11 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
     this.oldDocument = '';
     this.idAdvance = -1;
     this.closeModal();
+  }
+
+  // Filtrado de solicitudes sin terminar.
+  filterNotEnded(){
+    this.solicitudes = this.solicitudes.filter((sol:any) => !sol.terminado);
   }
 
 }
