@@ -46,7 +46,7 @@ export class AlertService {
       text: message,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si, eliminar',
+      confirmButtonText: 'Si, confirmar',
       cancelButtonText: 'No, cancelar',
       allowOutsideClick: false
     })
