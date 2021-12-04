@@ -45,7 +45,7 @@ router.post('/solicitation', loginController.recuperarToken, loginController.ver
 // Se encarga de comunicarse con el controller para modificar una solicitud
 router.put('/solicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
     
-    const solicitation = new Solicitation(req.body.idSolicitud, req.token.id, req.body.funcionarioResponsable, req.body.funcionarioFinal, req.body.fechaSolicitud, req.body.fechaInicio, req.body.fechaFin, req.files.documentoActaConst, 1, 0)
+    const solicitation = new Solicitation(req.body.idSolicitud, req.token.id, req.body.funcionarioResponsable, req.body.funcionarioFinal, req.body.fechaSolicitud, req.body.fechaInicio, req.body.fechaFin, req.files?.documentoActaConst, 1, 0)
     // Se llama a la función que modifica la solicitud
 
     const verifyModify = await solicitationController.inputDataModifySolicitation(solicitation)
@@ -90,9 +90,8 @@ router.post('/finishSolicitation', loginController.recuperarToken, loginControll
 
     // Se llama a la función que finaliza la solicitud por el id
     const verifyFinish = await solicitationController.finishedSolicitation(+req.body.idSolicitud, req.token.id)
-
+    
     if (verifyFinish) {
-
         // Se envía el secret al frontend
         res.json({
             "estado": true

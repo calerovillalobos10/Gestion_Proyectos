@@ -284,7 +284,7 @@ export default class AdvanceController{
         }
     }
 
-    inputDataModifyAdvance = (dataLogin) => {
+    inputDataModifyAdvance = async (dataLogin) => {
         
         const inputData = [
             { name: "idAvanceBE", type: sql.TinyInt, data: parseInt(dataLogin.getIdAvance, 10) },
@@ -295,11 +295,11 @@ export default class AdvanceController{
             { name: "estadoBE", type: sql.Bit, data: dataLogin.getEstado }
         ]
 
-        let sp = 'sp_modifyAdvance'
+        let sp = 'sp_modifyAdvance';
 
         ( dataLogin.getDocumento != null ) ? inputData.push({ name: "documentoBE", type: sql.VarBinary, data: dataLogin.getDocumento.data }) : sp = 'sp_modifyAdvanceWithoutDocument';
 
-        return await modifyAdvance(dataLogin, inputData, sp);
+        return await this.modifyAdvance(dataLogin, inputData, sp);
     }
 }
 
