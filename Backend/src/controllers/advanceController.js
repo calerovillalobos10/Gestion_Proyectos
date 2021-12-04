@@ -189,6 +189,38 @@ export default class AdvanceController{
         }
     }
 
+    // Esta función recupera un documento del avance mediante el id
+    recoverDocumentAdvanceById = async (idAvance, idFuncionarioAplicativo) => {
+        
+        let pool = null
+
+        // Este if se encarga de llamar a las validaciones
+        if ( idAvance != null && this.validacionController.verifyNumber(idAvance) && this.validacionController.verifySpecialCharacters(idAvance) && this.validacionController.verifyMinSize(idAvance)
+            && idFuncionarioAplicativo != null && this.validacionController.verifyNumber(idFuncionarioAplicativo) && this.validacionController.verifySpecialCharacters(idFuncionarioAplicativo) && this.validacionController.verifyMinSize(idFuncionarioAplicativo) ) {
+
+            try {
+                // Conección a la base
+                pool = await getConnection()
+                // Parámetros de entrada y ejecución del sp
+                const result = await pool.request()
+                    .input("idFuncionarioAplicativoBE", sql.SmallInt, idFuncionarioAplicativo)
+                    .input("idAvanceBE", sql.TinyInt, idAvance)
+                    .execute('sp_recoverDocumentAdvanceById')
+                // validación sobre la recuperación del objeto
+                return ( result.recordset.length > 0) ? result.recordset[0].documento : false
+            } catch (err) {
+                console.log(err);
+                return false
+            } finally {
+                // Cerrar la conexión
+                pool.close()
+            }
+        } else {
+            console.log('Falló el proceso de validación de datos');
+            return false
+        }
+    }
+
     // Esta función se encarga de cambiar el estado 
     deleteAdvance = async (idAvance, idFuncionarioAplicativo) => {
         
@@ -221,7 +253,7 @@ export default class AdvanceController{
     }
 
     // Esta función se encarga de modificar el avance en la base de datos
-    modifyAdvance = async (dataLogin) => {
+    modifyAdvance = async (dataLogin, inputData, sp) => {
 
         let pool = null
         const idAvance = parseInt(dataLogin.getIdAvance, 10)
@@ -234,15 +266,9 @@ export default class AdvanceController{
                 // Conección a la base
                 pool = await getConnection()
                 // Parámetros de entrada y ejecución del sp
-                const result = await pool.request()
-                .input("idAvanceBE", sql.TinyInt, parseInt(dataLogin.getIdAvance, 10))
-                .input("idTrimestreBE", sql.TinyInt, parseInt(dataLogin.getTrimestre, 10))
-                .input("idFuncionarioAplicativoBE", sql.SmallInt, parseInt(dataLogin.getFuncionarioAplicativo, 10))
-                .input("idSolicitudBE", sql.SmallInt, parseInt(dataLogin.getTrimestre, 10))
-                .input("fechaAvanceBE", sql.SmallDateTime, dataLogin.getFechaSolicitud)
-                .input("documentoBE", sql.VarBinary, dataLogin.getDocumento.data)
-                .input("estadoBE", sql.Bit, dataLogin.getEstado)
-                .execute('sp_modifyAdvance')
+                const request = await pool.request()
+                inputData.forEach( field => request.input( field.name, field.type, field.data) );
+                const result = await request.execute(sp)
                 // validación sobre la inserción del objeto
                 return (result.rowsAffected[0] > 0) ? true : false
             } catch (err) {
@@ -256,6 +282,24 @@ export default class AdvanceController{
             console.log('Falló el proceso de validación de datos');
             return false
         }
+    }
+
+    inputDataModifyAdvance = (dataLogin) => {
+        
+        const inputData = [
+            { name: "idAvanceBE", type: sql.TinyInt, data: parseInt(dataLogin.getIdAvance, 10) },
+            { name: "idTrimestreBE", type: sql.TinyInt, data: parseInt(dataLogin.getTrimestre, 10) },
+            { name: "idFuncionarioAplicativoBE", type: sql.SmallInt, data: parseInt(dataLogin.getFuncionarioAplicativo, 10) },
+            { name: "idSolicitudBE", type: sql.SmallInt, data: parseInt(dataLogin.getTrimestre, 10) },
+            { name: "fechaAvanceBE", type: sql.SmallDateTime, data: dataLogin.getFechaSolicitud },
+            { name: "estadoBE", type: sql.Bit, data: dataLogin.getEstado }
+        ]
+
+        let sp = 'sp_modifyAdvance'
+
+        ( dataLogin.getDocumento != null ) ? inputData.push({ name: "documentoBE", type: sql.VarBinary, data: dataLogin.getDocumento.data }) : sp = 'sp_modifyAdvanceWithoutDocument';
+
+        return await modifyAdvance(dataLogin, inputData, sp);
     }
 }
 

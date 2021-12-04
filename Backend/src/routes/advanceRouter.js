@@ -46,7 +46,7 @@ router.put('/advance', loginController.recuperarToken, loginController.verifyTok
 
     const advance = new Advance(req.body.idAvance, req.body.idTrimestre, req.body.idFuncionario_Aplciativo, req.body.idSolicitud, req.body.fechaAvance, req.files.documento, 1)
     // Se llama a la función que modifica el avance
-    const verifyModify = await advanceController.modifyAdvance(advance)
+    const verifyModify = await advanceController.inputDataModifyAdvance(advance)
 
     if ( verifyModify )  {
         // Se envía el secret al frontend
@@ -121,6 +121,28 @@ router.post('/advanceById', loginController.recuperarToken, loginController.veri
         // Si sucede algún error se le notifica al frontend
         res.json({
             "mensaje": "No se pudo recuperar el avance",
+            "estado": false,
+        })
+    }
+})
+
+// Se encarga de comunicarse con el controller para recuperar un documento del avance
+router.post('/documentAdvanceById', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
+   
+    // Se llama a la función recupera el documento por el id
+    const document = await advanceController.recoverDocumentAdvanceById(+req.body.idAvance, req.token.id)
+
+    if (document) {
+
+        // Se envía el secret al frontend
+        res.json({
+            "document": document,
+            "estado": true
+        })
+    } else {
+        // Si sucede algún error se le notifica al frontend
+        res.json({
+            "mensaje": "No se pudo recuperar el documento",
             "estado": false,
         })
     }

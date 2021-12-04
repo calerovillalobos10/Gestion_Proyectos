@@ -48,7 +48,7 @@ router.put('/solicitation', loginController.recuperarToken, loginController.veri
     const solicitation = new Solicitation(req.body.idSolicitud, req.token.id, req.body.funcionarioResponsable, req.body.funcionarioFinal, req.body.fechaSolicitud, req.body.fechaInicio, req.body.fechaFin, req.files.documentoActaConst, 1, 0)
     // Se llama a la función que modifica la solicitud
 
-    const verifyModify = await solicitationController.modifySolicitation(solicitation)
+    const verifyModify = await solicitationController.inputDataModifySolicitation(solicitation)
     console.log(2);
     if ( verifyModify )  {
         // Se envía el secret al frontend
@@ -85,6 +85,27 @@ router.post('/deleteSolicitation', loginController.recuperarToken, loginControll
     }
 })
 
+// Se comunica con el controller para finalizar una soliciud
+router.post('/finishSolicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
+
+    // Se llama a la función que finaliza la solicitud por el id
+    const verifyFinish = await solicitationController.finishedSolicitation(+req.body.idSolicitud, req.token.id)
+
+    if (verifyFinish) {
+
+        // Se envía el secret al frontend
+        res.json({
+            "estado": true
+        })
+    } else {
+        // Si sucede algún error se le notifica al frontend
+        res.json({
+            "mensaje": "No se pudo finalizar la solicitud",
+            "estado": false,
+        })
+    }
+})
+
 // Se encarga de comunicarse con el controller para recuperar un listado de solicitudes
 router.get('/solicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
     // Se llama a la función recupera la lista
@@ -111,7 +132,7 @@ router.get('/solicitation', loginController.recuperarToken, loginController.veri
 router.post('/solicitationById', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
    
     // Se llama a la función recupera el funcionario por el id
-    const solicitation = await solicitationController.recoverSolicitationById(+req.body.idSolicitud, +req.token.id)
+    const solicitation = await solicitationController.recoverDocumentSolicitationById(+req.body.idSolicitud, +req.token.id)
         
     if (solicitation) {
 
@@ -124,6 +145,28 @@ router.post('/solicitationById', loginController.recuperarToken, loginController
         // Si sucede algún error se le notifica al frontend
         res.json({
             "mensaje": "No se pudo recuperar la solicitud",
+            "estado": false,
+        })
+    }
+})
+
+// Se encarga de comunicarse con el controller para recuperar un objeto solicitud
+router.post('/documentSolicitationById', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
+   
+    // Se llama a la función recupera el funcionario por el id
+    const document = await solicitationController.recoverDocumentById(+req.body.idSolicitud, +req.token.id)
+        
+    if (document) {
+
+        // Se envía el secret al frontend
+        res.json({
+            "document": document,
+            "estado": true
+        })
+    } else {
+        // Si sucede algún error se le notifica al frontend
+        res.json({
+            "mensaje": "No se pudo recuperar el documento",
             "estado": false,
         })
     }

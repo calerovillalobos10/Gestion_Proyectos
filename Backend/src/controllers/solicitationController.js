@@ -202,6 +202,38 @@ export default class SolicitationController{
         }
     }
 
+    // Esta función recupera un documento de la solicitud mediante el id
+    recoverDocumentSolicitationById = async (idSolicitud, idFuncionarioAplicativo) => {
+        
+        let pool = null
+    
+        // Este if se encarga de llamar a las validaciones
+        if ( idSolicitud != null && this.validacionController.verifyNumber(idSolicitud) && this.validacionController.verifySpecialCharacters(idSolicitud) && this.validacionController.verifyMinSize(idSolicitud)
+            && idFuncionarioAplicativo != null && this.validacionController.verifyNumber(idFuncionarioAplicativo) && this.validacionController.verifySpecialCharacters(idFuncionarioAplicativo) && this.validacionController.verifyMinSize(idFuncionarioAplicativo) ) {
+    
+            try {
+                // Conección a la base
+                pool = await getConnection()
+                // Parámetros de entrada y ejecución del sp
+                const result = await pool.request()
+                    .input("idFuncionarioAplicativoBE", sql.SmallInt, idFuncionarioAplicativo)
+                    .input("idSolicitudBE", sql.SmallInt, idSolicitud)
+                    .execute('sp_recoverDocumentSolicitationById')
+                // validación sobre la recuperación del objeto
+                return ( result.recordset.length > 0) ? result.recordset[0].documentoActa : false
+            } catch (err) {
+                console.log(err);
+                return false
+            } finally {
+                // Cerrar la conexión
+                pool.close()
+            }
+        } else {
+            console.log('Falló el proceso de validación de datos');
+            return false
+        }
+    }
+
     // Esta función se encarga de cambiar el estado 
     deleteSolicitation = async (idSolicitud, idFuncionarioAplicativo) => {
         
@@ -233,8 +265,39 @@ export default class SolicitationController{
         }
     }
 
+    // Esta función se encarga de cambiar el estado de terminado
+    finishedSolicitation = async (idSolicitud, idFuncionarioAplicativo) => {
+        
+        let pool = null
+        // Este if se encarga de llamar a las validaciones
+        if ( idSolicitud != null && this.validacionController.verifyNumber(idSolicitud) && this.validacionController.verifySpecialCharacters(idSolicitud) && this.validacionController.verifyMinSize(idSolicitud)
+            && idFuncionarioAplicativo != null && this.validacionController.verifyNumber(idFuncionarioAplicativo) && this.validacionController.verifySpecialCharacters(idFuncionarioAplicativo) && this.validacionController.verifyMinSize(idFuncionarioAplicativo) ) {
+
+            try {
+                // Conección a la base
+                pool = await getConnection()
+                // Parámetros de entrada y ejecución del sp
+                const result = await pool.request()
+                    .input("idFuncionarioAplicativoBE", sql.SmallInt, idFuncionarioAplicativo)
+                    .input("idSolicitudBE", sql.SmallInt, idSolicitud)
+                    .execute('sp_finishedSolicitation')
+                // validación sobre la inserción del objeto
+                return ( result.rowsAffected[0] > 0 ) ? true : false
+            } catch (err) {
+                console.log(err);
+                return false
+            } finally {
+                // Cerrar la conexión
+                pool.close()
+            }
+        } else {
+            console.log('Falló el proceso de validación de datos');
+            return false
+        }
+    }
+
     // Esta función se encarga de modificar la solicitud en la base de datos
-    modifySolicitation = async (dataLogin) => {
+    modifySolicitation = async (dataLogin, inputData, sp) => {
 
         let pool = null
         const idSolicitud = parseInt(dataLogin.getIdSolicitud, 10)
@@ -249,18 +312,9 @@ export default class SolicitationController{
                 // Conección a la base
                 pool = await getConnection()
                 // Parámetros de entrada y ejecución del sp
-                const result = await pool.request()
-                .input("idSolicitudBE", sql.SmallInt, idSolicitud)
-                .input("idFuncionarioAplicativoBE", sql.SmallInt, dataLogin.getFuncionarioAplicativo)
-                .input("idFuncionarioResponsableBE", sql.SmallInt, dataLogin.getFuncionarioResponsable)
-                .input("idFuncionarioFinalBE", sql.SmallInt, dataLogin.getFuncionarioFinal)
-                .input("fechaSolicitudBE", sql.SmallDateTime, dataLogin.getFechaSolicitud)
-                .input("fechaInicioBE", sql.Date, dataLogin.getFechaIncio)
-                .input("fechaFinBE", sql.Date, dataLogin.getFechaFin)
-                .input("documentoActaConstBE", sql.VarBinary, dataLogin.getDocumentoActaConst.data)
-                .input("estadoBE", sql.Bit, dataLogin.getEstado)
-                .input("terminadoBE", sql.Bit, dataLogin.getTerminado)
-                .execute('sp_modifySolicitation')
+                const request = await pool.request()
+                inputData.forEach( field => request.input( field.name, field.type, field.data) );
+                const result = await request.execute(sp)
                 // validación sobre la inserción del objeto
                 return (result.rowsAffected[0] > 0) ? true : false
             } catch (err) {
@@ -274,6 +328,27 @@ export default class SolicitationController{
             console.log('Falló el proceso de validación de datos');
             return false
         }
+    }
+
+    inputDataModifySolicitation = (dataLogin) => {
+        
+        const inputData = [
+            { name: "idSolicitudBE", type: sql.SmallInt, data: parseInt(dataLogin.getIdSolicitud, 10) },
+            { name: "idFuncionarioAplicativoBE", type: sql.SmallInt, data: dataLogin.getFuncionarioAplicativo },
+            { name: "idFuncionarioResponsableBE", type: sql.SmallInt, data: dataLogin.getFuncionarioResponsable },
+            { name: "idFuncionarioFinalBE", type: sql.SmallInt, data: dataLogin.getFuncionarioFinal },
+            { name: "fechaSolicitudBE", type: sql.SmallDateTime, data: dataLogin.getFechaSolicitud },
+            { name: "fechaInicioBE", type: sql.Date, data: dataLogin.getFechaIncio },
+            { name: "fechaFinBE", type: sql.Date, data: dataLogin.getFechaFin },
+            { name: "estadoBE", type: sql.Bit, data: dataLogin.getEstado },
+            { name: "terminadoBE", type: sql.Bit, data: parseInt(dataLogin.getTerminado, 10) }
+        ]
+
+        let sp = 'sp_modifySolicitation'
+
+        ( dataLogin.getDocumento != null ) ? inputData.push({ name: "documentoActaConstBE", type: sql.VarBinary, data: dataLogin.getDocumentoActaConst.data }) : sp = 'sp_modifySolicitationWithoutDocument';
+
+        return await modifySolicitation(dataLogin, inputData, sp);
     }
 }
 
