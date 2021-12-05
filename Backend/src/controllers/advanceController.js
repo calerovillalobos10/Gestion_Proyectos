@@ -47,9 +47,8 @@ export default class AdvanceController{
         let pool = null
         // Se llama al método que se encarga de verificar los atributos del objeto avance
         const verifyAtributes = this.verifyAttributesAdvance(dataLogin)
-
         // Este if se encarga de llamar a las validaciones
-        if ( verifyAtributes ) {
+        if ( verifyAtributes && dataLogin.getDocumento != null && this.validacionController.verifyExtDocument(dataLogin.getDocumento) ) {
 
             try {
                 // Conección a la base
@@ -86,7 +85,6 @@ export default class AdvanceController{
         const idFuncionarioAplicativo = dataLogin.getFuncionarioAplicativo
         const idSolicitud = dataLogin.getIdSolicitud
         const fechaAvance = dataLogin.getFechaAvance
-        const documento = dataLogin.getDocumento
 
         // Verificaciones de los diferentes atributos del objeto avance
         let verifyIdTrimestre = ( idTrimestre != null && this.validacionController.verifySpecialCharacters(parseInt(idTrimestre, 10)) && this.validacionController.verifyMinSize(parseInt(idTrimestre, 10), 1) && this.validacionController.verifyNumber(parseInt(idTrimestre, 10)) ) ? true : false
@@ -97,9 +95,7 @@ export default class AdvanceController{
         
         let verifyFechaAvance = ( fechaAvance != null && this.validacionController.verifySpecialCharacters(fechaAvance) && this.validacionController.verifyDate(fechaAvance) ) ? true : false
         
-        let verifyDocumento = ( documento != null ) && this.validacionController.verifyExtDocument(documento) ? true : false;
-        
-        return ( verifyIdTrimestre && verifyIdFuncionarioAplicativo && verifyIdSolicitud && verifyFechaAvance && verifyDocumento ) ? true : false
+        return ( verifyIdTrimestre && verifyIdFuncionarioAplicativo && verifyIdSolicitud && verifyFechaAvance ) ? true : false
     }
 
     /* 
