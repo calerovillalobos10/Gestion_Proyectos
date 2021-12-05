@@ -40,11 +40,14 @@ export class SolicitudeService {
 
   // Finaliza una solicitud por id     METHOD: post
   endById(id: number) {
-    return this.http.post<any>(`${API_URL}/endSolicitud`, {id: id})
+    return this.http.post<any>(`${API_URL}/finishSolicitation`, {idSolicitud: id})
   }
 
   //Obtiene todas las solicitudes     METHOD: Get
   getAll(){
     return this.http.get<any>(`${API_URL}/solicitation`)
   }
+
+
+
 }

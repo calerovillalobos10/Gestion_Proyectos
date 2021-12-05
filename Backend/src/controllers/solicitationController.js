@@ -312,7 +312,7 @@ export default class SolicitationController{
                 // Conección a la base
                 pool = await getConnection()
                 // Parámetros de entrada y ejecución del sp
-                const request = await pool.request()
+                const request =  pool.request()
                 inputData.forEach( field => request.input( field.name, field.type, field.data) );
                 const result = await request.execute(sp)
                 // validación sobre la inserción del objeto
@@ -330,7 +330,7 @@ export default class SolicitationController{
         }
     }
 
-    inputDataModifySolicitation = (dataLogin) => {
+    inputDataModifySolicitation = async (dataLogin) => {
         
         const inputData = [
             { name: "idSolicitudBE", type: sql.SmallInt, data: parseInt(dataLogin.getIdSolicitud, 10) },
@@ -344,11 +344,10 @@ export default class SolicitationController{
             { name: "terminadoBE", type: sql.Bit, data: parseInt(dataLogin.getTerminado, 10) }
         ]
 
-        let sp = 'sp_modifySolicitation'
-
+        let sp = 'sp_modifySolicitation';
+     
         ( dataLogin.getDocumento != null ) ? inputData.push({ name: "documentoActaConstBE", type: sql.VarBinary, data: dataLogin.getDocumentoActaConst.data }) : sp = 'sp_modifySolicitationWithoutDocument';
 
-        return await modifySolicitation(dataLogin, inputData, sp);
+        return await this.modifySolicitation(dataLogin, inputData, sp);
     }
 }
-
