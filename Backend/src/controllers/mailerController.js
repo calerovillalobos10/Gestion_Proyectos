@@ -1,5 +1,5 @@
 // Importaciones necesarias
-import nodemailer from 'nodemailer'
+import nodemailer from 'nodemailer';
 
 export default class MailerController {
 
@@ -17,10 +17,10 @@ export default class MailerController {
                 user: process.env.CORREO,
                 pass: process.env.CONTRASENIA
             },
-        });
+        }),
 
         // Parámetros del cuerpo de correo
-        const mailOptions = {
+        mailOptions = {
             from: process.env.CORREO,
             to: email,
             subject: "Doble Autentificación",

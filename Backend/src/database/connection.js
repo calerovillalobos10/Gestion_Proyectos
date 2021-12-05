@@ -1,5 +1,5 @@
 // Importaciones necesarias
-import sql from 'mssql'
+import sql from 'mssql';
 
 // Se crea un objeto con los atributos que tendrá la conexión
 const dbSettings = {
@@ -11,19 +11,19 @@ const dbSettings = {
         encrypt: false,
         trustServerCertificate: true,
     },
-}
+};
 
 // Una vez terminado de conectar retornará un pool
 export const getConnection = async () => {
     
     try {
-        const pool = await sql.connect(dbSettings)
-        return pool 
+        const pool = await sql.connect(dbSettings);
+        return pool;
     } catch (err) {
         console.log(err);
     }
 }
 
-export { sql }
+export { sql };
 
 

@@ -1,7 +1,7 @@
 // Importaciones necesarias
-import { getConnection, sql } from '../database/connection'
-import ValidacionController from '../controllers/validationController'
-import Solicitation from '../models/solicitation'
+import { getConnection, sql } from '../database/connection';
+import ValidacionController from '../controllers/validationController';
+import Solicitation from '../models/solicitation';
 
 export default class SolicitationController{
 
@@ -9,51 +9,50 @@ export default class SolicitationController{
 
     // Constructor donde se inicializan las instancias
     constructor() {
-        this.validacionController = new ValidacionController()
+        this.validacionController = new ValidacionController();
     }
 
     // Esta función obtiene una lista de solicitudes de la base de datos
     listSolicitation = async (idFuncionarioAplicativo) => {
 
-        let pool = null
+        let pool = null;
 
         if ( idFuncionarioAplicativo != null && this.validacionController.verifyNumber(idFuncionarioAplicativo) && this.validacionController.verifySpecialCharacters(idFuncionarioAplicativo) && this.validacionController.verifyMinSize(idFuncionarioAplicativo) ) {
             
             try {
                 // Conección a la base
-                pool = await getConnection()
+                pool = await getConnection();
                 // Ejecución del sp
                 const result = await pool.request()
                 .input("idFuncionarioAplicativoBE", sql.SmallInt, idFuncionarioAplicativo)
-                .execute('sp_listSolicitation')
+                .execute('sp_listSolicitation');
                 // Retorno del objeto con los parámetros que se ocupan en el frontend
-                return result.recordset
+                return result.recordset;
             } catch (err) {
                 console.log(err);
-                return false
+                return false;
             } finally {
                 // Cerrar la conexión
-                pool.close()
+                pool.close();
             }
         } else {
             console.log('Falló el proceso de validación de datos');
-            return false
+            return false;
         }  
     }
 
     // Esta función se encarga de enviar los parámetros del objeto solicitation a la base de datos para que sean insertados
     insertSolicitation = async (dataLogin) => {
 
-        let pool = null
+        let pool = null;
         // Se llama al método que se encarga de verificar los atributos del objeto solicitation
-        const verifyAtributes = this.verifyAttributesSolicitation(dataLogin)
-
+        const verifyAtributes = this.verifyAttributesSolicitation(dataLogin);
         // Este if se encarga de llamar a las validaciones
-        if ( verifyAtributes ) {
+        if ( verifyAtributes && dataLogin.getDocumentoActaConst != null && this.validacionController.verifyExtDocument(dataLogin.getDocumentoActaConst) ) {
 
             try {
                 // Conección a la base
-                pool = await getConnection()
+                pool = await getConnection();
                 // Parámetros de entrada y salida del sp y ejecución del mismo
                 const result = await pool.request()
                     .input("idFuncionarioAplicativoBE", sql.SmallInt, dataLogin.getFuncionarioAplicativo)
@@ -65,49 +64,46 @@ export default class SolicitationController{
                     .input("documentoActaConstBE", sql.VarBinary, dataLogin.getDocumentoActaConst.data)
                     .input("estadoBE", sql.Bit, dataLogin.getEstado)
                     .input("terminadoBE", sql.Bit, dataLogin.getTerminado)
-                    .execute('sp_insertSolicitation')
+                    .execute('sp_insertSolicitation');
                 // validación sobre la inserción del objeto
-                return ( result.rowsAffected[0] > 0 ) ? true : false
+                return ( result.rowsAffected[0] > 0 ) ? true : false;
             } catch (err) {
                 console.log(err);
-                return false
+                return false;
             } finally {
                 // Cerrar la conexión
-                pool.close()
+                pool.close();
             }
         } else {
             console.log('Falló el proceso de validación de datos');
-            return false
+            return false;
         }
     }
 
     // Esta función se encarga de verificar los atributos del objeto solicitation 
     verifyAttributesSolicitation = (dataLogin) => {
 
-        const idFuncionarioAplicativo = dataLogin.getFuncionarioAplicativo
-        const idFuncionarioResponsable = dataLogin.getFuncionarioResponsable
-        const idFuncionarioFinal = dataLogin.getFuncionarioFinal
-        const fechaSolicitud = dataLogin.getFechaSolicitud
-        const fechaInicio = dataLogin.getFechaIncio
-        const fechaFin = dataLogin.getFechaFin
-        const documentoActaConst = dataLogin.getDocumentoActaConst
+        const idFuncionarioAplicativo = dataLogin.getFuncionarioAplicativo,
+            idFuncionarioResponsable = dataLogin.getFuncionarioResponsable,
+            idFuncionarioFinal = dataLogin.getFuncionarioFinal,
+            fechaSolicitud = dataLogin.getFechaSolicitud,
+            fechaInicio = dataLogin.getFechaIncio,
+            fechaFin = dataLogin.getFechaFin;
 
         // Verificaciones de los diferentes atributos del objeto solicitation
-        let verifyIdFuncionarioAplicativo = ( idFuncionarioAplicativo != null && this.validacionController.verifySpecialCharacters(parseInt(idFuncionarioAplicativo, 10)) && this.validacionController.verifyMinSize(parseInt(idFuncionarioAplicativo, 10), 1) && this.validacionController.verifyNumber(parseInt(idFuncionarioAplicativo, 10)) ) ? true : false
+        let verifyIdFuncionarioAplicativo = ( idFuncionarioAplicativo != null && this.validacionController.verifySpecialCharacters(parseInt(idFuncionarioAplicativo, 10)) && this.validacionController.verifyMinSize(parseInt(idFuncionarioAplicativo, 10), 1) && this.validacionController.verifyNumber(parseInt(idFuncionarioAplicativo, 10)) ) ? true : false,
     
-        let verifyIdFuncionarioResponsable = ( idFuncionarioResponsable != null && this.validacionController.verifySpecialCharacters(parseInt(idFuncionarioResponsable, 10)) && this.validacionController.verifyMinSize(parseInt(idFuncionarioResponsable, 10), 1) && this.validacionController.verifyNumber(parseInt(idFuncionarioResponsable, 10)) ) ? true : false
+            verifyIdFuncionarioResponsable = ( idFuncionarioResponsable != null && this.validacionController.verifySpecialCharacters(parseInt(idFuncionarioResponsable, 10)) && this.validacionController.verifyMinSize(parseInt(idFuncionarioResponsable, 10), 1) && this.validacionController.verifyNumber(parseInt(idFuncionarioResponsable, 10)) ) ? true : false,
     
-        let verifyIdFuncionarioFinal = ( idFuncionarioFinal != null && this.validacionController.verifySpecialCharacters(parseInt(idFuncionarioFinal, 10)) && this.validacionController.verifyMinSize(parseInt(idFuncionarioFinal, 10), 1) && this.validacionController.verifyNumber(parseInt(idFuncionarioFinal, 10)) ) ? true : false
+            verifyIdFuncionarioFinal = ( idFuncionarioFinal != null && this.validacionController.verifySpecialCharacters(parseInt(idFuncionarioFinal, 10)) && this.validacionController.verifyMinSize(parseInt(idFuncionarioFinal, 10), 1) && this.validacionController.verifyNumber(parseInt(idFuncionarioFinal, 10)) ) ? true : false,
     
-        let verifyFechaSolicitud = ( fechaSolicitud != null && this.validacionController.verifySpecialCharacters(fechaSolicitud) && this.validacionController.verifyDate(fechaSolicitud) ) ? true : false
+            verifyFechaSolicitud = ( fechaSolicitud != null && this.validacionController.verifySpecialCharacters(fechaSolicitud) && this.validacionController.verifyDate(fechaSolicitud) ) ? true : false,
     
-        let verifyFechaInicio = ( fechaInicio != null && this.validacionController.verifySpecialCharacters(fechaInicio) && this.validacionController.verifyDate(fechaInicio) ) ? true : false
+            verifyFechaInicio = ( fechaInicio != null && this.validacionController.verifySpecialCharacters(fechaInicio) && this.validacionController.verifyDate(fechaInicio) ) ? true : false,
     
-        let verifyFechaFin = ( fechaFin != null && this.validacionController.verifySpecialCharacters(fechaFin) && this.validacionController.verifyDate(fechaFin) ) ? true : false
+            verifyFechaFin = ( fechaFin != null && this.validacionController.verifySpecialCharacters(fechaFin) && this.validacionController.verifyDate(fechaFin) ) ? true : false;
     
-        let verifyDocumentoActaConst = ( documentoActaConst != null ) && this.validacionController.verifyExtDocument(documentoActaConst) ? true : false;
-    
-        return ( verifyIdFuncionarioAplicativo &&  verifyIdFuncionarioResponsable && verifyIdFuncionarioFinal && verifyFechaSolicitud && verifyFechaInicio && verifyFechaFin ) ? true : false
+        return ( verifyIdFuncionarioAplicativo &&  verifyIdFuncionarioResponsable && verifyIdFuncionarioFinal && verifyFechaSolicitud && verifyFechaInicio && verifyFechaFin ) ? true : false;
     }
 
     /* 
@@ -118,17 +114,17 @@ export default class SolicitationController{
     */
     verifySolicitation = async (dataLogin) => {
 
-        let pool = null
+        let pool = null;
 
         // Se llama al método que se encarga de verificar los atributos del objeto solicitation
-        const verifyAtributes = this.verifyAttributesSolicitation(dataLogin)
+        const verifyAtributes = this.verifyAttributesSolicitation(dataLogin);
 
         // Este if se encarga de llamar a las validaciones
         if ( verifyAtributes ) {
 
             try {
                 // Conección a la base
-                pool = await getConnection()
+                pool = await getConnection();
                 // Parámetros de entrada del sp y ejecución del mismo
                 const result = await pool.request()
                 .input("idFuncionarioAplicativoBE", sql.SmallInt, dataLogin.getFuncionarioAplicativo)
@@ -140,28 +136,26 @@ export default class SolicitationController{
                 .input("documentoActaConstBE", sql.VarBinary, dataLogin.getDocumentoActaConst.data)
                 .input("estadoBE", sql.Bit, dataLogin.getEstado)
                 .input("terminadoBE", sql.Bit, dataLogin.getTerminado)
-                .execute('sp_verifySolicitation')
+                .execute('sp_verifySolicitation');
                 // validación sobre la inserción del objeto
-                return ( result.rowsAffected[0] > 0 ) ? true : false
+                return ( result.rowsAffected[0] > 0 ) ? true : false;
             } catch (err) {
-
                 console.log(err);
-                return false
+                return false;
             } finally {
                 // Cerrar la conexión
-                pool.close()
+                pool.close();
             }
         } else {
-
             console.log('Falló el proceso de validación de datos');
-            return false
+            return false;
         }
     }
 
     // Esta función recupera un objeto solicitud mediante el id
     recoverSolicitationById = async (idSolicitud, idFuncionarioAplicativo) => {
         
-        let pool = null
+        let pool = null;
 
         // Este if se encarga de llamar a las validaciones
         if ( idSolicitud != null && this.validacionController.verifyNumber(idSolicitud) && this.validacionController.verifySpecialCharacters(idSolicitud) && this.validacionController.verifyMinSize(idSolicitud)
@@ -169,14 +163,14 @@ export default class SolicitationController{
 
             try {
                 // Conección a la base
-                pool = await getConnection()
+                pool = await getConnection();
                 // Parámetros de entrada y ejecución del sp
                 const result = await pool.request()
                     .input("idFuncionarioAplicativoBE", sql.SmallInt, idFuncionarioAplicativo)
                     .input("idSolicitudBE", sql.SmallInt, idSolicitud)
-                    .execute('sp_recoverSolicitationById')
+                    .execute('sp_recoverSolicitationById'),
                 // Creación del objeto funcionario
-                const solicitation = new Solicitation(
+                solicitation = new Solicitation(
                     result.recordset[0].idSolicitud, 
                     result.recordset[0].idFuncionario_Aplicativo, 
                     result.recordset[0].idFuncionario_Responsable,
@@ -186,26 +180,26 @@ export default class SolicitationController{
                     result.recordset[0].fechaFin, 
                     result.recordset[0].documentoActa,
                     result.recordset[0].estado, 
-                    result.recordset[0].terminado)
+                    result.recordset[0].terminado);
                 // validación sobre la inserción del objeto
-                return ( result.recordset.length > 0) ? solicitation : false
+                return ( result.recordset.length > 0) ? solicitation : false;
             } catch (err) {
                 console.log(err);
-                return false
+                return false;
             } finally {
                 // Cerrar la conexión
-                pool.close()
+                pool.close();
             }
         } else {
             console.log('Falló el proceso de validación de datos');
-            return false
+            return false;
         }
     }
 
     // Esta función recupera un documento de la solicitud mediante el id
     recoverDocumentSolicitationById = async (idSolicitud, idFuncionarioAplicativo) => {
         
-        let pool = null
+        let pool = null;
     
         // Este if se encarga de llamar a las validaciones
         if ( idSolicitud != null && this.validacionController.verifyNumber(idSolicitud) && this.validacionController.verifySpecialCharacters(idSolicitud) && this.validacionController.verifyMinSize(idSolicitud)
@@ -213,120 +207,120 @@ export default class SolicitationController{
     
             try {
                 // Conección a la base
-                pool = await getConnection()
+                pool = await getConnection();
                 // Parámetros de entrada y ejecución del sp
                 const result = await pool.request()
                     .input("idFuncionarioAplicativoBE", sql.SmallInt, idFuncionarioAplicativo)
                     .input("idSolicitudBE", sql.SmallInt, idSolicitud)
-                    .execute('sp_recoverDocumentSolicitationById')
+                    .execute('sp_recoverDocumentSolicitationById');
                 // validación sobre la recuperación del objeto
-                return ( result.recordset.length > 0) ? result.recordset[0].documentoActa : false
+                return ( result.recordset.length > 0) ? result.recordset[0].documentoActa : false;
             } catch (err) {
                 console.log(err);
-                return false
+                return false;
             } finally {
                 // Cerrar la conexión
-                pool.close()
+                pool.close();
             }
         } else {
             console.log('Falló el proceso de validación de datos');
-            return false
+            return false;
         }
     }
 
     // Esta función se encarga de cambiar el estado 
     deleteSolicitation = async (idSolicitud, idFuncionarioAplicativo) => {
         
-        let pool = null
+        let pool = null;
         // Este if se encarga de llamar a las validaciones
         if ( idSolicitud != null && this.validacionController.verifyNumber(idSolicitud) && this.validacionController.verifySpecialCharacters(idSolicitud) && this.validacionController.verifyMinSize(idSolicitud)
             && idFuncionarioAplicativo != null && this.validacionController.verifyNumber(idFuncionarioAplicativo) && this.validacionController.verifySpecialCharacters(idFuncionarioAplicativo) && this.validacionController.verifyMinSize(idFuncionarioAplicativo) ) {
 
             try {
                 // Conección a la base
-                pool = await getConnection()
+                pool = await getConnection();
                 // Parámetros de entrada y ejecución del sp
                 const result = await pool.request()
                     .input("idFuncionarioAplicativoBE", sql.SmallInt, idFuncionarioAplicativo)
                     .input("idSolicitudBE", sql.SmallInt, idSolicitud)
-                    .execute('sp_deleteSolicitation')
+                    .execute('sp_deleteSolicitation');
                 // validación sobre la inserción del objeto
-                return ( result.rowsAffected[0] > 0 ) ? true : false
+                return ( result.rowsAffected[0] > 0 ) ? true : false;
             } catch (err) {
                 console.log(err);
-                return false
+                return false;
             } finally {
                 // Cerrar la conexión
-                pool.close()
+                pool.close();
             }
         } else {
             console.log('Falló el proceso de validación de datos');
-            return false
+            return false;
         }
     }
 
     // Esta función se encarga de cambiar el estado de terminado
     finishedSolicitation = async (idSolicitud, idFuncionarioAplicativo) => {
         
-        let pool = null
+        let pool = null;
         // Este if se encarga de llamar a las validaciones
         if ( idSolicitud != null && this.validacionController.verifyNumber(idSolicitud) && this.validacionController.verifySpecialCharacters(idSolicitud) && this.validacionController.verifyMinSize(idSolicitud)
             && idFuncionarioAplicativo != null && this.validacionController.verifyNumber(idFuncionarioAplicativo) && this.validacionController.verifySpecialCharacters(idFuncionarioAplicativo) && this.validacionController.verifyMinSize(idFuncionarioAplicativo) ) {
 
             try {
                 // Conección a la base
-                pool = await getConnection()
+                pool = await getConnection();
                 // Parámetros de entrada y ejecución del sp
                 const result = await pool.request()
                     .input("idFuncionarioAplicativoBE", sql.SmallInt, idFuncionarioAplicativo)
                     .input("idSolicitudBE", sql.SmallInt, idSolicitud)
-                    .execute('sp_finishedSolicitation')
+                    .execute('sp_finishedSolicitation');
                 // validación sobre la inserción del objeto
-                return ( result.rowsAffected[0] > 0 ) ? true : false
+                return ( result.rowsAffected[0] > 0 ) ? true : false;
             } catch (err) {
                 console.log(err);
-                return false
+                return false;
             } finally {
                 // Cerrar la conexión
-                pool.close()
+                pool.close();
             }
         } else {
             console.log('Falló el proceso de validación de datos');
-            return false
+            return false;
         }
     }
 
     // Esta función se encarga de modificar la solicitud en la base de datos
     modifySolicitation = async (dataLogin, inputData, sp) => {
 
-        let pool = null
-        const idSolicitud = parseInt(dataLogin.getIdSolicitud, 10)
-        const terminado = parseInt(dataLogin.getTerminado, 10)
+        let pool = null;
+        const idSolicitud = parseInt(dataLogin.getIdSolicitud, 10),
+        terminado = parseInt(dataLogin.getTerminado, 10),
         // Se llama al método que se encarga de verificar los atributos del objeto solicitation
-        const verifyAtributes = this.verifyAttributesSolicitation(dataLogin)
+        verifyAtributes = this.verifyAttributesSolicitation(dataLogin);
 
         if ( verifyAtributes && idSolicitud != null && this.validacionController.verifyNumber(idSolicitud) && this.validacionController.verifySpecialCharacters(idSolicitud) && this.validacionController.verifyMinSize(idSolicitud) 
            && terminado != null && this.validacionController.verifySpecialCharacters(terminado) && this.validacionController.verifyMinSize(terminado, 1) && this.validacionController.verifyNumber(terminado) ){
             
             try {
                 // Conección a la base
-                pool = await getConnection()
+                pool = await getConnection();
                 // Parámetros de entrada y ejecución del sp
-                const request =  pool.request()
+                const request = pool.request();
                 inputData.forEach( field => request.input( field.name, field.type, field.data) );
-                const result = await request.execute(sp)
+                const result = await request.execute(sp);
                 // validación sobre la inserción del objeto
-                return (result.rowsAffected[0] > 0) ? true : false
+                return (result.rowsAffected[0] > 0) ? true : false;
             } catch (err) {
                 console.log(err);
-                return false
+                return false;
             } finally {
                 // Cerrar la conexión
-                pool.close()
+                pool.close();
             }
         } else {
             console.log('Falló el proceso de validación de datos');
-            return false
+            return false;
         }
     }
 
@@ -342,7 +336,7 @@ export default class SolicitationController{
             { name: "fechaFinBE", type: sql.Date, data: dataLogin.getFechaFin },
             { name: "estadoBE", type: sql.Bit, data: dataLogin.getEstado },
             { name: "terminadoBE", type: sql.Bit, data: parseInt(dataLogin.getTerminado, 10) }
-        ]
+        ];
 
         let sp = 'sp_modifySolicitation';
      

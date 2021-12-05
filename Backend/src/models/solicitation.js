@@ -16,82 +16,82 @@ export default class Solicitation{
     }
 
     get getIdSolicitud() {
-        return this.idSolicitud
+        return this.idSolicitud;
     }
 
     set setIdSolicitud(idSolicitud) {
-        this.idSolicitud = idSolicitud
+        this.idSolicitud = idSolicitud;
     }
 
     get getFuncionarioAplicativo() {
-        return this.funcionarioAplicativo
+        return this.funcionarioAplicativo;
     }
 
     set setFuncionarioAplicativo(funcionarioAplicativo) {
-        this.funcionarioAplicativo = funcionarioAplicativo
+        this.funcionarioAplicativo = funcionarioAplicativo;
     }
 
     get getFuncionarioResponsable() {
-        return this.funcionarioResponsable
+        return this.funcionarioResponsable;
     }
 
     set setFuncionarioResponsable(funcionarioResponsable) {
-        this.funcionarioResponsable = funcionarioResponsable
+        this.funcionarioResponsable = funcionarioResponsable;
     }
 
     get getFuncionarioFinal() {
-        return this.funcionarioFinal
+        return this.funcionarioFinal;
     }
 
     set setFuncionarioFinal(funcionarioFinal) {
-        this.funcionarioFinal = funcionarioFinal
+        this.funcionarioFinal = funcionarioFinal;
     }
 
     get getFechaSolicitud() {
-        return this.fechaSolicitud
+        return this.fechaSolicitud;
     }
 
     set setFechaSolicitud(fechaSolicitud) {
-        this.fechaSolicitud = fechaSolicitud
+        this.fechaSolicitud = fechaSolicitud;
     }
 
     get getFechaIncio() {
-        return this.fechaIncio
+        return this.fechaIncio;
     }
 
     set setFechaIncio(fechaIncio) {
-        this.fechaIncio = fechaIncio
+        this.fechaIncio = fechaIncio;
     }
 
     get getFechaFin() {
-        return this.fechaFin
+        return this.fechaFin;
     }
 
     set setFechaFin(fechaFin) {
-        this.fechaFin = fechaFin
+        this.fechaFin = fechaFin;
     }
 
     get getDocumentoActaConst() {
-        return this.documentoActaConst
+        return this.documentoActaConst;
     }
 
     set setDocumentoActaConst(documentoActaConst) {
-        this.documentoActaConst = documentoActaConst
+        this.documentoActaConst = documentoActaConst;
     }
 
     get getEstado() {
-        return this.estado
+        return this.estado;
     }
 
     set setEstado(estado) {
-        this.estado = estado
+        this.estado = estado;
     }
 
     get getTerminado() {
-        return this.terminado
+        return this.terminado;
     }
 
     set setTerminado(terminado) {
-        this.terminado = terminado
+        this.terminado = terminado;
     }
 }
