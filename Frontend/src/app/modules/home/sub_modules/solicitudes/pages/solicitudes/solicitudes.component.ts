@@ -13,6 +13,8 @@ import { FormControl } from '@angular/forms';
 })
 export class SolicitudesComponent implements OnInit {
 
+  public value = 50;
+
   public dtOptions: any = {};
   public dtTrigger: Subject<any> = new Subject<any>();
   public allRows: Array<Solicitud> = [];
@@ -134,6 +136,7 @@ export class SolicitudesComponent implements OnInit {
       { title: 'Fecha de solicitud', data: 'fechaSolicitud', orderable: true },
       { title: 'Fecha de inicio', data: 'fechaInicio', orderable: true },
       { title: 'Fecha de fin', data: 'fechaFin', orderable: true },
+      { title: 'Progreso', orderable: false },
       { title: 'Acciones', orderable: false, searchable: false },
     ]
   }

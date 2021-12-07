@@ -20,8 +20,12 @@ export class AdvancesService {
 
   // Metodo de obtencion por id. 
   getById(id: any){
-    
     return this.http.post<any>(`${API_URL}/advanceById`, {idAvance: id})
+  }
+
+  // Metodo de obtencion por id. 
+  getDocumentById(id: any){
+    return this.http.post<any>(`${API_URL}/documentAdvanceById`, {idAvance: id})
   }
 
   // Metodo de creacion de avance.  
@@ -31,7 +35,7 @@ export class AdvancesService {
 
   // Metodo de actualizacion de avance. 
   update(adv: FormData) {
-    return  this.http.put<any>(`${API_URL}/avances`, adv)
+    return  this.http.put<any>(`${API_URL}/advance`, adv)
   }
 
   // Elimina un avance por id     

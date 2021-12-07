@@ -310,6 +310,7 @@ export default class SolicitationController{
                 inputData.forEach( field => request.input( field.name, field.type, field.data) );
                 const result = await request.execute(sp);
                 // validación sobre la inserción del objeto
+
                 return (result.rowsAffected[0] > 0) ? true : false;
             } catch (err) {
                 console.log(err);
@@ -340,7 +341,7 @@ export default class SolicitationController{
 
         let sp = 'sp_modifySolicitation';
      
-        ( dataLogin.getDocumento != null ) ? inputData.push({ name: "documentoActaConstBE", type: sql.VarBinary, data: dataLogin.getDocumentoActaConst.data }) : sp = 'sp_modifySolicitationWithoutDocument';
+        ( dataLogin.getDocumentoActaConst != null ) ? inputData.push({ name: "documentoActaConstBE", type: sql.VarBinary, data: dataLogin.getDocumentoActaConst.data }) : sp = 'sp_modifySolicitationWithoutDocument';
 
         return await this.modifySolicitation(dataLogin, inputData, sp);
     }

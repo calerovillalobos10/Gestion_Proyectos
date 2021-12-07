@@ -311,7 +311,8 @@ export class AddModalComponent extends ModalSkeleton implements OnInit {
 
     this.service.getById(id).subscribe(
       (res) => {
-
+        console.log(res);
+        
         if (res['estado']) {
           
           this.patchData(res['solicitation'], id);

@@ -43,9 +43,11 @@ export class DetModalComponent implements OnInit {
   }
 
   async loadAvance() {
-    this.service.getById(this.advanceId).subscribe(
+    this.service.getDocumentById(this.advanceId).subscribe(
       res => {
-        this.pdfSrc = res['advance'].documento;
+        console.log(res);
+        
+        this.pdfSrc = res['document'];
       },
       err => {
         this.closeOnError();

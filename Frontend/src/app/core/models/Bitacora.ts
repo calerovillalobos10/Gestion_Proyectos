@@ -1,5 +1,4 @@
 export interface Bitacora{
-
   idBitacora: number,
   transaccion: number | string,
   nombre: any
@@ -8,5 +7,4 @@ export interface Bitacora{
   idAvance: number| string,
   idSolicitud: number,
   fechaBitacora: string
-
 }

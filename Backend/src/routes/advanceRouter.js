@@ -43,12 +43,13 @@ router.post('/advance', loginController.recuperarToken, loginController.verifyTo
 
 // Se encarga de comunicarse con el controller para modificar un avance
 router.put('/advance', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
-
+   
     const advance = new Advance(req.body.idAvance, req.body.idTrimestre, req.body.idFuncionario_Aplicativo, req.body.idSolicitud, req.body.fechaAvance, req.files?.documento, 1),
     // Se llama a la función que modifica el avance
           verifyModify = await advanceController.inputDataModifyAdvance(advance);
-
+   
     if ( verifyModify )  {
+        
         // Se envía el secret al frontend
         res.json({
             "estado": true

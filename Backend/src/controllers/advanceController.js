@@ -246,18 +246,21 @@ export default class AdvanceController{
         let pool = null;
         const idAvance = parseInt(dataLogin.getIdAvance, 10),
         // Se llama al método que se encarga de verificar los atributos del objeto avance
-              verifyAtributes = this.verifyAttributesAdvance(dataLogin);
-
-        if ( verifyAtributes && idAvance != null && this.validacionController.verifyNumber(idAvance) && this.validacionController.verifySpecialCharacters(idAvance) && this.validacionController.verifyMinSize(idAvance) ){
-            
+        verifyAtributes = this.verifyAttributesAdvance(dataLogin);
+        
+        if ( verifyAtributes && dataLogin.idAvance != null && this.validacionController.verifyNumber(idAvance) && this.validacionController.verifySpecialCharacters(idAvance) && this.validacionController.verifyMinSize(idAvance) ){
+          
             try {
                 // Conección a la base
                 pool = await getConnection();
                 // Parámetros de entrada y ejecución del sp
-                const request = await pool.request();
-                inputData.forEach( field => request.input( field.name, field.type, field.data) ),
-                      result = await request.execute(sp);
+                const request = pool.request();
+                inputData.forEach( field => request.input( field.name, field.type, field.data) );
+                const result = await request.execute(sp);
                 // validación sobre la inserción del objeto
+
+                console.log(result);
+
                 return (result.rowsAffected[0] > 0) ? true : false;
             } catch (err) {
                 console.log(err);
@@ -279,8 +282,8 @@ export default class AdvanceController{
             { name: "idAvanceBE", type: sql.TinyInt, data: parseInt(dataLogin.getIdAvance, 10) },
             { name: "idTrimestreBE", type: sql.TinyInt, data: parseInt(dataLogin.getTrimestre, 10) },
             { name: "idFuncionarioAplicativoBE", type: sql.SmallInt, data: parseInt(dataLogin.getFuncionarioAplicativo, 10) },
-            { name: "idSolicitudBE", type: sql.SmallInt, data: parseInt(dataLogin.getTrimestre, 10) },
-            { name: "fechaAvanceBE", type: sql.SmallDateTime, data: dataLogin.getFechaSolicitud },
+            { name: "idSolicitudBE", type: sql.SmallInt, data: parseInt(dataLogin.getIdSolicitud, 10) },
+            { name: "fechaAvanceBE", type: sql.SmallDateTime, data: dataLogin.getFechaAvance },
             { name: "estadoBE", type: sql.Bit, data: dataLogin.getEstado }
         ];
 

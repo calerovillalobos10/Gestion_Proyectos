@@ -45,9 +45,10 @@ router.post('/solicitation', loginController.recuperarToken, loginController.ver
 router.put('/solicitation', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
     
     const solicitation = new Solicitation(req.body.idSolicitud, req.token.id, req.body.funcionarioResponsable, req.body.funcionarioFinal, req.body.fechaSolicitud, req.body.fechaInicio, req.body.fechaFin, req.files?.documentoActaConst, 1, 0),
+    
     // Se llama a la función que modifica la solicitud
           verifyModify = await solicitationController.inputDataModifySolicitation(solicitation);
-
+  
     if ( verifyModify )  {
         // Se envía el secret al frontend
         res.json({
@@ -123,7 +124,7 @@ router.get('/solicitation', loginController.recuperarToken, loginController.veri
 // Se encarga de comunicarse con el controller para recuperar un objeto solicitud
 router.post('/solicitationById', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
     // Se llama a la función recupera el funcionario por el id
-    const solicitation = await solicitationController.recoverDocumentSolicitationById(+req.body.idSolicitud, +req.token.id);
+    const solicitation = await solicitationController.recoverSolicitationById(+req.body.idSolicitud, +req.token.id);
         
     if (solicitation) {
         // Se envía el secret al frontend
@@ -143,7 +144,7 @@ router.post('/solicitationById', loginController.recuperarToken, loginController
 // Se encarga de comunicarse con el controller para recuperar un objeto solicitud
 router.post('/documentSolicitationById', loginController.recuperarToken, loginController.verifyToken, async (req, res) => {
     // Se llama a la función recupera el funcionario por el id
-    const document = await solicitationController.recoverDocumentById(+req.body.idSolicitud, +req.token.id);
+    const document = await solicitationController.recoverDocumentSolicitationById(+req.body.idSolicitud, +req.token.id);
         
     if (document) {
         // Se envía el secret al frontend

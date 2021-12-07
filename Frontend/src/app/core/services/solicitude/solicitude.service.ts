@@ -22,6 +22,11 @@ export class SolicitudeService {
     return this.http.post<any>(`${API_URL}/solicitationById`, {idSolicitud: id})
   }
 
+  // Metodo de obtencion por id. 
+  getDocumentById(id: any){
+    return this.http.post<any>(`${API_URL}/documentSolicitationById`, {idSolicitud: id})
+  }
+
   // Metodo de creacion de solicitud.  METHOD: Post
   create(sol: FormData) {
     return this.http.post<any>(`${API_URL}/solicitation`, sol)
