@@ -47,18 +47,6 @@ router.post('/login', async (req, res) => {
         // Llamado para crear el token del usuario
         const token = loginController.getToken(dataBD, res);
 
-        if ( token ) {
-            // TODO: nunca se envía ya que el res lo tiene el getToken
-            // Se envía el nombre, correo y dobleaAuth al frontend
-            res.json({
-                "id": dataBD.id,
-                "nombre": dataBD.nombre,
-                "correo": dataBD.correo,
-                "dobleAuth": dataBD.dobleAuth,
-                "urlFoto": dataBD.urlFoto,
-                "estado": dataBD.estado,
-            });
-        }
     } else {
         // Si sucede algún error se le notifica al frontend
         res.json({

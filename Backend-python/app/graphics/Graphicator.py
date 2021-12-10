@@ -5,7 +5,7 @@ matplotlib.use('Agg') # Utiliza el matplot sin GUI
 import matplotlib.pyplot as plt
 from datetime import datetime
 from data.DB import get_conn
-from os import remove
+from os import error, remove
 
 # -------------------------------------------------------------------------------
 # Imprime los avances generales de todos los trimestres
@@ -25,7 +25,8 @@ def advances_by_trim():
       plt.savefig( file_name )
 
       return (prepare_file(file_name))
-    except:
+    except error:
+      print (error)
       return False
 # -------------------------------------------------------------------------------
 
@@ -46,7 +47,8 @@ def advances_by_year(year):
       file_name = generate_file_name('adv_by_')
       plt.savefig( file_name )
       return (prepare_file(file_name))
-    except:
+    except error:
+      print (error)
       return False
 # -------------------------------------------------------------------------------
 
@@ -75,7 +77,8 @@ def solicitude_status():
         plt.savefig( file_name )
         
         return (prepare_file(file_name))
-    except:
+    except error:
+      print (error)
       return False
 
 # -------------------------------------------------------------------------------
@@ -105,7 +108,8 @@ def solicitude_status_by_year(year):
         plt.savefig( file_name )
     
         return (prepare_file(file_name))
-      except:
+      except error:
+        print (error)
         return False
 # -------------------------------------------------------------------------------
 
@@ -131,6 +135,7 @@ def solicitude_changed_by_year(year):
         plt.savefig( file_name )
         return (prepare_file(file_name))
       except:
+        print(error)
         return False
 
 # Generacion de un nombre de archivo temporal.
@@ -161,7 +166,8 @@ def solicitude_changed():
       
       plt.savefig( file_name )
       return (prepare_file(file_name))
-    except:
+    except error:
+      print (error)
       return False
 
 # Métodos extra ajenos a la graficacion 

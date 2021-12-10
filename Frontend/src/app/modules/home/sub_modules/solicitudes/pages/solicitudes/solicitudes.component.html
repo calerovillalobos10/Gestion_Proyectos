@@ -58,7 +58,15 @@
       <td class="ta-center">{{ solicitud.fechaInicio | date: "dd/MM/yyyy" }}</td>
       <td class="ta-center">{{ solicitud.fechaFin | date: "dd/MM/yyyy" }}</td>
       
-      <td> <p class="percentage">{{value}}%</p><progress class="{{value == 100 ? 'pr100 br10' : value > 50 ? 'pr75' : value > 25 ? 'pr50' : 'pr25' }}" min='0' max='100' value="{{value}}" ></progress></td>
+
+
+      <td> <p class="percentage">{{getPercentage(solicitud)}}%</p>
+        <progress class="{{getPercentage(solicitud) == 100 
+          ? 'pr100 br10' : getPercentage(solicitud) > 50 
+          ? 'pr75' : getPercentage(solicitud) > 25 
+          ? 'pr50' : 'pr25' }}" min='0' max='100' value="{{getPercentage(solicitud)}}" >
+        </progress>
+      </td>
 
       <td>
         <div

@@ -264,4 +264,19 @@ export class SolicitudesComponent implements OnInit {
     this.rerender();
   }
 
+  getPercentage(solicitude:any){
+
+    // Si es null y esta terminado el % sera de 100
+    if(!solicitude.porcentajes && solicitude.terminado) return 100;
+
+    // Si es null sin terminar el % sera de 0
+    if(!solicitude.porcentajes && !solicitude.terminado) return 0;
+
+    // Si el porcentaje es mayor o igual a 100 y no esta terminado el % sera de 99
+    if(solicitude.porcentajes >= 100 && !solicitude.terminado) return 99;
+
+    return solicitude.porcentajes;
+  }
+
+
 }

@@ -150,7 +150,4 @@ export default class LoginController {
             }
         })
     }
-
-    // Esta función sirve para recuperar el id del funcionario aplicativo desde el payload del token
-    recoverIdFunctionaryToken = (token) => jwt.decode(token).dataBD.id;
 }

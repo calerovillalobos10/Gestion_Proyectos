@@ -8,6 +8,6 @@ export interface Solicitud{
   fechaInicio:string,
   fechaFin:string,
   documentoActa:any,
-  progreso?: number,
+  porcentajes?: number,
   terminado?: boolean
 } 

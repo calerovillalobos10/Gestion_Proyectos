@@ -33,6 +33,7 @@ progress{
   height: 30px;
   display: inline-block;
   border-radius: 10px;
+ 
 }
 
 progress::-webkit-progress-value{
@@ -73,6 +74,7 @@ progress.br10::-webkit-progress-value{
   font-weight: bold;
   color: white;
   transform: translate(35px, -10px);
+  user-select: none;
 }
 
 .ta-center{
