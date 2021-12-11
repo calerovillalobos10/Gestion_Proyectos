@@ -13,8 +13,8 @@ export class CuboComponent implements OnInit {
   constructor() {
     this.pivotGridDataSource = {
       fields: [
-          { dataField: '[Funcionario]', area: 'row' },
-          { dataField: '[Month]', area: 'column' },
+          { dataField: '[Olap Bitacoras Dim].[Funcionario]', area: 'row' },
+          { dataField: '[Year]', area: 'column' },
           { dataField: "[Recuento Olap Solicitudes Fact]", area: "data"}
       ],
       store: {
